@@ -1,5 +1,6 @@
 import Foundation
 import OSLog
+import os
 
 /// Central scan engine that orchestrates concurrent scanner execution,
 /// safety validation, and result aggregation.
@@ -22,31 +23,44 @@ public actor ScanEngine {
     /// - Parameter progressHandler: Called with progress updates during scanning.
     /// - Returns: A complete `ScanResult` with safety-validated items.
     public func performSmartScan(
-        progressHandler: @Sendable (ScanProgress) -> Void = { _ in }
+        progressHandler: @escaping @Sendable (ScanProgress) -> Void = { _ in }
     ) async -> ScanResult {
         let startTime = Date()
         Logger.scanner.info("Starting Smart Scan")
 
         var allItems: [CleanupItem] = []
+        let runningBytes = OSAllocatedUnfairLock(initialState: Int64(0))
+        let runningCount = OSAllocatedUnfairLock(initialState: 0)
+
+        let makeProgress: @Sendable (CleanupCategory, String) -> Void = { category, path in
+            let bytes = runningBytes.withLock { $0 }
+            let count = runningCount.withLock { $0 }
+            progressHandler(ScanProgress(
+                currentCategory: category,
+                currentPath: path,
+                scannedBytes: bytes,
+                scannedItemsCount: count
+            ))
+        }
 
         // Run all scanners concurrently using a TaskGroup
         await withTaskGroup(of: [ScanItem].self) { group in
-            group.addTask { await self.cacheScanner.scan() }
-            group.addTask { await self.logScanner.scan() }
-            group.addTask { await self.trashScanner.scan() }
-            group.addTask { await self.xcodeScanner.scan() }
-            group.addTask { await self.gradleScanner.scan() }
-            group.addTask { await self.nodeScanner.scan() }
-            group.addTask { await self.homebrewScanner.scan() }
-            group.addTask { await self.dockerScanner.scan() }
+            group.addTask { await self.cacheScanner.scan { makeProgress(.systemCache, $0) } }
+            group.addTask { await self.logScanner.scan { makeProgress(.userLogs, $0) } }
+            group.addTask { await self.trashScanner.scan { makeProgress(.trash, $0) } }
+            group.addTask { await self.xcodeScanner.scan { makeProgress(.developerXcode, $0) } }
+            group.addTask { await self.gradleScanner.scan { makeProgress(.developerGradle, $0) } }
+            group.addTask { await self.nodeScanner.scan { makeProgress(.developerNode, $0) } }
+            group.addTask { await self.homebrewScanner.scan { makeProgress(.developerHomebrew, $0) } }
+            group.addTask { await self.dockerScanner.scan { makeProgress(.developerDocker, $0) } }
 
             for await scanItems in group {
-                // Validate each item through safety pipeline
+                var newValidItems: [CleanupItem] = []
                 for item in scanItems {
                     let result = safetyValidator.validate(item.url)
                     switch result {
                     case .approved:
-                        allItems.append(item.toCleanupItem())
+                        newValidItems.append(item.toCleanupItem())
                     case .rejected(let reason):
                         Logger.safety.debug("Rejected: \(item.url.path, privacy: .private) — \(reason)")
                     case .skipped(let reason):
@@ -54,12 +68,13 @@ public actor ScanEngine {
                     }
                 }
 
-                // Update progress
-                let totalBytes = allItems.reduce(0) { $0 + $1.size }
-                progressHandler(ScanProgress(
-                    scannedBytes: totalBytes,
-                    scannedItemsCount: allItems.count
-                ))
+                let addedBytes = newValidItems.reduce(0) { $0 + $1.size }
+                let addedCount = newValidItems.count
+
+                runningBytes.withLock { $0 += addedBytes }
+                runningCount.withLock { $0 += addedCount }
+
+                allItems.append(contentsOf: newValidItems)
             }
         }
 

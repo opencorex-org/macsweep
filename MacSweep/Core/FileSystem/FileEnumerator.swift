@@ -63,12 +63,18 @@ public struct FileEnumerator: Sendable {
     }
 
     /// Calculates the total size of a directory by summing all contained file sizes.
-    public static func directorySize(_ url: URL) async -> Int64 {
+    /// - Parameter onProgress: Optional closure called periodically with active file path.
+    public static func directorySize(_ url: URL, onProgress: (@Sendable (String) -> Void)? = nil) async -> Int64 {
         var totalSize: Int64 = 0
+        var count = 0
 
         for await metadata in enumerate(directory: url, includeHidden: true) {
             if !metadata.isDirectory {
                 totalSize += metadata.size
+            }
+            count += 1
+            if count % 15 == 0 {
+                onProgress?(metadata.url.path)
             }
         }
 
