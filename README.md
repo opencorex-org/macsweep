@@ -1,7 +1,7 @@
 # MacSweep
 
 <p align="center">
-  <img src="MacSweep/Assets.xcassets/AppIcon.appiconset/appicon_512x512.jpg" width="128" height="128" alt="MacSweep Logo">
+  <img src="MacSweep/Assets.xcassets/AppIcon.appiconset/logo.png" width="128" height="128" alt="MacSweep Logo">
 </p>
 
 <p align="center">
