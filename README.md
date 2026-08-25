@@ -1,7 +1,7 @@
 # MacSweep
 
 <p align="center">
-  <img src="MacSweep/Resources/Assets.xcassets/AppIcon.appiconset/icon_128x128.png" width="128" height="128" alt="MacSweep Logo">
+  <img src="MacSweep/Assets.xcassets/AppIcon.appiconset/appicon_512x512.jpg" width="128" height="128" alt="MacSweep Logo">
 </p>
 
 <p align="center">
@@ -20,14 +20,14 @@
 
 ## Key Features
 
-* 🧹 **Smart Scan:** Unified discovery of system caches, application logs, temporary files, and Trash items.
-* 🛠️ **Developer Cache Cleaner:** Targeted cleaning of Xcode DerivedData, SPM caches, CocoaPods, Gradle, Android build caches, npm, pnpm, Yarn, Bun, Homebrew, and Docker artifacts.
-* 📊 **Interactive Storage Analyzer:** Visual folder tree and disk usage breakdown.
-* 📁 **Large File Finder:** Discover large files over configurable thresholds (500 MB to 10 GB+).
-* 🔍 **Safe Duplicate Detection:** Multi-stage content hash engine for discovering duplicate copies safely.
-* 📦 **App Uninstaller:** Complete leftover file discovery for uninstalled applications.
-* 🔒 **Safety First:** Hardcoded system safeguards, symlink resolution, zero automated background deletions, and explicit Trash relocation.
-* 🛡️ **Privacy First:** 100% local scanning, zero telemetry, zero analytics tracking, zero cloud server uploads.
+* **Smart Scan:** Unified discovery of system caches, application logs, temporary files, and Trash items.
+* **Developer Cache Cleaner:** Targeted cleaning of Xcode DerivedData, SPM caches, CocoaPods, Gradle, Android build caches, npm, pnpm, Yarn, Bun, Homebrew, and Docker artifacts.
+* **Interactive Storage Analyzer:** Visual folder tree and disk usage breakdown.
+* **Large File Finder:** Discover large files over configurable thresholds (500 MB to 10 GB+).
+* **Safe Duplicate Detection:** Multi-stage content hash engine for discovering duplicate copies safely.
+* **App Uninstaller:** Complete leftover file discovery for uninstalled applications.
+* **Safety First:** Hardcoded system safeguards, symlink resolution, zero automated background deletions, and explicit Trash relocation.
+* **Privacy First:** 100% local scanning, zero telemetry, zero analytics tracking, zero cloud server uploads.
 
 ---
 
@@ -70,15 +70,15 @@ For full technical documentation, see [`docs/architecture.md`](docs/architecture
 
 ## Documentation
 
-* 📖 [System Architecture Specification](docs/architecture.md)
-* 🔐 [Permissions & FDA Guide](docs/permissions.md)
-* 🚀 [Developer Setup & Contributing Guide](docs/development.md)
-* 📦 [Direct Release & Code Signing Guide](docs/releases.md)
-* 🛡️ [Privacy Policy Statement](docs/privacy.md)
-* 🔒 [Security & Vulnerability Disclosure](SECURITY.md)
+* [System Architecture Specification](docs/architecture.md)
+* [Permissions & FDA Guide](docs/permissions.md)
+* [Developer Setup & Contributing Guide](docs/development.md)
+* [Direct Release & Code Signing Guide](docs/releases.md)
+* [Privacy Policy Statement](docs/privacy.md)
+* [Security & Vulnerability Disclosure](SECURITY.md)
 
 ---
 
 ## License
 
-MacSweep is open-source software licensed under the **Apache License 2.0**. Developed with ❤️ under the **OpenCorex** organization.
+MacSweep is open-source software licensed under the **Apache License 2.0**. Developed under the **OpenCorex** organization.
