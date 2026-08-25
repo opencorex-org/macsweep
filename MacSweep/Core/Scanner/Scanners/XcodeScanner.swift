@@ -11,20 +11,23 @@ public struct XcodeScanner: Sendable {
         return [
             (dev.appendingPathComponent("DerivedData"), "DerivedData"),
             (dev.appendingPathComponent("Archives"), "Archives"),
+            (dev.appendingPathComponent("iOS DeviceSupport"), "iOS Device Support"),
+            (dev.appendingPathComponent("Products"), "Build Products"),
+            (home.appendingPathComponent("Library/Developer/CoreSimulator/Caches"), "Simulator Caches"),
             (home.appendingPathComponent("Library/Caches/org.swift.swiftpm"), "Swift Package Manager Cache"),
-            (home.appendingPathComponent("Library/Caches/CocoaPods"), "CocoaPods Cache"),
-            (home.appendingPathComponent("Library/Developer/CoreSimulator/Caches"), "Simulator Caches")
+            (home.appendingPathComponent("Library/Caches/CocoaPods"), "CocoaPods Cache")
         ]
     }
 
-    public func scan() async -> [ScanItem] {
+    public func scan(onProgress: (@Sendable (String) -> Void)? = nil) async -> [ScanItem] {
         var items: [ScanItem] = []
 
         for (path, label) in targetPaths {
             guard fileManager.fileExists(atPath: path.path) else { continue }
+            onProgress?(path.path)
             Logger.scanner.debug("Scanning Xcode path: \(label)")
 
-            let size = await FileEnumerator.directorySize(path)
+            let size = await FileEnumerator.directorySize(path, onProgress: onProgress)
             guard size > 0 else { continue }
 
             let modDate = (try? path.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate ?? Date.distantPast

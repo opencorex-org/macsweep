@@ -10,5 +10,10 @@ jobs:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16'
       - name: Build & Package
         run: ./scripts/release.sh
+
+

@@ -115,7 +115,7 @@ public struct DashboardView: View {
 
                 // System Health Features Banner
                 HStack(spacing: 12) {
-                    HealthBadge(icon: "shield.checkmark.fill", color: .green, title: "Safety Guard", subtitle: "SIP Protection Enforced")
+                    HealthBadge(icon: "checkmark.shield.fill", color: .green, title: "Safety Guard", subtitle: "SIP Protection Enforced")
                     HealthBadge(icon: "memorychip.fill", color: .blue, title: "Memory Engine", subtitle: "Real-time Monitor")
                     HealthBadge(icon: "lock.applewatch", color: .orange, title: "Privacy Suite", subtitle: "Browser Data Safe")
                 }

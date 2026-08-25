@@ -13,14 +13,15 @@ public struct DockerScanner: Sendable {
         ]
     }
 
-    public func scan() async -> [ScanItem] {
+    public func scan(onProgress: (@Sendable (String) -> Void)? = nil) async -> [ScanItem] {
         var items: [ScanItem] = []
 
         for (path, label) in targetPaths {
             guard fileManager.fileExists(atPath: path.path) else { continue }
+            onProgress?(path.path)
             Logger.scanner.debug("Scanning Docker path: \(label)")
 
-            let size = await FileEnumerator.directorySize(path)
+            let size = await FileEnumerator.directorySize(path, onProgress: onProgress)
             guard size > 0 else { continue }
 
             let modDate = (try? path.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate ?? Date.distantPast

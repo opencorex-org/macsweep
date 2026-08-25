@@ -14,16 +14,9 @@ public struct SmartScanView: View {
             if viewModel.isScanning {
                 ScanProgressView(progress: viewModel.currentProgress)
             } else if let cleanResult = viewModel.lastCleanResult {
-                ScanSummaryView(result: cleanResult)
-                    .overlay(
-                        VStack {
-                            Spacer()
-                            PrimaryButton(title: "Scan Again", iconName: "arrow.clockwise") {
-                                Task { await viewModel.startScan() }
-                            }
-                            .padding(.bottom, 24)
-                        }
-                    )
+                ScanSummaryView(result: cleanResult) {
+                    Task { await viewModel.startScan() }
+                }
             } else if viewModel.items.isEmpty {
                 EmptyStateView(
                     title: "Smart Scan",
@@ -38,26 +31,62 @@ public struct SmartScanView: View {
                 // Results List
                 VStack(spacing: 0) {
                     // Header Bar
-                    HStack {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Scan Results")
-                                .font(.system(size: 18, weight: .bold))
-                                .foregroundColor(.msLabel)
-                            Text("\(viewModel.selectedCount) items selected (\(ByteFormatter.format(viewModel.selectedBytes)))")
-                                .font(.system(size: 12))
-                                .foregroundColor(.msSecondaryLabel)
+                    VStack(spacing: 12) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 3) {
+                                HStack(spacing: 8) {
+                                    Text("Scan Completed")
+                                        .font(.system(size: 18, weight: .bold))
+                                        .foregroundColor(.msLabel)
+
+                                    Text("\(ByteFormatter.format(viewModel.totalBytes)) Reclaimable")
+                                        .font(.system(size: 11, weight: .bold))
+                                        .foregroundColor(.green)
+                                        .padding(.horizontal, 8)
+                                        .padding(.vertical, 3)
+                                        .background(Color.green.opacity(0.12))
+                                        .cornerRadius(6)
+                                }
+
+                                Text("\(viewModel.selectedCount) of \(viewModel.items.count) items selected (\(ByteFormatter.format(viewModel.selectedBytes)))")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.msSecondaryLabel)
+                            }
+
+                            Spacer()
+
+                            PrimaryButton(
+                                title: "Clean \(ByteFormatter.format(viewModel.selectedBytes))",
+                                iconName: "sparkles",
+                                isLoading: viewModel.isCleaning
+                            ) {
+                                showConfirmDialog = true
+                            }
+                            .disabled(viewModel.selectedCount == 0)
                         }
 
-                        Spacer()
+                        // Quick Filter Controls
+                        HStack(spacing: 12) {
+                            Button("Select All") {
+                                viewModel.selectAll()
+                            }
+                            .buttonStyle(.borderless)
+                            .font(.system(size: 11, weight: .medium))
 
-                        PrimaryButton(
-                            title: "Clean \(ByteFormatter.format(viewModel.selectedBytes))",
-                            iconName: "trash.fill",
-                            isLoading: viewModel.isCleaning
-                        ) {
-                            showConfirmDialog = true
+                            Button("Safe Items Only") {
+                                viewModel.selectSafeOnly()
+                            }
+                            .buttonStyle(.borderless)
+                            .font(.system(size: 11, weight: .medium))
+
+                            Button("Deselect All") {
+                                viewModel.deselectAll()
+                            }
+                            .buttonStyle(.borderless)
+                            .font(.system(size: 11, weight: .medium))
+
+                            Spacer()
                         }
-                        .disabled(viewModel.selectedCount == 0)
                     }
                     .padding(16)
                     .background(Color.msSecondaryBackground)
@@ -83,9 +112,9 @@ public struct SmartScanView: View {
         }
         .sheet(isPresented: $showConfirmDialog) {
             ConfirmationDialog(
-                title: "Clean Selected Items?",
-                message: "Are you sure you want to permanently delete \(viewModel.selectedCount) items (\(ByteFormatter.format(viewModel.selectedBytes)))?",
-                confirmTitle: "Clean Now",
+                title: "Approve Optimization & Cleanup?",
+                message: "You are approving the permanent removal of \(viewModel.selectedCount) selected items (\(ByteFormatter.format(viewModel.selectedBytes))) to free up disk space on your Mac. System files and SIP integrity remain protected.",
+                confirmTitle: "Approve & Clean \(ByteFormatter.format(viewModel.selectedBytes))",
                 isDestructive: true,
                 onConfirm: {
                     showConfirmDialog = false

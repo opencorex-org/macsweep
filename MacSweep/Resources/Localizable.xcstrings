@@ -20,6 +20,9 @@
     "%@ Free" : {
 
     },
+    "%@ Reclaimable" : {
+
+    },
     "%@ used" : {
 
     },
@@ -36,9 +39,6 @@
         }
       }
     },
-    "%lld" : {
-
-    },
     "%lld items" : {
 
     },
@@ -52,25 +52,25 @@
         }
       }
     },
-    "%lld items ready for cleanup" : {
-
-    },
-    "%lld items scanned (%@)" : {
+    "%lld items found (%@)" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "%1$lld items scanned (%2$@)"
+            "value" : "%1$lld items found (%2$@)"
           }
         }
       }
     },
-    "%lld items selected (%@)" : {
+    "%lld items ready for cleanup" : {
+
+    },
+    "%lld of %lld items selected (%@)" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "%1$lld items selected (%2$@)"
+            "value" : "%1$lld of %2$lld items selected (%3$@)"
           }
         }
       }
@@ -127,12 +127,6 @@
     "Cleanable Junk" : {
 
     },
-    "Cleaned" : {
-
-    },
-    "Cleanup Complete!" : {
-
-    },
     "Clear web browser caches, cookies, and tracking artifacts" : {
 
     },
@@ -153,6 +147,9 @@
         }
       }
     },
+    "Deselect All" : {
+
+    },
     "Developer Cleaner" : {
 
     },
@@ -165,7 +162,7 @@
     "Enable cleanup completion notifications" : {
 
     },
-    "Failed" : {
+    "Files safely processed. System integrity & SIP fully preserved." : {
 
     },
     "Find and remove identical file copies across folders" : {
@@ -202,6 +199,9 @@
 
     },
     "Launch MacSweep at login" : {
+
+    },
+    "Mac Storage Optimized!" : {
 
     },
     "MacSweep" : {
@@ -248,7 +248,13 @@
     "Real-time system health, storage allocation, and maintenance tools" : {
 
     },
-    "Scan Results" : {
+    "Safe Items Only" : {
+
+    },
+    "Scan Again" : {
+
+    },
+    "Scan Completed" : {
 
     },
     "Scanning" : {
@@ -258,6 +264,9 @@
 
     },
     "Search apps..." : {
+
+    },
+    "Select All" : {
 
     },
     "Setup Complete!" : {
@@ -283,7 +292,7 @@
     "Storage Analyzer" : {
 
     },
-    "Successfully reclaimed %@" : {
+    "Successfully reclaimed %@ of disk space" : {
 
     },
     "System caches & temporary items" : {
