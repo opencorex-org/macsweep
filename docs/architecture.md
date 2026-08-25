@@ -2,10 +2,24 @@
 **Organization:** OpenCorex  
 **Project:** MacSweep (`OpenCorex/macsweep`)  
 **Platform:** macOS 14.0+  
+**Distribution Channel:** Direct Download Only (Developer ID Signed & Apple Notarized)  
 
 ---
 
-For the full detailed 31-section technical specification document, see the canonical specification document.
+## Distribution Model
+
+MacSweep is distributed exclusively as a **Direct Download** application (via GitHub Releases and the OpenCorex project portal) packed in a Developer ID signed, Hardened Runtime enabled, and Apple-notarized `.dmg` installer.
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                   Direct Download Distribution                         │
+├────────────────────────────────────────────────────────────────────────┤
+│ • Code Signing: Developer ID Application Certificate                   │
+│ • Hardened Runtime: Enabled (`-options runtime`)                       │
+│ • Gatekeeper Compliance: Apple Notarized & Stapled                     │
+│ • Disk Access Scope: Full Disk Access (FDA) Supported                  │
+└────────────────────────────────────────────────────────────────────────┘
+```
 
 ## System Architecture Summary
 
@@ -59,5 +73,5 @@ MacSweep uses a layered data-flow architecture:
 - **`Core/Safety`**: Rules database & path traversal validation (`SafetyValidator`, `ProtectedPaths`, `SafetyPolicy`).
 - **`Core/Storage`**: System disk statistics & tree folder size calculators (`DiskSpaceService`, `DirectorySizeCalculator`).
 - **`Core/FileSystem`**: Low-level `FileManager` wrappers, metadata extraction, security-scoped bookmark handles.
-- **`Core/Permissions`**: Full Disk Access validators & sandbox permission managers (`PermissionManager`, `FullDiskAccessManager`).
+- **`Core/Permissions`**: Full Disk Access validators (`PermissionManager`, `FullDiskAccessManager`).
 - **`Core/Utilities`**: Formatting, logging (`OSLog`), process execution helpers (`Logger`, `ByteFormatter`).
