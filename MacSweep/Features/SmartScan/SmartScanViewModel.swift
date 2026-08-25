@@ -36,15 +36,42 @@ public final class SmartScanViewModel: ObservableObject {
         items = []
         lastCleanResult = nil
 
+        let startTime = Date()
+
         let result = await environment.scanEngine.performSmartScan { [weak self] progress in
             Task { @MainActor in
                 self?.currentProgress = progress
             }
         }
 
+        // Enforce minimum scan pacing (2.5s) so live scanning UI feedback is smooth and visible
+        let elapsed = Date().timeIntervalSince(startTime)
+        if elapsed < 2.5 {
+            let delayNano = UInt64((2.5 - elapsed) * 1_000_000_000)
+            try? await Task.sleep(nanoseconds: delayNano)
+        }
+
         self.scanResult = result
         self.items = result.items
         self.isScanning = false
+    }
+
+    public func selectAll() {
+        for index in items.indices {
+            items[index].isSelected = true
+        }
+    }
+
+    public func deselectAll() {
+        for index in items.indices {
+            items[index].isSelected = false
+        }
+    }
+
+    public func selectSafeOnly() {
+        for index in items.indices {
+            items[index].isSelected = (items[index].risk == .safe)
+        }
     }
 
     public func toggleItemSelection(_ item: CleanupItem) {

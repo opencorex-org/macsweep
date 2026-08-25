@@ -3,34 +3,71 @@ import SwiftUI
 public struct ScanProgressView: View {
     public let progress: ScanProgress?
 
+    public init(progress: ScanProgress?) {
+        self.progress = progress
+    }
+
     public var body: some View {
         VStack(spacing: 24) {
             ZStack {
                 Circle()
-                    .stroke(Color.primary.opacity(0.1), lineWidth: 8)
-                    .frame(width: 120, height: 120)
+                    .stroke(Color.primary.opacity(0.08), lineWidth: 8)
+                    .frame(width: 130, height: 130)
 
-                ProgressView()
-                    .scaleEffect(1.5)
-                    .controlSize(.large)
+                Circle()
+                    .trim(from: 0, to: 0.75)
+                    .stroke(
+                        LinearGradient(
+                            colors: [.blue, .purple],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        style: StrokeStyle(lineWidth: 8, lineCap: .round)
+                    )
+                    .frame(width: 130, height: 130)
+                    .rotationEffect(.degrees(progress == nil ? 0 : 360))
+                    .animation(.linear(duration: 2).repeatForever(autoreverses: false), value: progress != nil)
+
+                Image(systemName: progress?.currentCategory?.iconName ?? "sparkles")
+                    .font(.system(size: 36, weight: .semibold))
+                    .foregroundColor(progress?.currentCategory?.tintColor ?? .accentColor)
             }
 
-            VStack(spacing: 8) {
+            VStack(spacing: 12) {
                 Text("Scanning Mac...")
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.msLabel)
 
                 if let progress = progress {
-                    Text("\(progress.scannedItemsCount) items scanned (\(progress.formattedScannedSize))")
-                        .font(.system(size: 13))
+                    if let category = progress.currentCategory {
+                        HStack(spacing: 6) {
+                            Image(systemName: category.iconName)
+                                .font(.system(size: 11, weight: .bold))
+                            Text(category.displayName)
+                                .font(.system(size: 12, weight: .semibold))
+                        }
+                        .foregroundColor(category.tintColor)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(category.tintColor.opacity(0.12))
+                        .cornerRadius(12)
+                    }
+
+                    Text("\(progress.scannedItemsCount) items found (\(progress.formattedScannedSize))")
+                        .font(.system(size: 14, weight: .medium))
                         .foregroundColor(.msSecondaryLabel)
 
                     if !progress.currentPath.isEmpty {
                         Text(progress.currentPath)
                             .font(.system(size: 11, design: .monospaced))
-                            .foregroundColor(.msSecondaryLabel)
+                            .foregroundColor(.msSecondaryLabel.opacity(0.85))
                             .lineLimit(1)
-                            .frame(maxWidth: 400)
+                            .truncationMode(.middle)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 6)
+                            .background(Color.primary.opacity(0.04))
+                            .cornerRadius(6)
+                            .frame(maxWidth: 520)
                     }
                 }
             }
