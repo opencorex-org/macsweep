@@ -13,7 +13,7 @@ All contributors are expected to adhere to our [Code of Conduct](CODE_OF_CONDUCT
 ## 2. How to Contribute
 
 ### 2.1 Reporting Bugs
-* Search existing [GitHub Issues](https://github.com/OpenCorex/macsweep/issues) to verify the bug hasn't been reported.
+* Search existing [GitHub Issues](https://github.com/opencorex-org/macsweep/issues) to verify the bug hasn't been reported.
 * Open a new bug report using our `.github/ISSUE_TEMPLATE/bug_report.yml` template.
 * Include detailed steps to reproduce, macOS version, and relevant `OSLog` diagnostics (never post personal file paths).
 
@@ -42,4 +42,4 @@ All contributors are expected to adhere to our [Code of Conduct](CODE_OF_CONDUCT
 
 ## 4. Community & Support
 
-Join the conversation on [GitHub Discussions](https://github.com/OpenCorex/macsweep/discussions) or contact the maintainers at **dev@opencorex.org**.
+Join the conversation on [GitHub Discussions](https://github.com/opencorex-org/macsweep/discussions) or contact the maintainers at **dev@opencorex.org**.

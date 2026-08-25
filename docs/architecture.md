@@ -1,6 +1,6 @@
 # MacSweep Architecture & Technical Specification
 **Organization:** OpenCorex  
-**Project:** MacSweep (`OpenCorex/macsweep`)  
+**Project:** MacSweep (`opencorex-org/macsweep`)  
 **Platform:** macOS 14.0+  
 **Distribution Channel:** Direct Download Only (Developer ID Signed & Apple Notarized)  
 

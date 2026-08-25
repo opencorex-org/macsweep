@@ -1,7 +1,7 @@
 # MacSweep Privacy Architecture & Policy
 
 **Organization:** OpenCorex  
-**Project:** MacSweep (`OpenCorex/macsweep`)  
+**Project:** MacSweep (`opencorex-org/macsweep`)  
 
 ---
 
@@ -24,7 +24,7 @@ MacSweep performs network connections **only** in the following explicit scenari
 
 * **Software Update Check (Direct Release Build Only):**
   - **Purpose:** Checks if a newer version of MacSweep is available on GitHub Releases.
-  - **Destination:** `https://api.github.com/repos/OpenCorex/macsweep/releases/latest`
+  - **Destination:** `https://api.github.com/repos/opencorex-org/macsweep/releases/latest`
   - **Data Transmitted:** Standard HTTP User-Agent requesting JSON release metadata. Zero user identifier, hardware serial, or system information is sent.
   - **User Control:** Updates can be checked manually or toggled off in **Settings > General**.
 

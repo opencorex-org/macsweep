@@ -1,7 +1,7 @@
 # Security Policy & Vulnerability Disclosure
 
 **Organization:** OpenCorex  
-**Project:** MacSweep (`OpenCorex/macsweep`)  
+**Project:** MacSweep (`opencorex-org/macsweep`)  
 
 ---
 
@@ -17,7 +17,7 @@ Security updates and safety patches are actively applied to the following versio
 
 ---
 
-## 2. Reporting a Vulnerability
+## Security Philosophy
 
 The OpenCorex maintainers take security and user data safety extremely seriously. If you discover a security vulnerability, path traversal flaw, privilege escalation risk, or potential data loss scenario in MacSweep:
 
@@ -26,7 +26,7 @@ The OpenCorex maintainers take security and user data safety extremely seriously
 Instead, report vulnerabilities privately through one of the following channels:
 
 * **Email:** Send details to **security@opencorex.org**
-* **GitHub Private Advisory:** Submit via [GitHub Security Advisories](https://github.com/OpenCorex/macsweep/security/advisories/new)
+* **GitHub Private Advisory:** Submit via [GitHub Security Advisories](https://github.com/opencorex-org/macsweep/security/advisories/new)
 
 ### What to Include in Your Report
 * A detailed description of the vulnerability.

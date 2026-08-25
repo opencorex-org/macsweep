@@ -1,6 +1,6 @@
 # macOS Permissions Technical Specification
 
-**Project:** MacSweep (`OpenCorex/macsweep`)  
+**Project:** MacSweep (`opencorex-org/macsweep`)  
 **Organization:** OpenCorex  
 **Distribution Channel:** Direct Download Only (Developer ID Signed & Apple Notarized)  
 **Target Platform:** macOS 14.0 (Sonoma) and later  

@@ -1,6 +1,6 @@
 # MacSweep Security & Safety Specification
 **Organization:** OpenCorex  
-**Project:** MacSweep (`OpenCorex/macsweep`)  
+**Project:** MacSweep (`opencorex-org/macsweep`)  
 
 ---
 

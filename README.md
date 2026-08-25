@@ -9,11 +9,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/OpenCorex/macsweep/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/OpenCorex/macsweep/ci.yml?branch=main&style=flat-square&label=CI" alt="CI Status"></a>
+  <a href="https://github.com/opencorex-org/macsweep/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/opencorex-org/macsweep/ci.yml?branch=main&style=flat-square&label=CI" alt="CI Status"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square" alt="License"></a>
   <a href="https://swift.org"><img src="https://img.shields.io/badge/Swift-5.10%2B-orange.svg?style=flat-square" alt="Swift Version"></a>
   <a href="https://apple.com/macos"><img src="https://img.shields.io/badge/platform-macOS%2014.0%2B-lightgrey.svg?style=flat-square" alt="Platform"></a>
-  <a href="https://github.com/OpenCorex/macsweep/releases"><img src="https://img.shields.io/badge/distribution-Direct%20Download-success.svg?style=flat-square" alt="Direct Download"></a>
+  <a href="https://github.com/opencorex-org/macsweep/releases"><img src="https://img.shields.io/badge/distribution-Direct%20Download-success.svg?style=flat-square" alt="Direct Download"></a>
 </p>
 
 ---
@@ -36,7 +36,7 @@
 MacSweep is distributed as a **Direct Download** package signed with Apple Developer ID certificates and notarized by Apple.
 
 ### Direct Download
-Download the latest Developer ID signed and Apple-notarized `.dmg` installer from [GitHub Releases](https://github.com/OpenCorex/macsweep/releases).
+Download the latest Developer ID signed and Apple-notarized `.dmg` installer from [GitHub Releases](https://github.com/opencorex-org/macsweep/releases).
 
 1. Download `MacSweep.dmg`.
 2. Open the DMG file and drag **MacSweep** into your `Applications` folder.
@@ -44,7 +44,7 @@ Download the latest Developer ID signed and Apple-notarized `.dmg` installer fro
 
 ### Building From Source
 ```bash
-git clone https://github.com/OpenCorex/macsweep.git
+git clone https://github.com/opencorex-org/macsweep.git
 cd macsweep
 open MacSweep.xcodeproj
 ```

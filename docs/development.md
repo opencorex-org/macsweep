@@ -1,7 +1,7 @@
 # MacSweep Development & Setup Guide
 
 **Organization:** OpenCorex  
-**Project:** MacSweep (`OpenCorex/macsweep`)  
+**Project:** MacSweep (`opencorex-org/macsweep`)  
 **Target Platform:** macOS 14.0+  
 
 ---
@@ -24,7 +24,7 @@ To build, run, and contribute to MacSweep, ensure your development environment s
 Clone the repository directly from GitHub:
 
 ```bash
-git clone https://github.com/OpenCorex/macsweep.git
+git clone https://github.com/opencorex-org/macsweep.git
 cd macsweep
 ```
 

@@ -7,8 +7,8 @@ public enum AppConstants {
         public static let name = "MacSweep"
         public static let organization = "OpenCorex"
         public static let bundleIdentifier = "org.opencorex.macsweep"
-        public static let repositoryURL = URL(string: "https://github.com/OpenCorex/macsweep")!
-        public static let releasesURL = URL(string: "https://api.github.com/repos/OpenCorex/macsweep/releases/latest")!
+        public static let repositoryURL = URL(string: "https://github.com/opencorex-org/macsweep")!
+        public static let releasesURL = URL(string: "https://api.github.com/repos/opencorex-org/macsweep/releases/latest")!
     }
 
     /// Default scan and cleanup settings
