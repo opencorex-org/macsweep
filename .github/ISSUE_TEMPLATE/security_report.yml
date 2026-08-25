@@ -1,0 +1,12 @@
+name: Security Vulnerability
+description: Report a security vulnerability
+title: "[Security]: "
+labels: ["security"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the vulnerability
+    validations:
+      required: true

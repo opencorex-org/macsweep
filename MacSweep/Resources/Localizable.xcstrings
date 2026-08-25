@@ -1,0 +1,333 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    "%@ — %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ — %2$@"
+          }
+        }
+      }
+    },
+    "%@ free" : {
+
+    },
+    "%@ Free" : {
+
+    },
+    "%@ used" : {
+
+    },
+    "%@ Used" : {
+
+    },
+    "%@: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@"
+          }
+        }
+      }
+    },
+    "%lld" : {
+
+    },
+    "%lld items" : {
+
+    },
+    "%lld items • %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld items • %2$@"
+          }
+        }
+      }
+    },
+    "%lld items ready for cleanup" : {
+
+    },
+    "%lld items scanned (%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld items scanned (%2$@)"
+          }
+        }
+      }
+    },
+    "%lld items selected (%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld items selected (%2$@)"
+          }
+        }
+      }
+    },
+    "%lld/%lld items" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld/%2$lld items"
+          }
+        }
+      }
+    },
+    "%lld%%" : {
+
+    },
+    "> 1 GB" : {
+
+    },
+    "> 50 MB" : {
+
+    },
+    "> 100 MB" : {
+
+    },
+    "> 500 MB" : {
+
+    },
+    "About" : {
+
+    },
+    "Alerts & System Banners" : {
+
+    },
+    "App Uninstaller" : {
+
+    },
+    "Application Bundle" : {
+
+    },
+    "Auto Select" : {
+
+    },
+    "Automatically check for updates" : {
+
+    },
+    "Capacity" : {
+
+    },
+    "Clean Xcode DerivedData, Node caches, Gradle builds, Homebrew & Docker data" : {
+
+    },
+    "Cleanable Junk" : {
+
+    },
+    "Cleaned" : {
+
+    },
+    "Cleanup Complete!" : {
+
+    },
+    "Clear web browser caches, cookies, and tracking artifacts" : {
+
+    },
+    "Completely remove applications along with their hidden leftovers & caches" : {
+
+    },
+    "Completely Uninstall" : {
+
+    },
+    "Dashboard" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dashboard"
+          }
+        }
+      }
+    },
+    "Developer Cleaner" : {
+
+    },
+    "Distribution" : {
+
+    },
+    "Duplicates Finder" : {
+
+    },
+    "Enable cleanup completion notifications" : {
+
+    },
+    "Failed" : {
+
+    },
+    "Find and remove identical file copies across folders" : {
+
+    },
+    "Find files consuming substantial disk space" : {
+
+    },
+    "Full Disk Access is required for MacSweep to scan and clean system-wide caches and logs." : {
+
+    },
+    "Full Disk Access Required" : {
+
+    },
+    "General" : {
+
+    },
+    "High-performance macOS system cleaner & optimization suite." : {
+
+    },
+    "Installed Files & Leftovers" : {
+
+    },
+    "Keep Newest (Select Older)" : {
+
+    },
+    "Keep Oldest (Select Newer)" : {
+
+    },
+    "Large File Minimum Size: %lld MB" : {
+
+    },
+    "Large Files Finder" : {
+
+    },
+    "Launch MacSweep at login" : {
+
+    },
+    "MacSweep" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MacSweep"
+          }
+        }
+      }
+    },
+    "MacSweep Overview" : {
+
+    },
+    "Manage background LaunchAgents that run when logging into macOS" : {
+
+    },
+    "Notifications" : {
+
+    },
+    "Open Privacy & Security Settings" : {
+
+    },
+    "Optimize system performance, clean junk files, analyze disk usage, and manage developer caches." : {
+
+    },
+    "Original" : {
+
+    },
+    "Permissions & Disk Access" : {
+
+    },
+    "Privacy" : {
+
+    },
+    "Privacy Cleaner" : {
+
+    },
+    "Quick Tools" : {
+
+    },
+    "Real-time system health, storage allocation, and maintenance tools" : {
+
+    },
+    "Scan Results" : {
+
+    },
+    "Scanning" : {
+
+    },
+    "Scanning Mac..." : {
+
+    },
+    "Search apps..." : {
+
+    },
+    "Setup Complete!" : {
+
+    },
+    "Smart Scan" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smart Scan"
+          }
+        }
+      }
+    },
+    "Startup & Updates" : {
+
+    },
+    "Startup Items" : {
+
+    },
+    "Storage Analyzer" : {
+
+    },
+    "Successfully reclaimed %@" : {
+
+    },
+    "System caches & temporary items" : {
+
+    },
+    "System is optimized" : {
+
+    },
+    "System Optimal" : {
+
+    },
+    "System Storage" : {
+
+    },
+    "Threshold" : {
+
+    },
+    "Thresholds" : {
+
+    },
+    "To clean system caches, user logs, and developer artifacts, MacSweep needs Full Disk Access permission." : {
+
+    },
+    "Total %@" : {
+
+    },
+    "Total Size: %@" : {
+
+    },
+    "Version 1.0.0 (Build 1)" : {
+
+    },
+    "Visual disk space breakdown" : {
+
+    },
+    "Wasted %@" : {
+
+    },
+    "Welcome to MacSweep" : {
+
+    },
+    "You are ready to optimize and clean your Mac." : {
+
+    }
+  },
+  "version" : "1.0"
+}
