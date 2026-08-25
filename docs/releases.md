@@ -1,7 +1,7 @@
 # MacSweep Direct Release & Code Signing Specification
 
 **Organization:** OpenCorex  
-**Project:** MacSweep (`OpenCorex/macsweep`)  
+**Project:** MacSweep (`opencorex-org/macsweep`)  
 **Distribution Channel:** Direct Download Only (Developer ID Signed & Apple Notarized)  
 **Target Platform:** macOS 14.0+  
 

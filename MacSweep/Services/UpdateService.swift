@@ -7,7 +7,7 @@ public actor UpdateService {
 
     /// Checks for a newer release on GitHub.
     public func checkForUpdate() async -> UpdateInfo? {
-        guard let url = URL(string: "https://api.github.com/repos/OpenCorex/macsweep/releases/latest") else { return nil }
+        guard let url = URL(string: "https://api.github.com/repos/opencorex-org/macsweep/releases/latest") else { return nil }
 
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
