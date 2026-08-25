@@ -1,4 +1,5 @@
 import Foundation
+import AppKit
 import OSLog
 
 /// High-level file system operations wrapper used across MacSweep.
