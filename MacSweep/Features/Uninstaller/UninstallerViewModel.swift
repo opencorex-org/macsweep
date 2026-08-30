@@ -48,7 +48,9 @@ public final class UninstallerViewModel: ObservableObject {
         let startedAt = Date()
 
         let result = await service.uninstall(app) { [weak self] progress in
-            self?.uninstallProgress = progress
+            Task { @MainActor in
+                self?.uninstallProgress = progress
+            }
         }
 
         let elapsed = Date().timeIntervalSince(startedAt)
