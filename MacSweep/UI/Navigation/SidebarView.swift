@@ -49,8 +49,18 @@ public struct SidebarView: View {
                             .foregroundColor(.msSecondaryLabel)
                     }
 
-                    ProgressView(value: diskSpace.usedPercentage, total: 1.0)
-                        .tint(diskSpace.usedPercentage > 0.9 ? .msHighRisk : (diskSpace.usedPercentage > 0.75 ? .msCaution : .msAccent))
+                    GeometryReader { geometry in
+                        ZStack(alignment: .leading) {
+                            Capsule()
+                                .fill(Color.primary.opacity(0.08))
+                            Capsule()
+                                .fill(diskSpace.usedPercentage > 0.9 ? Color.msHighRisk : (diskSpace.usedPercentage > 0.75 ? Color.msCaution : Color.msAccent))
+                                .frame(
+                                    width: geometry.size.width * CGFloat(min(max(diskSpace.usedPercentage, 0), 1))
+                                )
+                        }
+                    }
+                    .frame(height: 6)
 
                     HStack {
                         Text("\(diskSpace.formattedUsed) used")

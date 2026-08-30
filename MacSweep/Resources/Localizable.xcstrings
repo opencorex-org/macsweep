@@ -81,6 +81,9 @@
     "%lld items ready for cleanup" : {
 
     },
+    "%lld MB" : {
+
+    },
     "%lld of %lld items processed" : {
       "localizations" : {
         "en" : {
@@ -159,16 +162,29 @@
     "> 500 MB" : {
 
     },
-    "About" : {
+    "1 GB" : {
 
     },
-    "Alerts & System Banners" : {
+    "A focused macOS utility for understanding storage, removing clutter, and keeping developer workspaces tidy." : {
+
+    },
+    "A restart is required after changing languages" : {
+
+    },
+    "Access Granted" : {
+
+    },
+    "Access Not Granted" : {
+
+    },
+    "Adjust minimum size" : {
 
     },
     "Analyzing categories" : {
 
     },
     "App Language" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -316,6 +332,9 @@
     "Application Bundle" : {
 
     },
+    "Application language" : {
+
+    },
     "Apply & Quit" : {
       "localizations" : {
         "ar" : {
@@ -461,13 +480,13 @@
     "Auto Select" : {
 
     },
-    "Automatically check for updates" : {
-
-    },
     "Cancel" : {
 
     },
     "Capacity" : {
+
+    },
+    "Check Again" : {
 
     },
     "Choose what MacSweep may clean. No cache is removed until you approve." : {
@@ -480,6 +499,9 @@
 
     },
     "Cleanable Junk" : {
+
+    },
+    "Cleanup tasks will finish silently while the app is in the background." : {
 
     },
     "Clear web browser caches, cookies, and tracking artifacts" : {
@@ -520,7 +542,7 @@
     "Duplicates Finder" : {
 
     },
-    "Enable cleanup completion notifications" : {
+    "Files are being moved to Trash and remain recoverable." : {
 
     },
     "Files are being moved to Trash and remain recoverable." : {
@@ -535,19 +557,16 @@
     "Find, inspect, and safely manage files consuming substantial disk space" : {
 
     },
-    "Full Disk Access is required for MacSweep to scan and clean system-wide caches and logs." : {
-
-    },
     "Full Disk Access Recommended" : {
 
     },
     "Full Disk Access Required" : {
 
     },
-    "General" : {
+    "Full Disk Access Required for Complete Uninstall" : {
 
     },
-    "High-performance macOS system cleaner & optimization suite." : {
+    "Grant access before uninstalling protected application containers and support files." : {
 
     },
     "Installed Files & Leftovers" : {
@@ -701,13 +720,10 @@
         }
       }
     },
-    "Large File Minimum Size: %lld MB" : {
-
-    },
     "Large Files Finder" : {
 
     },
-    "Launch MacSweep at login" : {
+    "Loading" : {
 
     },
     "Mac Storage Optimized!" : {
@@ -723,6 +739,9 @@
           }
         }
       }
+    },
+    "MacSweep can inspect protected folders for complete results." : {
+
     },
     "MacSweep needs to restart to apply the new language. Your work will not be lost." : {
       "localizations" : {
@@ -869,16 +888,25 @@
     "MacSweep Overview" : {
 
     },
+    "MacSweep will notify you when cleanup tasks finish." : {
+
+    },
+    "Make MacSweep work your way" : {
+
+    },
     "Manage background LaunchAgents that run when logging into macOS" : {
 
     },
-    "Notifications" : {
+    "Minimum file size" : {
+
+    },
+    "Notifications are enabled" : {
+
+    },
+    "Notifications are paused" : {
 
     },
     "Open" : {
-
-    },
-    "Open Privacy & Security Settings" : {
 
     },
     "Open Privacy Settings" : {
@@ -890,10 +918,7 @@
     "Original" : {
 
     },
-    "Permissions & Disk Access" : {
-
-    },
-    "Privacy" : {
+    "Preferences save automatically" : {
 
     },
     "Privacy Cleaner" : {
@@ -906,6 +931,7 @@
 
     },
     "Restart MacSweep after changing the language." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -1201,9 +1227,6 @@
     "Scan Again" : {
 
     },
-    "Scanning" : {
-
-    },
     "Scanning Mac..." : {
 
     },
@@ -1216,10 +1239,16 @@
     "Select All" : {
 
     },
+    "Settings" : {
+
+    },
     "Setup Complete!" : {
 
     },
     "Show in Finder" : {
+
+    },
+    "Smaller files are excluded from Large Files scans" : {
 
     },
     "Smart Scan" : {
@@ -1233,7 +1262,7 @@
         }
       }
     },
-    "Startup & Updates" : {
+    "Some caches, app containers, logs, and files will be inaccessible." : {
 
     },
     "Startup Items" : {
@@ -1260,10 +1289,10 @@
     "The application bundle could not be moved to Trash." : {
 
     },
-    "Threshold" : {
+    "This setting becomes the default threshold for future Large Files scans." : {
 
     },
-    "Thresholds" : {
+    "Threshold" : {
 
     },
     "To clean system caches, user logs, and developer artifacts, MacSweep needs Full Disk Access permission." : {
@@ -1293,9 +1322,6 @@
           }
         }
       }
-    },
-    "Version 1.0.0 (Build 1)" : {
-
     },
     "Visual disk space breakdown" : {
 

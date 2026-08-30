@@ -4,7 +4,7 @@ public struct ScanProgressView: View {
     public let progress: ScanProgress?
 
     private var fractionCompleted: Double {
-        progress?.fractionCompleted ?? 0
+        min(max(progress?.fractionCompleted ?? 0, 0), 1)
     }
 
     public init(progress: ScanProgress?) {
@@ -75,9 +75,16 @@ public struct ScanProgressView: View {
                     }
 
                     VStack(spacing: 7) {
-                        ProgressView(value: fractionCompleted, total: 1)
-                            .progressViewStyle(.linear)
-                            .tint(.accentColor)
+                        GeometryReader { geometry in
+                            ZStack(alignment: .leading) {
+                                Capsule()
+                                    .fill(Color.primary.opacity(0.08))
+                                Capsule()
+                                    .fill(Color.accentColor)
+                                    .frame(width: geometry.size.width * CGFloat(fractionCompleted))
+                            }
+                        }
+                        .frame(height: 8)
 
                         HStack {
                             Text("Analyzing categories")

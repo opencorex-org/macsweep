@@ -91,7 +91,7 @@ public final class ApplicationService: Sendable {
     /// Moves an application and its exact bundle-identifier leftovers to Trash.
     public func uninstall(
         _ app: ApplicationInfo,
-        progressHandler: @escaping @Sendable (ApplicationUninstallProgress) -> Void = { _ in }
+        progressHandler: @escaping @MainActor @Sendable (ApplicationUninstallProgress) -> Void = { _ in }
     ) async -> ApplicationUninstallResult {
         let startedAt = Date()
         let targets = [(url: app.bundleURL, name: app.name, size: app.bundleSize, isBundle: true)]
@@ -102,7 +102,7 @@ public final class ApplicationService: Sendable {
         var appBundleMoved = false
         var failures: [ApplicationUninstallFailure] = []
 
-        progressHandler(ApplicationUninstallProgress(
+        await progressHandler(ApplicationUninstallProgress(
             applicationName: app.name,
             currentItemName: "Preparing uninstall…",
             completedItemsCount: 0,
@@ -113,7 +113,7 @@ public final class ApplicationService: Sendable {
         for (index, target) in targets.enumerated() {
             if Task.isCancelled { break }
 
-            progressHandler(ApplicationUninstallProgress(
+            await progressHandler(ApplicationUninstallProgress(
                 applicationName: app.name,
                 currentItemName: target.name,
                 completedItemsCount: index,
@@ -125,7 +125,7 @@ public final class ApplicationService: Sendable {
                 guard fileManager.fileExists(atPath: target.url.path) else {
                     throw MacSweepError.fileNotFound(path: target.url.path)
                 }
-                _ = try TrashService.moveToTrash(target.url)
+                _ = try await TrashService.recycleUsingWorkspace(target.url)
                 movedCount += 1
                 movedBytes += target.size
                 if target.isBundle { appBundleMoved = true }
@@ -136,7 +136,7 @@ public final class ApplicationService: Sendable {
                 ))
             }
 
-            progressHandler(ApplicationUninstallProgress(
+            await progressHandler(ApplicationUninstallProgress(
                 applicationName: app.name,
                 currentItemName: target.name,
                 completedItemsCount: index + 1,

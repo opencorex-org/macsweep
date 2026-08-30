@@ -9,7 +9,11 @@ public final class LargeFilesViewModel: ObservableObject {
     @Published public private(set) var progress: LargeFileScanProgress?
     @Published public private(set) var scanResult: LargeFileScanResult?
     @Published public var files: [LargeFile] = []
-    @Published public var thresholdInMB: Int64 = 100
+    @Published public var thresholdInMB: Int64 {
+        didSet {
+            UserDefaults.standard.set(Int(thresholdInMB), forKey: "largeFileThresholdMB")
+        }
+    }
     @Published public private(set) var lastActionMessage: String?
     @Published public private(set) var managementFailures: [String] = []
 
@@ -29,6 +33,8 @@ public final class LargeFilesViewModel: ObservableObject {
 
     public init(service: LargeFileService = LargeFileService()) {
         self.service = service
+        let storedThreshold = UserDefaults.standard.object(forKey: "largeFileThresholdMB") as? NSNumber
+        self.thresholdInMB = storedThreshold?.int64Value ?? 100
     }
 
     public func scanLargeFiles() async {

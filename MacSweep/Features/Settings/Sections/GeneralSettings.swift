@@ -16,38 +16,73 @@ public struct GeneralSettings: View {
     ]
 
     public var body: some View {
-        Form {
-            Section(header: Text("Startup & Updates")) {
-                Toggle("Launch MacSweep at login", isOn: $viewModel.launchAtLogin)
-                Toggle("Automatically check for updates", isOn: $viewModel.autoCheckUpdates)
+        VStack(spacing: 16) {
+            SettingsCard(
+                title: "Startup & Updates",
+                subtitle: "Control how MacSweep starts and stays current",
+                icon: "arrow.triangle.2.circlepath",
+                tint: .blue
+            ) {
+                VStack(spacing: 14) {
+                    SettingsToggleRow(
+                        title: "Launch at login",
+                        detail: "Open MacSweep automatically when you sign in",
+                        icon: "power",
+                        isOn: $viewModel.launchAtLogin
+                    )
+
+                    Divider().padding(.leading, 33)
+
+                    SettingsToggleRow(
+                        title: "Automatic update checks",
+                        detail: "Check for new MacSweep versions in the background",
+                        icon: "arrow.down.circle",
+                        isOn: $viewModel.autoCheckUpdates
+                    )
+                }
             }
 
-            Section(header: Text("App Language")) {
-                Picker("Language", selection: Binding(
-                    get: { viewModel.selectedLanguage },
-                    set: { newLang in
-                        if newLang != viewModel.selectedLanguage {
-                            pendingLanguage = newLang
-                            showRestartAlert = true
-                        }
+            SettingsCard(
+                title: "Language",
+                subtitle: "Choose the language used throughout the app",
+                icon: "globe",
+                tint: .purple
+            ) {
+                HStack(spacing: 14) {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("Application language")
+                            .font(.system(size: 12, weight: .medium))
+                        Text("A restart is required after changing languages")
+                            .font(.system(size: 10))
+                            .foregroundColor(.msSecondaryLabel)
                     }
-                )) {
-                    ForEach(languageGroups, id: \.0) { groupName, languages in
-                        Section(header: Text(groupName)) {
-                            ForEach(languages) { lang in
-                                Text(lang.nativeName).tag(lang)
+
+                    Spacer()
+
+                    Picker("Language", selection: Binding(
+                        get: { viewModel.selectedLanguage },
+                        set: { newLang in
+                            if newLang != viewModel.selectedLanguage {
+                                pendingLanguage = newLang
+                                showRestartAlert = true
+                            }
+                        }
+                    )) {
+                        ForEach(languageGroups, id: \.0) { groupName, languages in
+                            Section(header: Text(groupName)) {
+                                ForEach(languages) { lang in
+                                    Text(lang.nativeName).tag(lang)
+                                }
                             }
                         }
                     }
+                    .labelsHidden()
+                    .pickerStyle(.menu)
+                    .frame(width: 180)
                 }
-                .pickerStyle(.menu)
-
-                Text("Restart MacSweep after changing the language.")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
             }
         }
-        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .top)
         .alert("Restart Required", isPresented: $showRestartAlert) {
             Button("Apply & Quit") {
                 if let lang = pendingLanguage {

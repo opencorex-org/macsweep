@@ -1,9 +1,8 @@
-# MacSweep
-
 <p align="center">
   <img src="MacSweep/Assets.xcassets/AppIcon.appiconset/logo.png" width="128" height="128" alt="MacSweep Logo">
 </p>
 
+<h1 align="center">MacSweep</h1>
 <p align="center">
   <b>An open-source, transparent, and privacy-first macOS system cleaner, storage analyzer, and developer-cache manager.</b>
 </p>

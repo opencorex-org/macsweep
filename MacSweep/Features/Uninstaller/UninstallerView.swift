@@ -2,10 +2,13 @@ import SwiftUI
 
 public struct UninstallerView: View {
     @EnvironmentObject private var environment: AppEnvironment
+    @ObservedObject private var permissionManager: PermissionManager
     @StateObject private var viewModel: UninstallerViewModel
     @State private var showConfirmDialog = false
+    @State private var showPermissionDialog = false
 
     public init(environment: AppEnvironment) {
+        _permissionManager = ObservedObject(wrappedValue: environment.permissionManager)
         _viewModel = StateObject(wrappedValue: UninstallerViewModel(service: environment.applicationService))
     }
 
@@ -33,6 +36,11 @@ public struct UninstallerView: View {
             .background(Color.msSecondaryBackground)
 
             Divider()
+
+            if !permissionManager.hasFullDiskAccess {
+                permissionBanner
+                Divider()
+            }
 
             if viewModel.isUninstalling, let app = viewModel.uninstallingApp {
                 ApplicationUninstallProgressView(app: app, progress: viewModel.uninstallProgress)
@@ -83,7 +91,11 @@ public struct UninstallerView: View {
                     // Right Detail
                     if let selectedApp = viewModel.selectedApp {
                         ApplicationDetailView(app: selectedApp) {
-                            showConfirmDialog = true
+                            if permissionManager.hasFullDiskAccess {
+                                showConfirmDialog = true
+                            } else {
+                                showPermissionDialog = true
+                            }
                         }
                     } else {
                         EmptyStateView(
@@ -117,6 +129,48 @@ public struct UninstallerView: View {
                 )
             }
         }
+        .sheet(isPresented: $showPermissionDialog) {
+            ConfirmationDialog(
+                title: "Full Disk Access Required",
+                message: "MacSweep needs Full Disk Access before uninstalling so it can move the application and its protected containers together without leaving a partial uninstall.",
+                confirmTitle: "Open Privacy Settings",
+                cancelTitle: "Not Now",
+                isDestructive: false,
+                onConfirm: {
+                    showPermissionDialog = false
+                    permissionManager.requestFullDiskAccess()
+                },
+                onCancel: {
+                    showPermissionDialog = false
+                }
+            )
+        }
+    }
+
+    private var permissionBanner: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "lock.trianglebadge.exclamationmark")
+                .foregroundColor(.orange)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Full Disk Access Required for Complete Uninstall")
+                    .font(.system(size: 12, weight: .semibold))
+                Text("Grant access before uninstalling protected application containers and support files.")
+                    .font(.system(size: 11))
+                    .foregroundColor(.msSecondaryLabel)
+            }
+
+            Spacer()
+
+            Button("Open Privacy Settings") {
+                permissionManager.requestFullDiskAccess()
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.small)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .background(Color.orange.opacity(0.08))
     }
 }
 
@@ -255,3 +309,4 @@ private struct ApplicationUninstallResultView: View {
         .cornerRadius(9)
     }
 }
+
