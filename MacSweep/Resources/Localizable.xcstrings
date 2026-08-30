@@ -29,6 +29,9 @@
     "%@ Used" : {
 
     },
+    "%@ was moved to Trash." : {
+
+    },
     "%@: %@" : {
       "localizations" : {
         "en" : {
@@ -78,6 +81,16 @@
     "%lld items ready for cleanup" : {
 
     },
+    "%lld of %lld items processed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld of %2$lld items processed"
+          }
+        }
+      }
+    },
     "%lld of %lld selected • %@" : {
       "localizations" : {
         "en" : {
@@ -111,8 +124,28 @@
     "%lld%%" : {
 
     },
+    "%lld%% • %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld%% • %2$@"
+          }
+        }
+      }
+    },
     "%lld%% of folders completed" : {
 
+    },
+    "• %@: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "• %1$@: %2$@"
+          }
+        }
+      }
     },
     "> 1 GB" : {
 
@@ -458,6 +491,9 @@
     "Completely Uninstall" : {
 
     },
+    "Could Not Move" : {
+
+    },
     "Dashboard" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -478,10 +514,16 @@
     "Distribution" : {
 
     },
+    "Done" : {
+
+    },
     "Duplicates Finder" : {
 
     },
     "Enable cleanup completion notifications" : {
+
+    },
+    "Files are being moved to Trash and remain recoverable." : {
 
     },
     "Files safely processed. System integrity & SIP fully preserved." : {
@@ -1215,6 +1257,9 @@
     "System Storage" : {
 
     },
+    "The application bundle could not be moved to Trash." : {
+
+    },
     "Threshold" : {
 
     },
@@ -1229,6 +1274,25 @@
     },
     "Total Size: %@" : {
 
+    },
+    "Uninstall Complete" : {
+
+    },
+    "Uninstall Completed with Issues" : {
+
+    },
+    "Uninstalling %@…" : {
+
+    },
+    "Version %@ • %lld associated item%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Version %1$@ • %2$lld associated item%3$@"
+          }
+        }
+      }
     },
     "Version 1.0.0 (Build 1)" : {
 

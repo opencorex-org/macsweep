@@ -1,4 +1,23 @@
 import SwiftUI
+import AppKit
+
+public struct ApplicationIconView: View {
+    public let bundleURL: URL
+    public let size: CGFloat
+
+    public init(bundleURL: URL, size: CGFloat) {
+        self.bundleURL = bundleURL
+        self.size = size
+    }
+
+    public var body: some View {
+        Image(nsImage: NSWorkspace.shared.icon(forFile: bundleURL.path))
+            .resizable()
+            .scaledToFit()
+            .frame(width: size, height: size)
+            .accessibilityHidden(true)
+    }
+}
 
 public struct ApplicationRow: View {
     public let app: ApplicationInfo
@@ -7,22 +26,14 @@ public struct ApplicationRow: View {
 
     public var body: some View {
         HStack(spacing: 12) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(Color.primary.opacity(0.06))
-                    .frame(width: 36, height: 36)
-
-                Image(systemName: "app.fill")
-                    .font(.system(size: 18))
-                    .foregroundColor(.msAccent)
-            }
+            ApplicationIconView(bundleURL: app.bundleURL, size: 38)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(app.name)
                     .font(.system(size: 13, weight: isSelected ? .bold : .semibold))
                     .foregroundColor(.msLabel)
 
-                Text(app.version.isEmpty ? app.bundleIdentifier : "v\(app.version)")
+                Text(app.version.isEmpty ? app.bundleIdentifier : "v\(app.version) • \(app.leftovers.count) leftover\(app.leftovers.count == 1 ? "" : "s")")
                     .font(.system(size: 11))
                     .foregroundColor(.msSecondaryLabel)
                     .lineLimit(1)
