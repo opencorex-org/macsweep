@@ -8,15 +8,7 @@ public struct ApplicationDetailView: View {
         VStack(alignment: .leading, spacing: 16) {
             // Header
             HStack(spacing: 16) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .fill(Color.msAccent.opacity(0.12))
-                        .frame(width: 56, height: 56)
-
-                    Image(systemName: "app.fill")
-                        .font(.system(size: 28))
-                        .foregroundColor(.msAccent)
-                }
+                ApplicationIconView(bundleURL: app.bundleURL, size: 60)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(app.name)
@@ -30,6 +22,10 @@ public struct ApplicationDetailView: View {
                     Text("Total Size: \(app.formattedTotalSize)")
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(.msAccent)
+
+                    Text("Version \(app.version.isEmpty ? "Unknown" : app.version) • \(app.leftovers.count) associated item\(app.leftovers.count == 1 ? "" : "s")")
+                        .font(.system(size: 11))
+                        .foregroundColor(.msSecondaryLabel)
                 }
 
                 Spacer()
@@ -44,40 +40,49 @@ public struct ApplicationDetailView: View {
                     .font(.system(size: 13, weight: .bold))
                     .foregroundColor(.msLabel)
 
-                VStack(spacing: 6) {
-                    HStack {
-                        Image(systemName: "square.stack.3d.up.fill")
-                            .foregroundColor(.blue)
-                        Text("Application Bundle")
-                            .font(.system(size: 12, weight: .medium))
-                        Spacer()
-                        Text(ByteFormatter.format(app.bundleSize))
-                            .font(.system(size: 12, weight: .semibold))
-                    }
-                    .padding(8)
-                    .background(Color.primary.opacity(0.04))
-                    .cornerRadius(6)
-
-                    ForEach(app.leftovers) { leftover in
+                ScrollView {
+                    VStack(spacing: 6) {
                         HStack {
-                            Image(systemName: "doc.fill")
-                                .foregroundColor(.gray)
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(leftover.name)
-                                    .font(.system(size: 12, weight: .medium))
-                                Text(leftover.type.rawValue)
-                                    .font(.system(size: 10))
-                                    .foregroundColor(.msSecondaryLabel)
-                            }
+                            Image(systemName: "square.stack.3d.up.fill")
+                                .foregroundColor(.blue)
+                            Text("Application Bundle")
+                                .font(.system(size: 12, weight: .medium))
                             Spacer()
-                            Text(ByteFormatter.format(leftover.size))
+                            Text(ByteFormatter.format(app.bundleSize))
                                 .font(.system(size: 12, weight: .semibold))
                         }
                         .padding(8)
                         .background(Color.primary.opacity(0.04))
                         .cornerRadius(6)
+
+                        ForEach(app.leftovers) { leftover in
+                            HStack {
+                                Image(systemName: "doc.fill")
+                                    .foregroundColor(.gray)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(leftover.name)
+                                        .font(.system(size: 12, weight: .medium))
+                                    Text(leftover.type.rawValue)
+                                        .font(.system(size: 10))
+                                        .foregroundColor(.msSecondaryLabel)
+
+                                    Text(leftover.url.path)
+                                        .font(.system(size: 9, design: .monospaced))
+                                        .foregroundColor(.msSecondaryLabel.opacity(0.8))
+                                        .lineLimit(1)
+                                        .truncationMode(.middle)
+                                }
+                                Spacer()
+                                Text(ByteFormatter.format(leftover.size))
+                                    .font(.system(size: 12, weight: .semibold))
+                            }
+                            .padding(8)
+                            .background(Color.primary.opacity(0.04))
+                            .cornerRadius(6)
+                        }
                     }
                 }
+                .frame(maxHeight: 320)
             }
 
             Spacer()
