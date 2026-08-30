@@ -89,8 +89,7 @@ public struct StorageCard: View {
                     }
                 }
             } else {
-                ProgressView()
-                    .controlSize(.small)
+                ActivityIndicatorView(size: 18)
                     .frame(maxWidth: .infinity, alignment: .center)
             }
         }
