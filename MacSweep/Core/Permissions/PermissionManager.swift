@@ -24,8 +24,11 @@ public final class PermissionManager: ObservableObject {
 
     /// Refreshes all permission states.
     public func refreshPermissions() {
-        hasFullDiskAccess = FullDiskAccessManager.shared.hasFullDiskAccess
-        Logger.permissions.info("Permissions refreshed — FDA: \(self.hasFullDiskAccess)")
+        let refreshedValue = FullDiskAccessManager.shared.hasFullDiskAccess
+        if hasFullDiskAccess != refreshedValue {
+            hasFullDiskAccess = refreshedValue
+        }
+        Logger.permissions.info("Permissions refreshed — FDA: \(refreshedValue)")
     }
 
     /// Opens System Settings to the Full Disk Access pane.
@@ -40,7 +43,11 @@ public final class PermissionManager: ObservableObject {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            self?.refreshPermissions()
+            // App activation can arrive while SwiftUI is reconciling a view tree.
+            // Defer publication to the next main-run-loop turn.
+            DispatchQueue.main.async {
+                self?.refreshPermissions()
+            }
         }
     }
 }
