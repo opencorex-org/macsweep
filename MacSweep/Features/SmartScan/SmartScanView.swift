@@ -17,12 +17,22 @@ public struct SmartScanView: View {
                 ScanSummaryView(result: cleanResult) {
                     Task { await viewModel.startScan() }
                 }
-            } else if viewModel.items.isEmpty {
+            } else if viewModel.scanResult == nil {
                 EmptyStateView(
                     title: "Smart Scan",
                     subtitle: "Scan your Mac to identify safe-to-remove cache files, system logs, user trash, and outdated developer artifacts.",
                     iconName: "sparkles",
                     buttonTitle: "Start Smart Scan",
+                    buttonAction: {
+                        Task { await viewModel.startScan() }
+                    }
+                )
+            } else if viewModel.items.isEmpty {
+                EmptyStateView(
+                    title: "Scan Complete — Your Mac Is Clean",
+                    subtitle: "No cleanup items were found. Nothing will be removed without your review and approval.",
+                    iconName: "checkmark.shield.fill",
+                    buttonTitle: "Scan Again",
                     buttonAction: {
                         Task { await viewModel.startScan() }
                     }
@@ -35,7 +45,7 @@ public struct SmartScanView: View {
                         HStack {
                             VStack(alignment: .leading, spacing: 3) {
                                 HStack(spacing: 8) {
-                                    Text("Scan Completed")
+                                    Text("Review Scan Results")
                                         .font(.system(size: 18, weight: .bold))
                                         .foregroundColor(.msLabel)
 
@@ -48,7 +58,7 @@ public struct SmartScanView: View {
                                         .cornerRadius(6)
                                 }
 
-                                Text("\(viewModel.selectedCount) of \(viewModel.items.count) items selected (\(ByteFormatter.format(viewModel.selectedBytes)))")
+                                Text("Choose what MacSweep may clean. No files are removed until you approve.")
                                     .font(.system(size: 12))
                                     .foregroundColor(.msSecondaryLabel)
                             }
@@ -67,14 +77,14 @@ public struct SmartScanView: View {
 
                         // Quick Filter Controls
                         HStack(spacing: 12) {
-                            Button("Select All") {
-                                viewModel.selectAll()
+                            Button("Safe Items Only") {
+                                viewModel.selectSafeOnly()
                             }
                             .buttonStyle(.borderless)
                             .font(.system(size: 11, weight: .medium))
 
-                            Button("Safe Items Only") {
-                                viewModel.selectSafeOnly()
+                            Button("Select All") {
+                                viewModel.selectAll()
                             }
                             .buttonStyle(.borderless)
                             .font(.system(size: 11, weight: .medium))
@@ -86,6 +96,10 @@ public struct SmartScanView: View {
                             .font(.system(size: 11, weight: .medium))
 
                             Spacer()
+
+                            Text("\(viewModel.selectedCount) of \(viewModel.items.count) selected • \(ByteFormatter.format(viewModel.selectedBytes))")
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundColor(.msSecondaryLabel)
                         }
                     }
                     .padding(16)

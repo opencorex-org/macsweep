@@ -5,7 +5,10 @@ import Combine
 public final class DeveloperCleanerViewModel: ObservableObject {
     @Published public private(set) var isScanning: Bool = false
     @Published public private(set) var isCleaning: Bool = false
+    @Published public private(set) var currentProgress: ScanProgress?
+    @Published public private(set) var scanResult: ScanResult?
     @Published public var items: [CleanupItem] = []
+    @Published public private(set) var lastCleanResult: CleanResult?
 
     private let environment: AppEnvironment
 
@@ -28,9 +31,44 @@ public final class DeveloperCleanerViewModel: ObservableObject {
     public func scanDeveloperCaches() async {
         guard !isScanning else { return }
         isScanning = true
-        let result = await environment.scanEngine.performDeveloperScan()
+        currentProgress = ScanProgress(totalCategoriesCount: 5)
+        scanResult = nil
+        items = []
+        lastCleanResult = nil
+
+        let startTime = Date()
+        let result = await environment.scanEngine.performDeveloperScan { [weak self] progress in
+            Task { @MainActor in
+                self?.currentProgress = progress
+            }
+        }
+
+        let elapsed = Date().timeIntervalSince(startTime)
+        if elapsed < 2.5 {
+            try? await Task.sleep(nanoseconds: UInt64((2.5 - elapsed) * 1_000_000_000))
+        }
+
+        self.scanResult = result
         self.items = result.items
         self.isScanning = false
+    }
+
+    public func selectAll() {
+        for index in items.indices {
+            items[index].isSelected = true
+        }
+    }
+
+    public func selectSafeOnly() {
+        for index in items.indices {
+            items[index].isSelected = items[index].risk == .safe
+        }
+    }
+
+    public func deselectAll() {
+        for index in items.indices {
+            items[index].isSelected = false
+        }
     }
 
     public func toggleItemSelection(_ item: CleanupItem) {
@@ -40,10 +78,12 @@ public final class DeveloperCleanerViewModel: ObservableObject {
     }
 
     public func cleanSelectedCaches() async {
-        guard !isCleaning else { return }
+        guard !isCleaning, selectedCount > 0 else { return }
         isCleaning = true
         let selected = items.filter(\.isSelected)
         let result = await environment.cleanEngine.clean(items: selected)
+
+        lastCleanResult = result
 
         items.removeAll { item in
             item.isSelected && !result.failures.contains(where: { $0.url == item.url })
