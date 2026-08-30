@@ -3,6 +3,10 @@ import SwiftUI
 public struct ScanProgressView: View {
     public let progress: ScanProgress?
 
+    private var fractionCompleted: Double {
+        progress?.fractionCompleted ?? 0
+    }
+
     public init(progress: ScanProgress?) {
         self.progress = progress
     }
@@ -69,6 +73,22 @@ public struct ScanProgressView: View {
                             .cornerRadius(6)
                             .frame(maxWidth: 520)
                     }
+
+                    VStack(spacing: 7) {
+                        ProgressView(value: fractionCompleted, total: 1)
+                            .progressViewStyle(.linear)
+                            .tint(.accentColor)
+
+                        HStack {
+                            Text("Analyzing categories")
+                            Spacer()
+                            Text("\(Int(fractionCompleted * 100))%")
+                                .fontWeight(.semibold)
+                        }
+                        .font(.system(size: 11))
+                        .foregroundColor(.msSecondaryLabel)
+                    }
+                    .frame(maxWidth: 520)
                 }
             }
         }

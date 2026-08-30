@@ -32,7 +32,7 @@ public struct SettingsView: View {
                     Label("About", systemImage: "info.circle")
                 }
         }
-        .frame(width: 520, height: 340)
+        .frame(width: 520, height: 420)
         .padding()
     }
 }

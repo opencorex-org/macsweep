@@ -32,6 +32,7 @@ public final class SmartScanViewModel: ObservableObject {
     public func startScan() async {
         guard !isScanning else { return }
         isScanning = true
+        currentProgress = ScanProgress(totalCategoriesCount: 8)
         scanResult = nil
         items = []
         lastCleanResult = nil
