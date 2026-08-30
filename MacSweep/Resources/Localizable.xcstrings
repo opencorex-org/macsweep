@@ -39,6 +39,19 @@
         }
       }
     },
+    "%lld could not be moved." : {
+
+    },
+    "%lld files inspected • %lld large files found" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld files inspected • %2$lld large files found"
+          }
+        }
+      }
+    },
     "%lld items" : {
 
     },
@@ -96,6 +109,9 @@
       }
     },
     "%lld%%" : {
+
+    },
+    "%lld%% of folders completed" : {
 
     },
     "> 1 GB" : {
@@ -474,10 +490,13 @@
     "Find and remove identical file copies across folders" : {
 
     },
-    "Find files consuming substantial disk space" : {
+    "Find, inspect, and safely manage files consuming substantial disk space" : {
 
     },
     "Full Disk Access is required for MacSweep to scan and clean system-wide caches and logs." : {
+
+    },
+    "Full Disk Access Recommended" : {
 
     },
     "Full Disk Access Required" : {
@@ -814,7 +833,13 @@
     "Notifications" : {
 
     },
+    "Open" : {
+
+    },
     "Open Privacy & Security Settings" : {
+
+    },
+    "Open Privacy Settings" : {
 
     },
     "Optimize system performance, clean junk files, analyze disk usage, and manage developer caches." : {
@@ -1134,9 +1159,6 @@
     "Scan Again" : {
 
     },
-    "Scan Completed" : {
-
-    },
     "Scanning" : {
 
     },
@@ -1146,10 +1168,16 @@
     "Search apps..." : {
 
     },
+    "Searching for Files Above %lld MB" : {
+
+    },
     "Select All" : {
 
     },
     "Setup Complete!" : {
+
+    },
+    "Show in Finder" : {
 
     },
     "Smart Scan" : {
@@ -1212,6 +1240,9 @@
 
     },
     "Welcome to MacSweep" : {
+
+    },
+    "Without access, macOS may skip protected folders and results can be incomplete." : {
 
     },
     "You are ready to optimize and clean your Mac." : {

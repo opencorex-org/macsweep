@@ -30,12 +30,12 @@ public final class FileAccessManager: Sendable {
     /// Returns commonly scannable root directories.
     public var scannableRoots: [URL] {
         [
-            homeDirectory,
             homeDirectory.appendingPathComponent("Downloads"),
             homeDirectory.appendingPathComponent("Documents"),
             homeDirectory.appendingPathComponent("Desktop"),
             homeDirectory.appendingPathComponent("Movies"),
-            homeDirectory.appendingPathComponent("Music")
+            homeDirectory.appendingPathComponent("Music"),
+            homeDirectory.appendingPathComponent("Pictures")
         ]
     }
 }
