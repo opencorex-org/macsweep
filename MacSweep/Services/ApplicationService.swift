@@ -102,7 +102,7 @@ public final class ApplicationService: Sendable {
         var appBundleMoved = false
         var failures: [ApplicationUninstallFailure] = []
 
-        progressHandler(ApplicationUninstallProgress(
+        await progressHandler(ApplicationUninstallProgress(
             applicationName: app.name,
             currentItemName: "Preparing uninstall…",
             completedItemsCount: 0,
@@ -113,7 +113,7 @@ public final class ApplicationService: Sendable {
         for (index, target) in targets.enumerated() {
             if Task.isCancelled { break }
 
-            progressHandler(ApplicationUninstallProgress(
+            await progressHandler(ApplicationUninstallProgress(
                 applicationName: app.name,
                 currentItemName: target.name,
                 completedItemsCount: index,
@@ -136,7 +136,7 @@ public final class ApplicationService: Sendable {
                 ))
             }
 
-            progressHandler(ApplicationUninstallProgress(
+            await progressHandler(ApplicationUninstallProgress(
                 applicationName: app.name,
                 currentItemName: target.name,
                 completedItemsCount: index + 1,
