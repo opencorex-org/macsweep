@@ -5,6 +5,7 @@ public struct PrimaryButton: View {
     public let iconName: String?
     public let isLoading: Bool
     public let action: () -> Void
+    @State private var isSpinnerRotating = false
 
     public init(
         title: String,
@@ -22,8 +23,12 @@ public struct PrimaryButton: View {
         Button(action: action) {
             HStack(spacing: 8) {
                 if isLoading {
-                    ProgressView()
-                        .controlSize(.small)
+                    Image(systemName: "arrow.triangle.2.circlepath")
+                        .font(.system(size: 13, weight: .semibold))
+                        .rotationEffect(.degrees(isSpinnerRotating ? 360 : 0))
+                        .animation(.linear(duration: 0.9).repeatForever(autoreverses: false), value: isSpinnerRotating)
+                        .onAppear { isSpinnerRotating = true }
+                        .onDisappear { isSpinnerRotating = false }
                 } else if let iconName = iconName {
                     Image(systemName: iconName)
                         .font(.system(size: 14, weight: .semibold))

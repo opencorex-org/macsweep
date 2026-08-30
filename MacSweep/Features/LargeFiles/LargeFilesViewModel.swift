@@ -1,12 +1,17 @@
 import SwiftUI
 import Combine
+import AppKit
 
 @MainActor
 public final class LargeFilesViewModel: ObservableObject {
     @Published public private(set) var isScanning: Bool = false
     @Published public private(set) var isCleaning: Bool = false
+    @Published public private(set) var progress: LargeFileScanProgress?
+    @Published public private(set) var scanResult: LargeFileScanResult?
     @Published public var files: [LargeFile] = []
     @Published public var thresholdInMB: Int64 = 100
+    @Published public private(set) var lastActionMessage: String?
+    @Published public private(set) var managementFailures: [String] = []
 
     private let service: LargeFileService
 
@@ -18,6 +23,10 @@ public final class LargeFilesViewModel: ObservableObject {
         files.filter(\.isSelected).count
     }
 
+    public var totalBytes: Int64 {
+        files.reduce(0) { $0 + $1.size }
+    }
+
     public init(service: LargeFileService = LargeFileService()) {
         self.service = service
     }
@@ -25,10 +34,43 @@ public final class LargeFilesViewModel: ObservableObject {
     public func scanLargeFiles() async {
         guard !isScanning else { return }
         isScanning = true
-        let thresholdBytes = thresholdInMB * 1024 * 1024
-        let results = await service.findLargeFiles(threshold: thresholdBytes)
-        self.files = results
+        files = []
+        scanResult = nil
+        lastActionMessage = nil
+        managementFailures = []
+
+        let rootsCount = FileAccessManager.shared.scannableRoots.count
+        progress = LargeFileScanProgress(
+            currentPath: "Preparing scan…",
+            scannedFilesCount: 0,
+            foundFilesCount: 0,
+            foundBytes: 0,
+            completedRootsCount: 0,
+            totalRootsCount: rootsCount
+        )
+
+        // The picker is labelled in decimal MB, so use decimal bytes as well.
+        let thresholdBytes = thresholdInMB * 1_000_000
+        let result = await service.findLargeFiles(threshold: thresholdBytes) { [weak self] progress in
+            Task { @MainActor in
+                self?.progress = progress
+            }
+        }
+        self.scanResult = result
+        self.files = result.files
         self.isScanning = false
+    }
+
+    public func selectAll() {
+        for index in files.indices {
+            files[index].isSelected = true
+        }
+    }
+
+    public func deselectAll() {
+        for index in files.indices {
+            files[index].isSelected = false
+        }
     }
 
     public func toggleFileSelection(_ file: LargeFile) {
@@ -38,20 +80,32 @@ public final class LargeFilesViewModel: ObservableObject {
     }
 
     public func removeSelectedFiles() async {
-        guard !isCleaning else { return }
+        guard !isCleaning, selectedCount > 0 else { return }
         isCleaning = true
 
-        let fileManager = FileManager.default
         var idsToRemove: [UUID] = []
+        var failures: [String] = []
         for file in files where file.isSelected {
             do {
-                try fileManager.removeItem(at: file.url)
+                _ = try TrashService.moveToTrash(file.url)
                 idsToRemove.append(file.id)
             } catch {
-                // Ignore or log error
+                failures.append("\(file.name): \(error.localizedDescription)")
             }
         }
         files.removeAll { idsToRemove.contains($0.id) }
+        managementFailures = failures
+        lastActionMessage = idsToRemove.isEmpty
+            ? "No files were moved to Trash."
+            : "Moved \(idsToRemove.count) file\(idsToRemove.count == 1 ? "" : "s") to Trash."
         isCleaning = false
+    }
+
+    public func revealInFinder(_ file: LargeFile) {
+        NSWorkspace.shared.activateFileViewerSelecting([file.url])
+    }
+
+    public func openFile(_ file: LargeFile) {
+        NSWorkspace.shared.open(file.url)
     }
 }
