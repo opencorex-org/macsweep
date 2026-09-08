@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="MacSweep/Assets.xcassets/AppIcon.appiconset/logo.png" width="128" height="128" alt="MacSweep Logo">
+  <img src="Documentation/logo.png" width="128" height="128" alt="MacSweep Logo">
 </p>
 
 <h1 align="center">MacSweep</h1>

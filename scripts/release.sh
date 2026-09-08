@@ -4,6 +4,11 @@ set -euo pipefail
 : "${RELEASE_VERSION:?RELEASE_VERSION is required, for example 1.0.0}"
 : "${SPARKLE_PRIVATE_KEY:?SPARKLE_PRIVATE_KEY is required}"
 
+if [[ ! "$RELEASE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  echo "RELEASE_VERSION must use MAJOR.MINOR.PATCH format" >&2
+  exit 1
+fi
+
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 RELEASE_DIR="$ROOT_DIR/build/Release"
 APP_PATH="$ROOT_DIR/build/Export/MacSweep.app"

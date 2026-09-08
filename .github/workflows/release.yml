@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v*.*.*'
 
 permissions:
   contents: write
@@ -14,10 +14,12 @@ concurrency:
 
 jobs:
   release:
+    if: github.repository == 'opencorex-org/macsweep'
     runs-on: macos-15
     timeout-minutes: 60
     env:
       RELEASE_VERSION: ${{ github.ref_name }}
+      RELEASE_BUILD_NUMBER: ${{ github.run_number }}
       DEVELOPMENT_TEAM: HT7R9CG7ZN
       GH_TOKEN: ${{ github.token }}
       MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
@@ -84,7 +86,7 @@ jobs:
           export RELEASE_VERSION="${RELEASE_VERSION#v}"
           ./scripts/release.sh
 
-      - name: Publish GitHub Release
+      - name: Upload draft GitHub Release
         shell: bash
         run: |
           set -euo pipefail
@@ -95,8 +97,12 @@ jobs:
             "build/Release/appcast.xml" \
             "build/Release/SHA256SUMS.txt" \
             --verify-tag \
+            --draft \
             --title "MacSweep $RELEASE_VERSION" \
             --notes-file RELEASE_NOTES.md
+
+      - name: Publish GitHub Release
+        run: gh release edit "$RELEASE_VERSION" --draft=false
 
       - name: Remove temporary signing material
         if: always()
