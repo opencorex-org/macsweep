@@ -1,7 +1,7 @@
 import Foundation
 
 /// Live progress update emitted during a cleanup operation.
-public struct CleanProgress: Sendable {
+public nonisolated struct CleanProgress: Sendable {
     public let currentItemName: String
     public let currentItemPath: String
     public let currentCategory: CleanupCategory?

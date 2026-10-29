@@ -11,6 +11,7 @@ done
 
 plutil -lint MacSweep/Info.plist Distribution/ExportOptions/DeveloperIDExportOptions.plist
 git diff --check
+bash scripts/test-scan-performance.sh
 ./scripts/build.sh
 
 xcodebuild \

@@ -1,7 +1,7 @@
 import Foundation
 
 /// Configuration for a scannable category defining target paths and matching rules.
-public struct ScanCategoryConfig: Sendable {
+public nonisolated struct ScanCategoryConfig: Sendable {
     public let category: CleanupCategory
     public let targetPaths: [URL]
     public let recursive: Bool

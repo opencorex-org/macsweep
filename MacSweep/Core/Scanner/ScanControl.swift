@@ -2,8 +2,8 @@ import Foundation
 import os
 
 /// Thread-safe cooperative control shared by every worker in one scan.
-public final class ScanControl: @unchecked Sendable {
-    private enum State {
+public nonisolated final class ScanControl: @unchecked Sendable {
+    private nonisolated enum State {
         case running
         case paused
         case cancelled

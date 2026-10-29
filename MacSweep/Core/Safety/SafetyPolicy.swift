@@ -1,7 +1,7 @@
 import Foundation
 
 /// Defines the safety policy rules applied to candidate cleanup items.
-public struct SafetyPolicy: Sendable {
+public nonisolated struct SafetyPolicy: Sendable {
     /// Minimum file age in days before items are eligible for safe cleanup.
     public let minimumAgeDays: Int
 

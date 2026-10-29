@@ -26,7 +26,7 @@ public final class FullScanViewModel: ObservableObject {
     }
 
     public func startScan() async {
-        guard !isScanning else { return }
+        guard !isScanning, !isCleaning else { return }
         let scanID = UUID()
         let control = ScanControl()
         activeScanID = scanID
@@ -38,22 +38,16 @@ public final class FullScanViewModel: ObservableObject {
         items = []
         lastCleanResult = nil
 
-        let startedAt = Date()
         let task = Task { [environment, weak self] in
             await environment.scanEngine.performFullScan(control: control) { progress in
-                Task { @MainActor in
-                    guard self?.activeScanID == scanID else { return }
+                Task { @MainActor [weak self] in
+                    guard self?.activeScanID == scanID, self?.isPaused == false else { return }
                     self?.currentProgress = progress
                 }
             }
         }
         scanTask = task
         let result = await task.value
-        guard activeScanID == scanID, !control.isCancelled else { return }
-        let elapsed = Date().timeIntervalSince(startedAt)
-        if elapsed < 2.5 {
-            try? await Task.sleep(nanoseconds: UInt64((2.5 - elapsed) * 1_000_000_000))
-        }
         guard activeScanID == scanID, !control.isCancelled else { return }
 
         scanResult = result
@@ -119,7 +113,7 @@ public final class FullScanViewModel: ObservableObject {
     }
 
     public func cleanSelected() async {
-        guard !isCleaning, selectedCount > 0 else { return }
+        guard !isCleaning, !isScanning, selectedCount > 0 else { return }
         isCleaning = true
         let selected = items.filter(\.isSelected)
         let totalSelectedBytes = selected.reduce(0) { $0 + $1.size }
@@ -135,13 +129,15 @@ public final class FullScanViewModel: ObservableObject {
         )
 
         let result = await environment.cleanEngine.clean(items: selected) { [weak self] progress in
-            Task { @MainActor in
+            Task { @MainActor [weak self] in
+                guard self?.isCleaning == true else { return }
                 self?.cleanProgress = progress
             }
         }
         lastCleanResult = result
+        let failedURLs = Set(result.failures.map(\.url))
         items.removeAll { item in
-            item.isSelected && !result.failures.contains(where: { $0.url == item.url })
+            item.isSelected && !failedURLs.contains(item.url)
         }
         cleanProgress = nil
         isCleaning = false

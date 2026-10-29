@@ -1,18 +1,14 @@
 import Foundation
 
 /// Formats raw byte counts into human-readable storage size strings (e.g., "14.2 GB").
-public struct ByteFormatter {
-    private static let formatter: ByteCountFormatter = {
-        let formatter = ByteCountFormatter()
-        formatter.countStyle = .file
-        formatter.allowedUnits = [.useBytes, .useKB, .useMB, .useGB, .useTB]
-        return formatter
-    }()
-
+public nonisolated struct ByteFormatter {
     /// Formats a byte count into a localized, human-readable string.
     /// - Parameter bytes: The number of bytes to format.
     /// - Returns: A formatted string such as "14.2 GB" or "512 MB".
     public static func format(_ bytes: Int64) -> String {
+        let formatter = ByteCountFormatter()
+        formatter.countStyle = .file
+        formatter.allowedUnits = [.useBytes, .useKB, .useMB, .useGB, .useTB]
         return formatter.string(fromByteCount: bytes)
     }
 

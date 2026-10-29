@@ -1,7 +1,7 @@
 import Foundation
 
 /// Aggregate container for scan results from a complete Smart Scan operation.
-public struct ScanResult: Sendable {
+public nonisolated struct ScanResult: Sendable {
     public var items: [CleanupItem]
     public let duration: TimeInterval
     public let scannedCategories: [CleanupCategory]

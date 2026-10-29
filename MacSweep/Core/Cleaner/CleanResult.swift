@@ -1,7 +1,7 @@
 import Foundation
 
 /// Aggregate result of a cleanup operation across multiple items.
-public struct CleanResult: Sendable {
+public nonisolated struct CleanResult: Sendable {
     public let totalItemsProcessed: Int
     public let successCount: Int
     public let failureCount: Int

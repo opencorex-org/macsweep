@@ -3,7 +3,7 @@ import OSLog
 
 /// Provides safe, validated file deletion operations.
 /// All deletions pass through SafetyValidator before execution.
-public struct DeletionService: Sendable {
+public nonisolated struct DeletionService: Sendable {
     private let safetyValidator: SafetyValidator
 
     public init(safetyValidator: SafetyValidator) {
@@ -44,7 +44,7 @@ public struct DeletionService: Sendable {
 }
 
 /// Result of a single cleanup operation.
-public struct CleanOperationResult: Sendable {
+public nonisolated struct CleanOperationResult: Sendable {
     public let url: URL
     public let success: Bool
     public let error: String?

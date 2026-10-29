@@ -2,7 +2,7 @@ import Foundation
 
 /// Represents a single file or directory identified as cleanable during scanning.
 /// This is the fundamental unit of work flowing through Scanner → Safety → Cleaner pipeline.
-public struct CleanupItem: Identifiable, Hashable, Sendable {
+public nonisolated struct CleanupItem: Identifiable, Hashable, Sendable {
     public let id: UUID
     public let url: URL
     public let name: String
@@ -24,6 +24,7 @@ public struct CleanupItem: Identifiable, Hashable, Sendable {
     }
 
     /// Relative date string for UI display.
+    @MainActor
     public var relativeDate: String {
         AppDateFormatter.relative(modificationDate)
     }

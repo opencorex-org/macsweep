@@ -2,8 +2,8 @@ import Foundation
 import OSLog
 
 /// Scans user and system cache directories for reclaimable temporary files.
-public struct CacheScanner: Sendable {
-    private let fileManager = FileManager.default
+public nonisolated struct CacheScanner: Sendable {
+    private var fileManager: FileManager { .default }
 
     /// Target cache directories to scan.
     private var cacheDirectories: [URL] {
@@ -16,6 +16,7 @@ public struct CacheScanner: Sendable {
     }
 
     /// Scans cache directories and returns discovered cleanable items.
+    @concurrent
     public func scan(onProgress: (@Sendable (String) -> Void)? = nil, control: ScanControl? = nil) async -> [ScanItem] {
         var items: [ScanItem] = []
 

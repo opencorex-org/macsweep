@@ -3,7 +3,7 @@ import OSLog
 
 /// Central safety validation engine that enforces all safety rules before cleanup.
 /// Every candidate item must pass through this validator before being queued for deletion.
-public final class SafetyValidator: Sendable {
+public nonisolated final class SafetyValidator: Sendable {
     private let policy: SafetyPolicy
     private let homeDirectory: URL
 
@@ -74,7 +74,7 @@ public final class SafetyValidator: Sendable {
 }
 
 /// Result of a safety validation check.
-public enum ValidationResult: Equatable, Sendable {
+public nonisolated enum ValidationResult: Equatable, Sendable {
     /// Item passed all safety checks and is approved for user review.
     case approved
     /// Item was explicitly rejected due to safety violation.

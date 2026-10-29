@@ -2,8 +2,8 @@ import Foundation
 import OSLog
 
 /// Scans Homebrew download and formula caches.
-public struct HomebrewScanner: Sendable {
-    private let fileManager = FileManager.default
+public nonisolated struct HomebrewScanner: Sendable {
+    private var fileManager: FileManager { .default }
 
     private var targetPaths: [(URL, String)] {
         let home = fileManager.homeDirectoryForCurrentUser
@@ -13,6 +13,7 @@ public struct HomebrewScanner: Sendable {
         ]
     }
 
+    @concurrent
     public func scan(onProgress: (@Sendable (String) -> Void)? = nil, control: ScanControl? = nil) async -> [ScanItem] {
         var items: [ScanItem] = []
 
