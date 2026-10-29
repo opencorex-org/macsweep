@@ -2,13 +2,14 @@ import Foundation
 import OSLog
 
 /// Scans the user's Trash directory for reclaimable items.
-public struct TrashScanner: Sendable {
-    private let fileManager = FileManager.default
+public nonisolated struct TrashScanner: Sendable {
+    private var fileManager: FileManager { .default }
 
     private var trashURL: URL {
         fileManager.homeDirectoryForCurrentUser.appendingPathComponent(".Trash")
     }
 
+    @concurrent
     public func scan(onProgress: (@Sendable (String) -> Void)? = nil, control: ScanControl? = nil) async -> [ScanItem] {
         var items: [ScanItem] = []
 

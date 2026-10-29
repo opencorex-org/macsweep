@@ -1,7 +1,7 @@
 import Foundation
 
 /// Extracts and holds metadata for a single file or directory from the file system.
-public struct FileMetadata: Sendable {
+public nonisolated struct FileMetadata: Sendable {
     public let url: URL
     public let size: Int64
     public let isDirectory: Bool

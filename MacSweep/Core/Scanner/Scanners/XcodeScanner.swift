@@ -2,8 +2,8 @@ import Foundation
 import OSLog
 
 /// Scans Xcode-related developer caches including DerivedData, Archives, and SPM caches.
-public struct XcodeScanner: Sendable {
-    private let fileManager = FileManager.default
+public nonisolated struct XcodeScanner: Sendable {
+    private var fileManager: FileManager { .default }
 
     private var targetPaths: [(url: URL, label: String, risk: CleanupRisk)] {
         let home = fileManager.homeDirectoryForCurrentUser
@@ -19,6 +19,7 @@ public struct XcodeScanner: Sendable {
         ]
     }
 
+    @concurrent
     public func scan(onProgress: (@Sendable (String) -> Void)? = nil, control: ScanControl? = nil) async -> [ScanItem] {
         var items: [ScanItem] = []
 

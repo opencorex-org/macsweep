@@ -2,7 +2,7 @@ import Foundation
 
 /// Risk classification assigned to cleanable items by the Safety Validator.
 /// Determines UI coloring, confirmation requirements, and default selection state.
-public enum CleanupRisk: String, Codable, Sendable, CaseIterable, Comparable {
+public nonisolated enum CleanupRisk: String, Codable, Sendable, CaseIterable, Comparable {
     /// Harmless temporary files that can be safely removed (e.g., download caches, log files).
     case safe
 

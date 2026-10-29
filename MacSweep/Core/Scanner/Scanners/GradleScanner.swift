@@ -2,8 +2,8 @@ import Foundation
 import OSLog
 
 /// Scans Gradle and Android build caches for reclaimable artifacts.
-public struct GradleScanner: Sendable {
-    private let fileManager = FileManager.default
+public nonisolated struct GradleScanner: Sendable {
+    private var fileManager: FileManager { .default }
 
     private var targetPaths: [(URL, String)] {
         let home = fileManager.homeDirectoryForCurrentUser
@@ -17,6 +17,7 @@ public struct GradleScanner: Sendable {
         ]
     }
 
+    @concurrent
     public func scan(onProgress: (@Sendable (String) -> Void)? = nil, control: ScanControl? = nil) async -> [ScanItem] {
         var items: [ScanItem] = []
 

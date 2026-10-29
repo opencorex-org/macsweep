@@ -33,7 +33,16 @@ public actor ScanEngine {
         let completedCategories = OSAllocatedUnfairLock(initialState: 0)
         let totalCategories = 3
 
+        let lastProgressTime = OSAllocatedUnfairLock(initialState: ContinuousClock.now)
         let makeProgress: @Sendable (CleanupCategory, String) -> Void = { category, path in
+            // Bound UI work across all concurrent scanners to ten updates per second.
+            let shouldReport = lastProgressTime.withLock { last in
+                let now = ContinuousClock.now
+                guard now - last >= .milliseconds(100) else { return false }
+                last = now
+                return true
+            }
+            guard shouldReport, !Task.isCancelled, control?.isCancelled != true else { return }
             progressHandler(ScanProgress(
                 currentCategory: category,
                 currentPath: path,
@@ -101,7 +110,16 @@ public actor ScanEngine {
         let completedCategories = OSAllocatedUnfairLock(initialState: 0)
         let totalCategories = 8
 
+        let lastProgressTime = OSAllocatedUnfairLock(initialState: ContinuousClock.now)
         let makeProgress: @Sendable (CleanupCategory, String) -> Void = { category, path in
+            // Bound UI work across all concurrent scanners to ten updates per second.
+            let shouldReport = lastProgressTime.withLock { last in
+                let now = ContinuousClock.now
+                guard now - last >= .milliseconds(100) else { return false }
+                last = now
+                return true
+            }
+            guard shouldReport, !Task.isCancelled, control?.isCancelled != true else { return }
             let bytes = runningBytes.withLock { $0 }
             let count = runningCount.withLock { $0 }
             let completed = completedCategories.withLock { $0 }
@@ -200,7 +218,16 @@ public actor ScanEngine {
         let completedCategories = OSAllocatedUnfairLock(initialState: 0)
         let totalCategories = 5
 
+        let lastProgressTime = OSAllocatedUnfairLock(initialState: ContinuousClock.now)
         let makeProgress: @Sendable (CleanupCategory, String) -> Void = { category, path in
+            // Bound UI work across all concurrent scanners to ten updates per second.
+            let shouldReport = lastProgressTime.withLock { last in
+                let now = ContinuousClock.now
+                guard now - last >= .milliseconds(100) else { return false }
+                last = now
+                return true
+            }
+            guard shouldReport, !Task.isCancelled, control?.isCancelled != true else { return }
             progressHandler(ScanProgress(
                 currentCategory: category,
                 currentPath: path,
@@ -230,10 +257,10 @@ public actor ScanEngine {
                     }
                 }
 
-                runningBytes.withLock { value in
-                    value += newValidItems.reduce(0) { $0 + $1.size }
-                }
-                runningCount.withLock { $0 += newValidItems.count }
+                let addedBytes = newValidItems.reduce(0) { $0 + $1.size }
+                let addedCount = newValidItems.count
+                runningBytes.withLock { $0 += addedBytes }
+                runningCount.withLock { $0 += addedCount }
                 let completed = completedCategories.withLock {
                     $0 += 1
                     return $0

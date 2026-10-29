@@ -2,7 +2,7 @@ import Foundation
 import OSLog
 
 /// Validates read/write permissions on file paths before scan or cleanup operations.
-public struct PermissionValidator: Sendable {
+public nonisolated struct PermissionValidator: Sendable {
     private static let fileManager = FileManager.default
 
     /// Checks if a path is readable.

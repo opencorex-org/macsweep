@@ -2,7 +2,7 @@ import Foundation
 
 /// Immutable database of protected macOS system paths that must never be modified or deleted.
 /// This is the foundation of MacSweep's safety architecture.
-public struct ProtectedPaths: Sendable {
+public nonisolated struct ProtectedPaths: Sendable {
     /// Absolute paths that are always protected. Any candidate within these directories is rejected.
     public static let systemRoots: Set<String> = [
         "/System",

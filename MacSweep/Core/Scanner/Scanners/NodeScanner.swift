@@ -2,8 +2,8 @@ import Foundation
 import OSLog
 
 /// Scans Node.js ecosystem caches (npm, pnpm, Yarn, Bun).
-public struct NodeScanner: Sendable {
-    private let fileManager = FileManager.default
+public nonisolated struct NodeScanner: Sendable {
+    private var fileManager: FileManager { .default }
 
     private var targetPaths: [(URL, String)] {
         let home = fileManager.homeDirectoryForCurrentUser
@@ -17,6 +17,7 @@ public struct NodeScanner: Sendable {
         ]
     }
 
+    @concurrent
     public func scan(onProgress: (@Sendable (String) -> Void)? = nil, control: ScanControl? = nil) async -> [ScanItem] {
         var items: [ScanItem] = []
 

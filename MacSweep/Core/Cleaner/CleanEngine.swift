@@ -3,7 +3,7 @@ import OSLog
 
 /// Central cleanup execution engine that processes user-confirmed cleanup operations.
 /// Only operates on items that have passed SafetyValidator and received user confirmation.
-public final class CleanEngine: Sendable {
+public nonisolated final class CleanEngine: Sendable {
     private let deletionService: DeletionService
 
     public init(safetyValidator: SafetyValidator) {
@@ -15,6 +15,7 @@ public final class CleanEngine: Sendable {
     ///   - items: The user-confirmed cleanup items (only selected items are processed).
     ///   - progressHandler: Optional callback reporting live deletion progress and bytes freed.
     /// - Returns: An aggregate `CleanResult`.
+    @concurrent
     public func clean(
         items: [CleanupItem],
         progressHandler: (@Sendable (CleanProgress) -> Void)? = nil
@@ -41,22 +42,16 @@ public final class CleanEngine: Sendable {
             totalBytes: totalTargetBytes
         ))
 
+        var lastProgress = ContinuousClock.now
         for item in selectedItems {
-            if Task.isCancelled { break }
-
-            // Report item starting to delete
-            progressHandler?(CleanProgress(
-                currentItemName: item.displayName,
-                currentItemPath: item.url.path,
-                currentCategory: item.category,
-                completedItemsCount: successCount + failureCount,
-                totalItemsCount: selectedItems.count,
-                bytesReclaimed: totalReclaimed,
-                totalBytes: totalTargetBytes
-            ))
-
-            // Yield before heavy file deletion to let UI render smoothly
-            await Task.yield()
+            if Task.isCancelled {
+                // Keep unprocessed items visible and selected for a later retry.
+                for pending in selectedItems.dropFirst(successCount + failureCount) {
+                    failures.append(CleanOperationResult(url: pending.url, success: false, error: "Cleanup cancelled"))
+                }
+                failureCount = failures.count
+                break
+            }
 
             let result = deletionService.safeDelete(item.url)
 
@@ -69,18 +64,18 @@ public final class CleanEngine: Sendable {
             }
 
             // Report progress after item deleted
-            progressHandler?(CleanProgress(
-                currentItemName: item.displayName,
-                currentItemPath: item.url.path,
-                currentCategory: item.category,
-                completedItemsCount: successCount + failureCount,
-                totalItemsCount: selectedItems.count,
-                bytesReclaimed: totalReclaimed,
-                totalBytes: totalTargetBytes
-            ))
-
-            // Cooperative pacing so the UI stays ultra smooth and never freezes the mouse cursor
-            try? await Task.sleep(nanoseconds: 20_000_000) // 20ms
+            if successCount + failureCount == selectedItems.count || ContinuousClock.now - lastProgress >= .milliseconds(100) {
+                lastProgress = .now
+                progressHandler?(CleanProgress(
+                    currentItemName: item.displayName,
+                    currentItemPath: item.url.path,
+                    currentCategory: item.category,
+                    completedItemsCount: successCount + failureCount,
+                    totalItemsCount: selectedItems.count,
+                    bytesReclaimed: totalReclaimed,
+                    totalBytes: totalTargetBytes
+                ))
+            }
         }
 
         let duration = Date().timeIntervalSince(startTime)
@@ -88,7 +83,7 @@ public final class CleanEngine: Sendable {
         Logger.cleaner.info("Cleanup complete: \(successCount) succeeded, \(failureCount) failed, \(ByteFormatter.format(totalReclaimed)) reclaimed in \(String(format: "%.2f", duration))s")
 
         return CleanResult(
-            totalItemsProcessed: selectedItems.count,
+            totalItemsProcessed: successCount + failureCount,
             successCount: successCount,
             failureCount: failureCount,
             totalBytesReclaimed: totalReclaimed,

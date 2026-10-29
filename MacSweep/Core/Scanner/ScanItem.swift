@@ -2,7 +2,7 @@ import Foundation
 
 /// Raw item discovered during scanning, before safety validation.
 /// This is the Scanner's output type, distinct from the validated CleanupItem.
-public struct ScanItem: Sendable {
+public nonisolated struct ScanItem: Sendable {
     public let url: URL
     public let size: Int64
     public let category: CleanupCategory

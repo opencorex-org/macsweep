@@ -1,7 +1,7 @@
 import Foundation
 
 /// Real-time progress reporting state for active scan operations.
-public struct ScanProgress: Sendable {
+public nonisolated struct ScanProgress: Sendable {
     public let currentCategory: CleanupCategory?
     public let currentPath: String
     public let scannedBytes: Int64

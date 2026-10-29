@@ -2,7 +2,7 @@ import Foundation
 import OSLog
 
 /// Validates and canonicalizes file paths to prevent symlink attacks and path traversal.
-public struct PathValidator: Sendable {
+public nonisolated struct PathValidator: Sendable {
     /// Resolves the canonical path by following symlinks and verifying the result
     /// stays within acceptable boundaries.
     /// - Parameters:

@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 
 /// Categories of cleanable artifacts discovered during scanning.
-public enum CleanupCategory: String, Codable, CaseIterable, Identifiable, Sendable {
+public nonisolated enum CleanupCategory: String, Codable, CaseIterable, Identifiable, Sendable {
     case systemCache
     case userLogs
     case trash

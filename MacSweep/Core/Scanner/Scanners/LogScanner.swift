@@ -2,8 +2,8 @@ import Foundation
 import OSLog
 
 /// Scans user log directories for reclaimable log files.
-public struct LogScanner: Sendable {
-    private let fileManager = FileManager.default
+public nonisolated struct LogScanner: Sendable {
+    private var fileManager: FileManager { .default }
 
     private var logDirectories: [URL] {
         let home = fileManager.homeDirectoryForCurrentUser
@@ -12,6 +12,7 @@ public struct LogScanner: Sendable {
         ]
     }
 
+    @concurrent
     public func scan(onProgress: (@Sendable (String) -> Void)? = nil, control: ScanControl? = nil) async -> [ScanItem] {
         var items: [ScanItem] = []
 
