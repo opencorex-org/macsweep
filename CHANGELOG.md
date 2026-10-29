@@ -2,6 +2,19 @@
 
 All notable changes to MacSweep are documented here.
 
+## [1.1.1] - 2026-10-30
+
+### Fixed
+
+- Keep Full Scan, Smart Scan, and Developer Cleaner filesystem work off the UI thread.
+- Limit progress updates and enumerate files on demand to reduce UI load and memory buffering.
+- Release paused scans on cancellation and retain unprocessed cleanup items for retry.
+
+### Changed
+
+- Remove artificial scan and cleanup delays.
+- Add regression checks for enumeration, cancellation, and background cleanup execution.
+
 ## [1.1.0] - 2026-09-27
 
 ### Added

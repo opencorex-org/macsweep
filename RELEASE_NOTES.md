@@ -1,14 +1,13 @@
-# MacSweep 1.1.0
+# MacSweep 1.1.1
 
-MacSweep 1.1.0 adds App Mover and Storage Manager tools, live deletion progress reporting, and improved Gatekeeper handling for unsigned releases.
+MacSweep 1.1.1 improves responsiveness during Full Scan, Smart Scan, and Developer Cleaner operations.
 
 ## Highlights
 
-- **App Mover**: Seamlessly migrate large applications and their support/cache directories to external storage with automatic symbolic link management.
-- **Storage Manager**: Monitor external volumes, detect free space, and manage relocatable data.
-- **Live Cleanup Progress**: Watch cleaning operations stream in real time with live item paths and bytes freed.
-- **Simplified Versioning**: About screen now displays clean semantic versioning without build counts.
-- **Streamlined Setup**: Added installer script and automated quarantine flag stripping for Gatekeeper convenience.
+- **Responsive scans and cleanup**: Filesystem operations explicitly run away from the UI thread.
+- **Lower progress overhead**: Rate-limited updates and demand-driven file enumeration reduce UI load and memory buffering.
+- **Reliable cancellation**: Paused scans stop when cancelled, and unprocessed cleanup items remain available for retry.
+- **Faster completion**: Removed artificial scan and cleanup delays.
 
 > MacSweep is an open-source, ad-hoc-signed build and is not Apple-notarized. On first launch, Control-click MacSweep, choose **Open**, then confirm **Open**.
 
