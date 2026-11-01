@@ -1,0 +1,85 @@
+name: Auto Release Tag
+
+on:
+  workflow_run:
+    workflows: [Verify]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: auto-release-main
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out verified source
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Validate release metadata
+        id: release
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mapfile -t versions < <(
+            sed -nE 's/^[[:space:]]*MARKETING_VERSION = ([^;]+);/\1/p' MacSweep.xcodeproj/project.pbxproj |
+              sort -u
+          )
+
+          if [[ ${#versions[@]} -ne 1 ]]; then
+            echo "Expected exactly one MARKETING_VERSION, found: ${versions[*]:-none}" >&2
+            exit 1
+          fi
+
+          version="${versions[0]}"
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "MARKETING_VERSION must be a semantic version, got: $version" >&2
+            exit 1
+          fi
+
+          tag="v$version"
+          grep -Fq "## [$version]" CHANGELOG.md || {
+            echo "CHANGELOG.md has no $version release entry" >&2
+            exit 1
+          }
+          grep -Fq "# MacSweep $version" RELEASE_NOTES.md || {
+            echo "RELEASE_NOTES.md is not prepared for $version" >&2
+            exit 1
+          }
+
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Create release tag when needed
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --force --tags origin
+
+          if git show-ref --verify --quiet "refs/tags/$RELEASE_TAG"; then
+            echo "$RELEASE_TAG already exists; no release is needed."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$RELEASE_TAG" -m "Release $RELEASE_TAG"
+          git push origin "$RELEASE_TAG"
+
