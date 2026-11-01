@@ -46,16 +46,17 @@ The same Sparkle key must be retained for future releases. Losing it can prevent
 
 ## Publishing a release
 
-1. Merge the completed and reviewed `dev` changes into `main`.
-2. Confirm the Verify workflow passes on `main`.
-3. Update `MARKETING_VERSION`, `CURRENT_PROJECT_VERSION`, `CHANGELOG.md`, and `RELEASE_NOTES.md`.
-4. Create an annotated tag, for example `git tag -a v1.0.0 -m "Release v1.0.0"`.
-5. Push the tag to the official repository.
-6. The Release workflow builds, signs, notarizes, staples, verifies, packages, signs the Sparkle update, generates the appcast, and publishes the GitHub Release.
-7. Download the published DMG and verify installation on a clean Mac account.
+1. Update `MARKETING_VERSION`, `CURRENT_PROJECT_VERSION`, `CHANGELOG.md`, and `RELEASE_NOTES.md` in the release pull request.
+2. Merge the completed and reviewed pull request into `main`.
+3. The Verify workflow builds and tests the exact merge commit.
+4. After verification succeeds, the Auto Release Tag workflow validates the release metadata and creates the matching annotated `vMAJOR.MINOR.PATCH` tag if it does not already exist.
+5. The tag starts the Release workflow, which builds, ad-hoc signs, verifies, packages, signs the Sparkle update, generates the appcast, and publishes the GitHub Release.
+6. Download the published DMG and verify installation on a clean Mac account.
+
+The tag step is idempotent: ordinary merges that keep the current version do not create another release. The workflow can also be started manually from GitHub Actions after correcting a configuration problem.
 
 The workflow fails before publication if a required Sparkle secret is absent or any build, ad-hoc signature, packaging, or appcast step fails.
 
 ## Future automatic updates
 
-For `v1.0.1` and later, repeat the same version and tag process. Sparkle checks the stable appcast automatically, compares the incrementing bundle version, verifies the EdDSA update signature, then offers or installs the update according to the user’s Settings choices.
+For `v1.0.1` and later, repeat the version and release-notes update process; the tag and GitHub Release are created automatically after the merge passes verification. Sparkle checks the stable appcast automatically, compares the incrementing bundle version, verifies the EdDSA update signature, then offers or installs the update according to the user’s Settings choices.
