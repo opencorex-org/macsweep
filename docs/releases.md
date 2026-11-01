@@ -50,10 +50,10 @@ The same Sparkle key must be retained for future releases. Losing it can prevent
 2. Merge the completed and reviewed pull request into `main`.
 3. The Verify workflow builds and tests the exact merge commit.
 4. After verification succeeds, the Auto Release Tag workflow validates the release metadata and creates the matching annotated `vMAJOR.MINOR.PATCH` tag if it does not already exist.
-5. The tag starts the Release workflow, which builds, ad-hoc signs, verifies, packages, signs the Sparkle update, generates the appcast, and publishes the GitHub Release.
+5. The automation directly calls the Release workflow for the tag, which builds, ad-hoc signs, verifies, packages, signs the Sparkle update, generates the appcast, and publishes the GitHub Release.
 6. Download the published DMG and verify installation on a clean Mac account.
 
-The tag step is idempotent: ordinary merges that keep the current version do not create another release. The workflow can also be started manually from GitHub Actions after correcting a configuration problem.
+The tag step is idempotent: ordinary merges that keep the current version do not create another release. If a tag exists but publication previously failed or never started, the next successful run retries the missing GitHub Release from the tagged source. The workflow can also be started manually from GitHub Actions after correcting a configuration problem.
 
 The workflow fails before publication if a required Sparkle secret is absent or any build, ad-hoc signature, packaging, or appcast step fails.
 
