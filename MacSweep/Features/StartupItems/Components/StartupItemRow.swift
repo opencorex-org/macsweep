@@ -26,6 +26,15 @@ public struct StartupItemRow: View {
                     .font(.system(size: 10))
                     .foregroundColor(.msSecondaryLabel)
                     .lineLimit(1)
+
+                HStack(spacing: 8) {
+                    Text(agent.publisher)
+                    Text("\(agent.signatureStatus)")
+                    Text("\(agent.impact) impact")
+                        .foregroundColor(agent.impact == "High" ? .red : agent.impact == "Medium" ? .orange : .green)
+                }
+                .font(.system(size: 9, weight: .medium))
+                .foregroundColor(.msSecondaryLabel)
             }
 
             Spacer()

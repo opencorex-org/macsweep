@@ -1,5 +1,6 @@
 import Foundation
 import OSLog
+import Security
 
 /// Enumerates user LaunchAgents and Login Items for the Startup Items feature.
 public final class LaunchAgentService: Sendable {
@@ -42,7 +43,10 @@ public final class LaunchAgentService: Sendable {
         return LaunchAgentInfo(
             url: url,
             label: label,
-            isEnabled: !(plist["Disabled"] as? Bool ?? false)
+            isEnabled: !(plist["Disabled"] as? Bool ?? false),
+            executablePath: (plist["Program"] as? String) ?? (plist["ProgramArguments"] as? [String])?.first,
+            runsAtLoad: plist["RunAtLoad"] as? Bool ?? false,
+            keepsAlive: (plist["KeepAlive"] as? Bool) ?? false
         )
     }
 }
@@ -53,4 +57,29 @@ public struct LaunchAgentInfo: Identifiable, Sendable {
     public let url: URL
     public let label: String
     public let isEnabled: Bool
+    public let executablePath: String?
+    public let runsAtLoad: Bool
+    public let keepsAlive: Bool
+
+    public var publisher: String {
+        let parts = label.split(separator: ".")
+        guard parts.count >= 2 else { return "Unknown publisher" }
+        if parts.first == "com" { return String(parts.dropFirst().first ?? "Unknown").capitalized }
+        return String(parts.first!).capitalized
+    }
+
+    public var impact: String {
+        if keepsAlive { return "High" }
+        if runsAtLoad { return "Medium" }
+        return "Low"
+    }
+
+    public var signatureStatus: String {
+        guard let executablePath else { return "Unknown" }
+        let expanded = NSString(string: executablePath).expandingTildeInPath as CFString
+        var code: SecStaticCode?
+        guard SecStaticCodeCreateWithPath(URL(fileURLWithPath: expanded as String) as CFURL, [], &code) == errSecSuccess,
+              let code else { return "Unsigned" }
+        return SecStaticCodeCheckValidity(code, [], nil) == errSecSuccess ? "Signed" : "Unsigned"
+    }
 }

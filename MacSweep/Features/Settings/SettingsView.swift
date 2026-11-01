@@ -1,7 +1,7 @@
 import SwiftUI
 
 private enum SettingsPane: String, CaseIterable, Identifiable {
-    case general, scanning, notifications, privacy, about
+    case general, scanning, maintenance, notifications, privacy, about
 
     var id: String { rawValue }
 
@@ -9,6 +9,7 @@ private enum SettingsPane: String, CaseIterable, Identifiable {
         switch self {
         case .general: "General"
         case .scanning: "Scanning"
+        case .maintenance: "Maintenance"
         case .notifications: "Notifications"
         case .privacy: "Privacy & Access"
         case .about: "About"
@@ -19,6 +20,7 @@ private enum SettingsPane: String, CaseIterable, Identifiable {
         switch self {
         case .general: "Startup, updates, and language"
         case .scanning: "File detection preferences"
+        case .maintenance: "Automation, exclusions, history, and rules"
         case .notifications: "Cleanup alerts and banners"
         case .privacy: "Permissions and data handling"
         case .about: "Version and application details"
@@ -29,6 +31,7 @@ private enum SettingsPane: String, CaseIterable, Identifiable {
         switch self {
         case .general: "gearshape.fill"
         case .scanning: "magnifyingglass"
+        case .maintenance: "wrench.and.screwdriver.fill"
         case .notifications: "bell.badge.fill"
         case .privacy: "hand.raised.fill"
         case .about: "info.circle.fill"
@@ -39,6 +42,7 @@ private enum SettingsPane: String, CaseIterable, Identifiable {
         switch self {
         case .general: .blue
         case .scanning: .orange
+        case .maintenance: .teal
         case .notifications: .purple
         case .privacy: .green
         case .about: .msAccent
@@ -139,6 +143,8 @@ public struct SettingsView: View {
                         GeneralSettings(viewModel: viewModel)
                     case .scanning:
                         ScanSettings(viewModel: viewModel)
+                    case .maintenance:
+                        MaintenanceSettings(viewModel: viewModel)
                     case .notifications:
                         NotificationSettings(viewModel: viewModel)
                     case .privacy:

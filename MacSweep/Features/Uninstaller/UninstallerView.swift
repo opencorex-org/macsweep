@@ -121,7 +121,7 @@ public struct UninstallerView: View {
                     isDestructive: true,
                     onConfirm: {
                         showConfirmDialog = false
-                        Task { await viewModel.uninstallApplication(selectedApp) }
+                        Task { await viewModel.uninstallApplication(selectedApp, history: environment.cleanupHistoryService, notifications: environment.notificationService) }
                     },
                     onCancel: {
                         showConfirmDialog = false

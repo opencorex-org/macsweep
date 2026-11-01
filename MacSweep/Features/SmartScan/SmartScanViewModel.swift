@@ -60,7 +60,7 @@ public final class SmartScanViewModel: ObservableObject {
         guard activeScanID == scanID, !control.isCancelled else { return }
 
         self.scanResult = result
-        self.items = result.items
+        self.items = environment.exclusionService.filter(result.items)
         self.isScanning = false
         self.isPaused = false
         self.scanTask = nil
@@ -146,6 +146,8 @@ public final class SmartScanViewModel: ObservableObject {
             }
         }
         self.lastCleanResult = cleanResult
+        environment.cleanupHistoryService.record(source: "Smart Scan", result: cleanResult)
+        environment.notificationService.send(title: "Smart cleanup finished", body: "Reclaimed \(cleanResult.formattedReclaimed) from \(cleanResult.successCount) items.")
 
         // Remove cleaned items from local state
         let failedURLs = Set(cleanResult.failures.map(\.url))

@@ -1,10 +1,14 @@
+import AppKit
+import Combine
 import SwiftUI
 
 public struct SidebarView: View {
     @Binding public var selection: NavigationItem?
     @EnvironmentObject private var environment: AppEnvironment
+    @Environment(\.scenePhase) private var scenePhase
 
     @State private var diskSpace: DiskSpace?
+    private let storageRefreshTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     public init(selection: Binding<NavigationItem?>) {
         self._selection = selection
@@ -47,6 +51,7 @@ public struct SidebarView: View {
                         Text("\(diskSpace.formattedAvailable) free")
                             .font(.system(size: 11))
                             .foregroundColor(.msSecondaryLabel)
+                            .contentTransition(.numericText())
                     }
 
                     GeometryReader { geometry in
@@ -75,7 +80,28 @@ public struct SidebarView: View {
             }
         }
         .task {
-            diskSpace = try? environment.diskSpaceService.getDiskSpace()
+            refreshDiskSpace()
+        }
+        .onReceive(storageRefreshTimer) { _ in
+            guard scenePhase == .active else { return }
+            refreshDiskSpace()
+        }
+        .onReceive(environment.cleanupHistoryService.objectWillChange) { _ in
+            refreshDiskSpace()
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(350))
+                refreshDiskSpace()
+            }
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active { refreshDiskSpace() }
+        }
+    }
+
+    private func refreshDiskSpace() {
+        guard let updated = try? environment.diskSpaceService.getDiskSpace() else { return }
+        withAnimation(.easeInOut(duration: 0.2)) {
+            diskSpace = updated
         }
     }
 }

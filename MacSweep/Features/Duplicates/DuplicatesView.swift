@@ -1,6 +1,7 @@
 import SwiftUI
 
 public struct DuplicatesView: View {
+    @EnvironmentObject private var environment: AppEnvironment
     @StateObject private var viewModel = DuplicatesViewModel()
     @State private var showConfirmDialog = false
 
@@ -47,7 +48,7 @@ public struct DuplicatesView: View {
                         iconName: "magnifyingglass",
                         isLoading: viewModel.isScanning
                     ) {
-                        Task { await viewModel.scanForDuplicates() }
+                        Task { await viewModel.scanForDuplicates(exclusions: environment.exclusionService) }
                     }
                 }
             }
@@ -65,7 +66,7 @@ public struct DuplicatesView: View {
                     iconName: "doc.on.doc.fill",
                     buttonTitle: "Start Duplicates Scan",
                     buttonAction: {
-                        Task { await viewModel.scanForDuplicates() }
+                        Task { await viewModel.scanForDuplicates(exclusions: environment.exclusionService) }
                     }
                 )
             } else {
@@ -83,13 +84,13 @@ public struct DuplicatesView: View {
         }
         .sheet(isPresented: $showConfirmDialog) {
             ConfirmationDialog(
-                title: "Delete Duplicate Files?",
-                message: "Are you sure you want to delete \(viewModel.selectedFilesCount) duplicate files (\(ByteFormatter.format(viewModel.selectedBytesCount)))?",
-                confirmTitle: "Delete Duplicates",
+                title: "Move Duplicate Files to Trash?",
+                message: "Move \(viewModel.selectedFilesCount) duplicate files (\(ByteFormatter.format(viewModel.selectedBytesCount))) to the macOS Trash?",
+                confirmTitle: "Move to Trash",
                 isDestructive: true,
                 onConfirm: {
                     showConfirmDialog = false
-                    Task { await viewModel.deleteSelectedDuplicates() }
+                    Task { await viewModel.deleteSelectedDuplicates(history: environment.cleanupHistoryService, notifications: environment.notificationService) }
                 },
                 onCancel: {
                     showConfirmDialog = false

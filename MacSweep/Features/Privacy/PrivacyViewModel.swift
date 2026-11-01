@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 import Combine
 
@@ -8,6 +9,7 @@ public struct PrivacyItem: Identifiable, Sendable {
     public let iconName: String
     public let path: URL
     public let size: Int64
+    public let bundleIdentifier: String?
     public var isSelected: Bool
 }
 
@@ -16,6 +18,7 @@ public final class PrivacyViewModel: ObservableObject {
     @Published public private(set) var isScanning: Bool = false
     @Published public private(set) var isCleaning: Bool = false
     @Published public var items: [PrivacyItem] = []
+    @Published public private(set) var statusMessage: String?
 
     public var selectedBytes: Int64 {
         items.filter(\.isSelected).reduce(0) { $0 + $1.size }
@@ -34,28 +37,28 @@ public final class PrivacyViewModel: ObservableObject {
         var discovered: [PrivacyItem] = []
         let home = FileManager.default.homeDirectoryForCurrentUser
 
-        // Safari Caches & History
-        let safariCache = home.appendingPathComponent("Library/Caches/com.apple.Safari")
-        if let size = await (try? FileEnumerator.directorySize(safariCache)), size > 0 {
-            discovered.append(PrivacyItem(browserName: "Safari", title: "Cache & Web Data", iconName: "safari.fill", path: safariCache, size: size, isSelected: true))
-        }
+        let definitions: [(String, String, String, [(String, String)])] = [
+            ("Safari", "com.apple.Safari", "safari.fill", [("Cache", "Library/Caches/com.apple.Safari"), ("History", "Library/Safari/History.db"), ("Cookies", "Library/Cookies/Cookies.binarycookies")]),
+            ("Google Chrome", "com.google.Chrome", "globe", [("Cache", "Library/Caches/Google/Chrome"), ("Cookies", "Library/Application Support/Google/Chrome/Default/Cookies"), ("History", "Library/Application Support/Google/Chrome/Default/History")]),
+            ("Firefox", "org.mozilla.firefox", "globe", [("Cache", "Library/Caches/Firefox")]),
+            ("Arc", "company.thebrowser.Browser", "globe", [("Cache", "Library/Caches/company.thebrowser.Browser"), ("Cookies", "Library/Application Support/Arc/User Data/Default/Cookies"), ("History", "Library/Application Support/Arc/User Data/Default/History")]),
+            ("Microsoft Edge", "com.microsoft.edgemac", "globe", [("Cache", "Library/Caches/Microsoft Edge"), ("Cookies", "Library/Application Support/Microsoft Edge/Default/Cookies"), ("History", "Library/Application Support/Microsoft Edge/Default/History")]),
+            ("Brave", "com.brave.Browser", "globe", [("Cache", "Library/Caches/BraveSoftware/Brave-Browser"), ("Cookies", "Library/Application Support/BraveSoftware/Brave-Browser/Default/Cookies"), ("History", "Library/Application Support/BraveSoftware/Brave-Browser/Default/History")]),
+            ("Opera", "com.operasoftware.Opera", "globe", [("Cache", "Library/Caches/com.operasoftware.Opera"), ("Cookies", "Library/Application Support/com.operasoftware.Opera/Cookies"), ("History", "Library/Application Support/com.operasoftware.Opera/History")]),
+            ("Vivaldi", "com.vivaldi.Vivaldi", "globe", [("Cache", "Library/Caches/Vivaldi"), ("Cookies", "Library/Application Support/Vivaldi/Default/Cookies"), ("History", "Library/Application Support/Vivaldi/Default/History")])
+        ]
 
-        // Chrome Caches
-        let chromeCache = home.appendingPathComponent("Library/Caches/Google/Chrome")
-        if let size = await (try? FileEnumerator.directorySize(chromeCache)), size > 0 {
-            discovered.append(PrivacyItem(browserName: "Google Chrome", title: "Cache & Cookies", iconName: "globe", path: chromeCache, size: size, isSelected: true))
-        }
-
-        // Firefox Caches
-        let firefoxCache = home.appendingPathComponent("Library/Caches/Firefox")
-        if let size = await (try? FileEnumerator.directorySize(firefoxCache)), size > 0 {
-            discovered.append(PrivacyItem(browserName: "Firefox", title: "Cache", iconName: "globe", path: firefoxCache, size: size, isSelected: true))
-        }
-
-        // Arc Caches
-        let arcCache = home.appendingPathComponent("Library/Caches/company.thebrowser.Browser")
-        if let size = await (try? FileEnumerator.directorySize(arcCache)), size > 0 {
-            discovered.append(PrivacyItem(browserName: "Arc", title: "Cache", iconName: "globe", path: arcCache, size: size, isSelected: true))
+        for (browser, bundleID, icon, targets) in definitions {
+            for (title, relativePath) in targets {
+                let url = home.appendingPathComponent(relativePath)
+                guard FileManager.default.fileExists(atPath: url.path) else { continue }
+                let values = try? url.resourceValues(forKeys: [.isDirectoryKey, .fileSizeKey, .totalFileAllocatedSizeKey])
+                let size = values?.isDirectory == true
+                    ? await FileEnumerator.directorySize(url)
+                    : Int64(values?.totalFileAllocatedSize ?? values?.fileSize ?? 0)
+                guard size > 0 else { continue }
+                discovered.append(PrivacyItem(browserName: browser, title: title, iconName: icon, path: url, size: size, bundleIdentifier: bundleID, isSelected: title == "Cache"))
+            }
         }
 
         self.items = discovered
@@ -68,21 +71,36 @@ public final class PrivacyViewModel: ObservableObject {
         }
     }
 
-    public func cleanPrivacyItems() async {
+    public func cleanPrivacyItems(history: CleanupHistoryService? = nil, notifications: NotificationService? = nil) async {
         guard !isCleaning else { return }
         isCleaning = true
 
         let fm = FileManager.default
+        let started = Date()
         var idsToRemove: [UUID] = []
+        var reclaimed: Int64 = 0
+        var blocked = Set<String>()
         for item in items where item.isSelected {
+            if let bundleID = item.bundleIdentifier,
+               !NSRunningApplication.runningApplications(withBundleIdentifier: bundleID).isEmpty {
+                blocked.insert(item.browserName)
+                continue
+            }
             do {
                 try fm.removeItem(at: item.path)
                 idsToRemove.append(item.id)
+                reclaimed += item.size
             } catch {
                 // Ignore
             }
         }
         items.removeAll { idsToRemove.contains($0.id) }
+        statusMessage = blocked.isEmpty
+            ? "Privacy cleanup finished."
+            : "Close \(blocked.sorted().joined(separator: ", ")) before cleaning its active profile."
+        let result = CleanResult(totalItemsProcessed: idsToRemove.count + blocked.count, successCount: idsToRemove.count, failureCount: blocked.count, totalBytesReclaimed: reclaimed, duration: Date().timeIntervalSince(started))
+        history?.record(source: "Privacy Cleaner", result: result)
+        notifications?.send(title: "Privacy cleanup finished", body: "Removed \(idsToRemove.count) browser data items using \(ByteFormatter.format(reclaimed)).")
         isCleaning = false
     }
 }
