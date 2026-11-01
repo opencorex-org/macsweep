@@ -2,6 +2,21 @@
 
 All notable changes to MacSweep are documented here.
 
+## [1.2.0] - 2026-11-01
+
+### Added
+
+- Scheduled and on-demand maintenance profiles, including customizable scan sources and safe auto-cleaning.
+- Cleanup history, global scan exclusions, custom cleanup rules, diagnostic report export, and storage trend tracking.
+- Menu-bar controls, native notifications, real Launch at Login integration, and automatic external-drive analysis.
+- Browser privacy coverage for Edge, Brave, Opera, and Vivaldi with active-browser protection.
+- Startup-item publisher, signature, and impact details plus live dashboard health indicators.
+
+### Changed
+
+- Duplicate cleanup now uses the macOS Trash and provides file preview/open actions.
+- Large-file, duplicate, uninstall, privacy, Smart Scan, Full Scan, and developer cleanups now record history and notify on completion.
+
 ## [1.1.1] - 2026-10-30
 
 ### Fixed
