@@ -51,7 +51,8 @@ public final class FullScanViewModel: ObservableObject {
         guard activeScanID == scanID, !control.isCancelled else { return }
 
         scanResult = result
-        items = result.items.map { item in
+        let customItems = await environment.customRuleService.scan()
+        items = environment.exclusionService.filter(result.items + customItems).map { item in
             var item = item
             item.isSelected = item.risk == .safe
             return item
@@ -135,6 +136,8 @@ public final class FullScanViewModel: ObservableObject {
             }
         }
         lastCleanResult = result
+        environment.cleanupHistoryService.record(source: "Full Scan", result: result)
+        environment.notificationService.send(title: "Full cleanup finished", body: "Reclaimed \(result.formattedReclaimed) from \(result.successCount) items.")
         let failedURLs = Set(result.failures.map(\.url))
         items.removeAll { item in
             item.isSelected && !failedURLs.contains(item.url)

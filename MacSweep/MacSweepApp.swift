@@ -24,5 +24,11 @@ struct MacSweepApp: App {
                 .disabled(!environment.updateService.isConfigured)
             }
         }
+
+        MenuBarExtra("MacSweep", systemImage: "sparkles") {
+            MenuBarView()
+                .environmentObject(environment)
+        }
+        .menuBarExtraStyle(.window)
     }
 }

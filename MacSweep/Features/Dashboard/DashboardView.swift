@@ -102,17 +102,47 @@ public struct DashboardView: View {
 
                 // System Health Features Banner
                 HStack(spacing: 12) {
-                    HealthBadge(icon: "checkmark.shield.fill", color: .green, title: "Safety Guard", subtitle: "SIP Protection Enforced")
-                    HealthBadge(icon: "memorychip.fill", color: .blue, title: "Memory Engine", subtitle: "Real-time Monitor")
-                    HealthBadge(icon: "lock.applewatch", color: .orange, title: "Privacy Suite", subtitle: "Browser Data Safe")
+                    HealthBadge(icon: "checkmark.shield.fill", color: viewModel.healthStatus.1, title: "System Health", subtitle: viewModel.healthStatus.0)
+                    HealthBadge(icon: "bolt.fill", color: viewModel.highImpactStartupCount == 0 ? .green : .orange, title: "Startup Load", subtitle: "\(viewModel.highImpactStartupCount) high-impact items")
+                    HealthBadge(icon: "clock.arrow.circlepath", color: .blue, title: "Storage History", subtitle: "\(viewModel.storageSnapshots.count) daily samples")
                 }
                 .padding(.top, 4)
+
+                if viewModel.storageSnapshots.count > 1 {
+                    StorageTrendCard(snapshots: viewModel.storageSnapshots)
+                }
             }
             .padding(20)
         }
         .onAppear {
             viewModel.refreshDiskSpace()
         }
+    }
+}
+
+private struct StorageTrendCard: View {
+    let snapshots: [StorageSnapshot]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Free Space Trend").font(.system(size: 13, weight: .bold))
+            GeometryReader { geometry in
+                let values = snapshots.suffix(30)
+                let maximum = values.map(\.freeBytes).max() ?? 1
+                HStack(alignment: .bottom, spacing: 2) {
+                    ForEach(Array(values)) { sample in
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(Color.blue.opacity(0.75))
+                            .frame(height: max(3, geometry.size.height * CGFloat(Double(sample.freeBytes) / Double(maximum))))
+                            .help("\(sample.date.formatted(date: .abbreviated, time: .omitted)): \(ByteFormatter.format(sample.freeBytes)) free")
+                    }
+                }
+            }
+            .frame(height: 70)
+        }
+        .padding(14)
+        .background(Color.msSecondaryBackground)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }
 

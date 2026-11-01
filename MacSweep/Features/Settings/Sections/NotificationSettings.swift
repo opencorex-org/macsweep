@@ -1,4 +1,5 @@
 import SwiftUI
+import UserNotifications
 
 public struct NotificationSettings: View {
     @ObservedObject var viewModel: SettingsViewModel
@@ -17,6 +18,9 @@ public struct NotificationSettings: View {
                     icon: "checkmark.circle",
                     isOn: $viewModel.enableNotifications
                 )
+                .onChange(of: viewModel.enableNotifications) { _, enabled in
+                    if enabled { environmentNotificationRequest() }
+                }
             }
 
             HStack(spacing: 12) {
@@ -44,5 +48,9 @@ public struct NotificationSettings: View {
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
         .frame(maxWidth: .infinity, alignment: .top)
+    }
+
+    private func environmentNotificationRequest() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
     }
 }

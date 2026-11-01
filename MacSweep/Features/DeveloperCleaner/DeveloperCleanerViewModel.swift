@@ -59,7 +59,7 @@ public final class DeveloperCleanerViewModel: ObservableObject {
         guard activeScanID == scanID, !control.isCancelled else { return }
 
         self.scanResult = result
-        self.items = result.items.map { item in
+        self.items = environment.exclusionService.filter(result.items).map { item in
             var item = item
             item.isSelected = item.risk == .safe
             return item
@@ -149,6 +149,8 @@ public final class DeveloperCleanerViewModel: ObservableObject {
         }
 
         lastCleanResult = result
+        environment.cleanupHistoryService.record(source: "Developer Cleaner", result: result)
+        environment.notificationService.send(title: "Developer cleanup finished", body: "Reclaimed \(result.formattedReclaimed) from \(result.successCount) items.")
 
         let failedURLs = Set(result.failures.map(\.url))
         items.removeAll { item in

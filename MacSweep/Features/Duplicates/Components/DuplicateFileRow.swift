@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 public struct DuplicateFileRow: View {
@@ -14,8 +15,10 @@ public struct DuplicateFileRow: View {
             .labelsHidden()
             .toggleStyle(.checkbox)
 
-            Image(systemName: "doc.fill")
-                .foregroundColor(.gray)
+            Image(nsImage: NSWorkspace.shared.icon(forFile: file.url.path))
+                .resizable()
+                .scaledToFit()
+                .frame(width: 32, height: 32)
 
             VStack(alignment: .leading, spacing: 2) {
                 HStack(spacing: 6) {
@@ -53,5 +56,11 @@ public struct DuplicateFileRow: View {
             }
         }
         .padding(.vertical, 4)
+        .contentShape(Rectangle())
+        .onTapGesture(count: 2) { NSWorkspace.shared.open(file.url) }
+        .contextMenu {
+            Button("Open Preview") { NSWorkspace.shared.open(file.url) }
+            Button("Reveal in Finder") { NSWorkspace.shared.activateFileViewerSelecting([file.url]) }
+        }
     }
 }

@@ -1,6 +1,7 @@
 import SwiftUI
 
 public struct PrivacyView: View {
+    @EnvironmentObject private var environment: AppEnvironment
     @StateObject private var viewModel = PrivacyViewModel()
     @State private var showConfirmDialog = false
 
@@ -40,8 +41,17 @@ public struct PrivacyView: View {
 
             Divider()
 
+            if let message = viewModel.statusMessage {
+                Label(message, systemImage: "info.circle.fill")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundColor(.orange)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+
             if viewModel.isScanning {
-                LoadingView(title: "Scanning Browser Caches...", subtitle: "Checking Safari, Chrome, Firefox, and Arc")
+                LoadingView(title: "Scanning Browser Data...", subtitle: "Checking Safari, Chrome, Firefox, Arc, Edge, Brave, Opera, and Vivaldi")
             } else if viewModel.items.isEmpty {
                 EmptyStateView(
                     title: "No Privacy Items Scanned",
@@ -71,7 +81,7 @@ public struct PrivacyView: View {
                 isDestructive: true,
                 onConfirm: {
                     showConfirmDialog = false
-                    Task { await viewModel.cleanPrivacyItems() }
+                    Task { await viewModel.cleanPrivacyItems(history: environment.cleanupHistoryService, notifications: environment.notificationService) }
                 },
                 onCancel: {
                     showConfirmDialog = false

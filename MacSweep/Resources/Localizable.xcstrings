@@ -7,6 +7,9 @@
     "· %@ ·" : {
 
     },
+    "%@" : {
+
+    },
     "%@  of  %@" : {
       "localizations" : {
         "en" : {
@@ -33,6 +36,16 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$@ · %2$@"
+          }
+        }
+      }
+    },
+    "%@ • .%@ • older than %lldd" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ • .%2$@ • older than %3$lldd"
           }
         }
       }
@@ -69,6 +82,9 @@
         }
       }
     },
+    "%@ impact" : {
+
+    },
     "%@ only has %@ free. This item needs %@." : {
       "localizations" : {
         "en" : {
@@ -97,6 +113,26 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$@: %2$@"
+          }
+        }
+      }
+    },
+    "%@: %@ free" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@ free"
+          }
+        }
+      }
+    },
+    "%lld cleaned / %lld failed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld cleaned / %2$lld failed"
           }
         }
       }
@@ -261,6 +297,9 @@
     "%lld%% used" : {
 
     },
+    "%lldd" : {
+
+    },
     "• %@: %@" : {
       "localizations" : {
         "en" : {
@@ -292,6 +331,16 @@
     "1 GB" : {
 
     },
+    "90-day change: %@%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "90-day change: %1$@%2$@"
+          }
+        }
+      }
+    },
     "A focused macOS utility for understanding storage, removing clutter, and keeping developer workspaces tidy." : {
 
     },
@@ -304,6 +353,12 @@
     "Access Not Granted" : {
 
     },
+    "Add" : {
+
+    },
+    "Add Folder…" : {
+
+    },
     "Adjust minimum size" : {
 
     },
@@ -311,6 +366,9 @@
 
     },
     "All components above will be moved to external storage and symlinked transparently." : {
+
+    },
+    "Analyze external drives when connected" : {
 
     },
     "App Components & Associated Data" : {
@@ -619,6 +677,9 @@
     "Auto Select" : {
 
     },
+    "Automatically clean safety-approved items" : {
+
+    },
     "Calculating folder sizes…" : {
 
     },
@@ -656,6 +717,9 @@
 
     },
     "Cleanup tasks will finish silently while the app is in the background." : {
+
+    },
+    "Clear History" : {
 
     },
     "Clear web browser caches, cookies, and tracking artifacts" : {
@@ -705,6 +769,12 @@
     "Duplicates Finder" : {
 
     },
+    "Export Report…" : {
+
+    },
+    "Extension" : {
+
+    },
     "External" : {
 
     },
@@ -723,7 +793,13 @@
     "Find, inspect, and safely manage files consuming substantial disk space" : {
 
     },
+    "Folder path" : {
+
+    },
     "Found so far:" : {
+
+    },
+    "Free Space Trend" : {
 
     },
     "Full App Move to External Applications" : {
@@ -742,6 +818,12 @@
 
     },
     "Grant access before uninstalling protected application containers and support files." : {
+
+    },
+    "Include developer cache sources" : {
+
+    },
+    "Include enabled custom rules" : {
 
     },
     "Installed Files & Leftovers" : {
@@ -1100,6 +1182,9 @@
         }
       }
     },
+    "No cleanups recorded yet." : {
+
+    },
     "No readable contents found" : {
 
     },
@@ -1116,6 +1201,12 @@
 
     },
     "Open" : {
+
+    },
+    "Open MacSweep" : {
+
+    },
+    "Open Preview" : {
 
     },
     "Open Privacy Settings" : {
@@ -1152,7 +1243,13 @@
     "Privacy Cleaner" : {
 
     },
+    "Profile" : {
+
+    },
     "Quick Tools" : {
+
+    },
+    "Quit MacSweep" : {
 
     },
     "Real-time system health, storage allocation, and maintenance tools" : {
@@ -1468,10 +1565,25 @@
     "Resume" : {
 
     },
+    "Reveal in Finder" : {
+
+    },
     "Review Developer Files" : {
 
     },
     "Review Scan Results" : {
+
+    },
+    "Rule name" : {
+
+    },
+    "Run Maintenance Now" : {
+
+    },
+    "Run Now" : {
+
+    },
+    "Running…" : {
 
     },
     "Safe Items Only" : {
@@ -1481,6 +1593,9 @@
 
     },
     "Scan Paused" : {
+
+    },
+    "Scan profile" : {
 
     },
     "Scanning Applications & Folders…" : {
@@ -1493,6 +1608,12 @@
 
     },
     "Scanning volumes…" : {
+
+    },
+    "Scanning…" : {
+
+    },
+    "Schedule" : {
 
     },
     "Search apps or folders…" : {

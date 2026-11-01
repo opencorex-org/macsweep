@@ -27,11 +27,15 @@ public final class DuplicatesViewModel: ObservableObject {
 
     public init() {}
 
-    public func scanForDuplicates() async {
+    public func scanForDuplicates(exclusions: ExclusionService? = nil) async {
         guard !isScanning else { return }
         isScanning = true
         let results = await service.findDuplicates(in: selectedDirectories)
-        self.groups = results
+        self.groups = results.compactMap { group in
+            var group = group
+            group.files.removeAll { exclusions?.contains($0.url) == true }
+            return group.files.count > 1 ? group : nil
+        }
         self.isScanning = false
     }
 
@@ -64,24 +68,32 @@ public final class DuplicatesViewModel: ObservableObject {
         }
     }
 
-    public func deleteSelectedDuplicates() async {
+    public func deleteSelectedDuplicates(history: CleanupHistoryService? = nil, notifications: NotificationService? = nil) async {
         guard !isCleaning else { return }
         isCleaning = true
 
-        let fileManager = FileManager.default
+        let started = Date()
+        var successCount = 0
+        var failureCount = 0
+        var reclaimed: Int64 = 0
         for groupIndex in groups.indices {
             var filesToRemove: [UUID] = []
             for file in groups[groupIndex].files where file.isSelected {
                 do {
-                    try fileManager.removeItem(at: file.url)
+                    _ = try TrashService.moveToTrash(file.url)
                     filesToRemove.append(file.id)
+                    successCount += 1
+                    reclaimed += groups[groupIndex].fileSize
                 } catch {
-                    // Log error if needed
+                    failureCount += 1
                 }
             }
             groups[groupIndex].files.removeAll { filesToRemove.contains($0.id) }
         }
         groups.removeAll { $0.files.count <= 1 }
+        let result = CleanResult(totalItemsProcessed: successCount + failureCount, successCount: successCount, failureCount: failureCount, totalBytesReclaimed: reclaimed, duration: Date().timeIntervalSince(started))
+        history?.record(source: "Duplicates Finder", result: result)
+        notifications?.send(title: "Duplicate cleanup finished", body: "Moved \(successCount) files to Trash and reclaimed \(ByteFormatter.format(reclaimed)).")
         isCleaning = false
     }
 }

@@ -29,7 +29,13 @@ public struct GeneralSettings: View {
                         title: "Launch at login",
                         detail: "Open MacSweep automatically when you sign in",
                         icon: "power",
-                        isOn: $viewModel.launchAtLogin
+                        isOn: Binding(
+                            get: { environment.loginItemService.isEnabled },
+                            set: { enabled in
+                                let succeeded = environment.loginItemService.setEnabled(enabled)
+                                viewModel.launchAtLogin = succeeded ? enabled : environment.loginItemService.isEnabled
+                            }
+                        )
                     )
 
                     Divider().padding(.leading, 33)
