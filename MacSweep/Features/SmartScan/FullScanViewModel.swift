@@ -52,7 +52,7 @@ public final class FullScanViewModel: ObservableObject {
 
         scanResult = result
         environment.activityLogStore.recordScan(result, title: "Full Scan completed")
-        items = result.items.map { item in
+        items = result.items.filter { !environment.ignoreListStore.contains($0) }.map { item in
             var item = item
             item.isSelected = item.risk == .safe
             return item

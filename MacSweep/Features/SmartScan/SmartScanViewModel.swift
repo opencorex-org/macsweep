@@ -60,7 +60,7 @@ public final class SmartScanViewModel: ObservableObject {
         guard activeScanID == scanID, !control.isCancelled else { return }
 
         self.scanResult = result
-        self.items = result.items.map { item in
+        self.items = result.items.filter { !environment.ignoreListStore.contains($0) }.map { item in
             var item = item
             item.isSelected = item.risk == .safe
             return item

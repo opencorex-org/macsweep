@@ -30,10 +30,13 @@ public nonisolated struct LogScanner: Sendable {
                 let ext = metadata.url.pathExtension.lowercased()
                 guard ["log", "txt", "crash", "diag", "ips", "spin"].contains(ext) else { continue }
 
+                let safeBefore = Date().addingTimeInterval(-7 * 24 * 60 * 60)
+
                 items.append(ScanItem(
                     url: metadata.url,
                     size: metadata.size,
                     category: .userLogs,
+                    risk: metadata.modificationDate <= safeBefore ? .safe : .caution,
                     isDirectory: false,
                     modificationDate: metadata.modificationDate
                 ))

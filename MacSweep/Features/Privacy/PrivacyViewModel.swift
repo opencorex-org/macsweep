@@ -25,37 +25,55 @@ public final class PrivacyViewModel: ObservableObject {
         items.filter(\.isSelected).count
     }
 
-    public init() {}
+    private let environment: AppEnvironment
+
+    public init(environment: AppEnvironment) { self.environment = environment }
 
     public func scanPrivacyItems() async {
         guard !isScanning else { return }
         isScanning = true
+        if environment.ignoreListStore.categories.contains(.browserPrivacy) {
+            items = []
+            isScanning = false
+            return
+        }
 
         var discovered: [PrivacyItem] = []
         let home = FileManager.default.homeDirectoryForCurrentUser
 
         // Safari Caches & History
         let safariCache = home.appendingPathComponent("Library/Caches/com.apple.Safari")
-        if let size = await (try? FileEnumerator.directorySize(safariCache)), size > 0 {
+        if !environment.ignoreListStore.contains(safariCache), let size = await (try? FileEnumerator.directorySize(safariCache)), size > 0 {
             discovered.append(PrivacyItem(browserName: "Safari", title: "Cache & Web Data", iconName: "safari.fill", path: safariCache, size: size, isSelected: true))
         }
 
         // Chrome Caches
         let chromeCache = home.appendingPathComponent("Library/Caches/Google/Chrome")
-        if let size = await (try? FileEnumerator.directorySize(chromeCache)), size > 0 {
+        if !environment.ignoreListStore.contains(chromeCache), let size = await (try? FileEnumerator.directorySize(chromeCache)), size > 0 {
             discovered.append(PrivacyItem(browserName: "Google Chrome", title: "Cache & Cookies", iconName: "globe", path: chromeCache, size: size, isSelected: true))
         }
 
         // Firefox Caches
-        let firefoxCache = home.appendingPathComponent("Library/Caches/Firefox")
-        if let size = await (try? FileEnumerator.directorySize(firefoxCache)), size > 0 {
+        let firefoxCache = home.appendingPathComponent("Library/Caches/org.mozilla.firefox")
+        if !environment.ignoreListStore.contains(firefoxCache), let size = await (try? FileEnumerator.directorySize(firefoxCache)), size > 0 {
             discovered.append(PrivacyItem(browserName: "Firefox", title: "Cache", iconName: "globe", path: firefoxCache, size: size, isSelected: true))
         }
 
         // Arc Caches
         let arcCache = home.appendingPathComponent("Library/Caches/company.thebrowser.Browser")
-        if let size = await (try? FileEnumerator.directorySize(arcCache)), size > 0 {
+        if !environment.ignoreListStore.contains(arcCache), let size = await (try? FileEnumerator.directorySize(arcCache)), size > 0 {
             discovered.append(PrivacyItem(browserName: "Arc", title: "Cache", iconName: "globe", path: arcCache, size: size, isSelected: true))
+        }
+
+        let extraBrowsers = [
+            ("Microsoft Edge", "Microsoft Edge"),
+            ("Brave", "BraveSoftware/Brave-Browser")
+        ]
+        for (name, relativePath) in extraBrowsers {
+            let cache = home.appendingPathComponent("Library/Caches/\(relativePath)")
+            if !environment.ignoreListStore.contains(cache), let size = await (try? FileEnumerator.directorySize(cache)), size > 0 {
+                discovered.append(PrivacyItem(browserName: name, title: "Cache", iconName: "globe", path: cache, size: size, isSelected: true))
+            }
         }
 
         self.items = discovered
@@ -72,17 +90,14 @@ public final class PrivacyViewModel: ObservableObject {
         guard !isCleaning else { return }
         isCleaning = true
 
-        let fm = FileManager.default
-        var idsToRemove: [UUID] = []
-        for item in items where item.isSelected {
-            do {
-                try fm.removeItem(at: item.path)
-                idsToRemove.append(item.id)
-            } catch {
-                // Ignore
-            }
+        let selected = items.filter(\.isSelected)
+        let cleanupItems = selected.map {
+            CleanupItem(url: $0.path, name: $0.browserName, size: $0.size, category: .browserPrivacy, risk: .caution, isDirectory: true, modificationDate: Date(), isSelected: true)
         }
-        items.removeAll { idsToRemove.contains($0.id) }
+        let result = await environment.cleanEngine.clean(items: cleanupItems)
+        environment.activityLogStore.recordCleanup(result, title: "Browser cache cleanup completed")
+        let failed = Set(result.failures.map(\.url))
+        items.removeAll { $0.isSelected && !failed.contains($0.path) }
         isCleaning = false
     }
 }
