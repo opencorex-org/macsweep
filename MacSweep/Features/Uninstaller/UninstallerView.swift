@@ -9,7 +9,10 @@ public struct UninstallerView: View {
 
     public init(environment: AppEnvironment) {
         _permissionManager = ObservedObject(wrappedValue: environment.permissionManager)
-        _viewModel = StateObject(wrappedValue: UninstallerViewModel(service: environment.applicationService))
+        _viewModel = StateObject(wrappedValue: UninstallerViewModel(
+            service: environment.applicationService,
+            activityLogStore: environment.activityLogStore
+        ))
     }
 
     public var body: some View {

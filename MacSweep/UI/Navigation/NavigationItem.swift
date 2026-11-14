@@ -11,6 +11,7 @@ public enum NavigationGroup: String, CaseIterable, Identifiable {
 
 public enum NavigationItem: String, CaseIterable, Identifiable, Hashable, Sendable {
     case dashboard
+    case activityLog
     case fullScan
     case smartScan
     case storageAnalyzer
@@ -29,6 +30,7 @@ public enum NavigationItem: String, CaseIterable, Identifiable, Hashable, Sendab
     public var displayName: String {
         switch self {
         case .dashboard: return "Dashboard"
+        case .activityLog: return "Activity Log"
         case .fullScan: return "Full Scan"
         case .smartScan: return "Smart Scan"
         case .storageAnalyzer: return "Storage Analyzer"
@@ -47,6 +49,7 @@ public enum NavigationItem: String, CaseIterable, Identifiable, Hashable, Sendab
     public var iconName: String {
         switch self {
         case .dashboard: return "gauge.medium"
+        case .activityLog: return "clock.arrow.circlepath"
         case .fullScan: return "magnifyingglass.circle.fill"
         case .smartScan: return "sparkles"
         case .storageAnalyzer: return "chart.pie.fill"
@@ -64,7 +67,7 @@ public enum NavigationItem: String, CaseIterable, Identifiable, Hashable, Sendab
 
     public var group: NavigationGroup {
         switch self {
-        case .dashboard: return .overview
+        case .dashboard, .activityLog: return .overview
         case .fullScan, .smartScan, .developerCleaner, .privacy: return .cleanup
         case .storageAnalyzer, .duplicates, .largeFiles, .startupItems, .uninstaller, .appMover, .storageManager: return .tools
         case .settings: return .preferences

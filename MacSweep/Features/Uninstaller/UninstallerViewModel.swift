@@ -13,6 +13,7 @@ public final class UninstallerViewModel: ObservableObject {
     @Published public private(set) var uninstallingApp: ApplicationInfo?
 
     private let service: ApplicationService
+    private let activityLogStore: ActivityLogStore
 
     public var filteredApplications: [ApplicationInfo] {
         if searchText.isEmpty {
@@ -24,8 +25,9 @@ public final class UninstallerViewModel: ObservableObject {
         }
     }
 
-    public init(service: ApplicationService = ApplicationService()) {
+    public init(service: ApplicationService = ApplicationService(), activityLogStore: ActivityLogStore) {
         self.service = service
+        self.activityLogStore = activityLogStore
     }
 
     public func loadApplications() async {
@@ -66,6 +68,7 @@ public final class UninstallerViewModel: ObservableObject {
         }
 
         uninstallResult = result
+        activityLogStore.recordUninstall(result)
         isUninstalling = false
     }
 

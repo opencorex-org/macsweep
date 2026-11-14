@@ -26,6 +26,7 @@ public final class DashboardViewModel: ObservableObject {
         self.lastScanResult = result
         self.cleanableBytes = result.totalBytes
         self.scannedItemsCount = result.items.count
+        environment.activityLogStore.recordScan(result, title: "Quick Scan completed")
         self.isScanning = false
         refreshDiskSpace()
     }

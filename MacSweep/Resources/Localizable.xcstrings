@@ -101,6 +101,9 @@
         }
       }
     },
+    "%lld" : {
+
+    },
     "%lld could not be moved." : {
 
     },
@@ -304,10 +307,19 @@
     "Access Not Granted" : {
 
     },
+    "Activity History" : {
+
+    },
+    "Activity type" : {
+
+    },
     "Adjust minimum size" : {
 
     },
     "All (%lld)" : {
+
+    },
+    "All Activity" : {
 
     },
     "All components above will be moved to external storage and symlinked transparently." : {
@@ -661,6 +673,15 @@
     "Cleanup tasks will finish silently while the app is in the background." : {
 
     },
+    "Clear" : {
+
+    },
+    "Clear all activity history?" : {
+
+    },
+    "Clear History" : {
+
+    },
     "Clear web browser caches, cookies, and tracking artifacts" : {
 
     },
@@ -688,6 +709,9 @@
       }
     },
     "Data (%lld)" : {
+
+    },
+    "Delete" : {
 
     },
     "Deselect All" : {
@@ -1471,6 +1495,9 @@
     "Resume" : {
 
     },
+    "Review completed MacSweep operations" : {
+
+    },
     "Review Developer Files" : {
 
     },
@@ -1496,6 +1523,9 @@
 
     },
     "Scanning volumes…" : {
+
+    },
+    "Search activity" : {
 
     },
     "Search apps or folders…" : {
@@ -1586,6 +1616,9 @@
 
     },
     "Theme" : {
+
+    },
+    "This cannot be undone." : {
 
     },
     "This setting becomes the default threshold for future Large Files scans." : {

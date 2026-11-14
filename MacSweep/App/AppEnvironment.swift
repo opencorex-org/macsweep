@@ -22,6 +22,7 @@ public final class AppEnvironment: ObservableObject {
     public let updateService: UpdateService
     public let volumeService: VolumeService
     public let appFolderMoverService: AppFolderMoverService
+    public let activityLogStore: ActivityLogStore
 
     public init() {
         self.diskSpaceService = DiskSpaceService()
@@ -35,5 +36,6 @@ public final class AppEnvironment: ObservableObject {
         self.updateService = UpdateService()
         self.volumeService = VolumeService()
         self.appFolderMoverService = AppFolderMoverService()
+        self.activityLogStore = ActivityLogStore()
     }
 }

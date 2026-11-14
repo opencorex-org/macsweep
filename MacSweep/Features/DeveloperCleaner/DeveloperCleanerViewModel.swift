@@ -59,6 +59,7 @@ public final class DeveloperCleanerViewModel: ObservableObject {
         guard activeScanID == scanID, !control.isCancelled else { return }
 
         self.scanResult = result
+        environment.activityLogStore.recordScan(result, title: "Developer scan completed")
         self.items = result.items.map { item in
             var item = item
             item.isSelected = item.risk == .safe
@@ -149,6 +150,7 @@ public final class DeveloperCleanerViewModel: ObservableObject {
         }
 
         lastCleanResult = result
+        environment.activityLogStore.recordCleanup(result, title: "Developer cleanup completed")
 
         let failedURLs = Set(result.failures.map(\.url))
         items.removeAll { item in

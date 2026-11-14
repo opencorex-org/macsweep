@@ -64,12 +64,14 @@ public final class AppMoverViewModel: ObservableObject {
 
     private let moverService: AppFolderMoverService
     private let volumeService: VolumeService
+    private let activityLogStore: ActivityLogStore
 
     // MARK: - Init
 
     public init(environment: AppEnvironment) {
         self.moverService = environment.appFolderMoverService
         self.volumeService = environment.volumeService
+        self.activityLogStore = environment.activityLogStore
     }
 
     // MARK: - Computed Properties
@@ -177,6 +179,7 @@ public final class AppMoverViewModel: ObservableObject {
             self?.moveProgress = progress
         }
         lastMoveResult = result
+        activityLogStore.recordTransfer(result, isRestore: false)
 
         // Refresh list after move
         await scan()
@@ -195,6 +198,7 @@ public final class AppMoverViewModel: ObservableObject {
             self?.moveProgress = progress
         }
         lastMoveResult = result
+        activityLogStore.recordTransfer(result, isRestore: true)
 
         await scan()
         viewState = .moveDone

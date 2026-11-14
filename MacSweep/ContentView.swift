@@ -14,6 +14,8 @@ public struct ContentView: View {
                 switch selectedItem {
                 case .dashboard:
                     DashboardView(environment: environment)
+                case .activityLog:
+                    ActivityLogView(store: environment.activityLogStore)
                 case .fullScan:
                     FullScanView(environment: environment)
                 case .smartScan:

@@ -61,6 +61,7 @@ public final class SmartScanViewModel: ObservableObject {
 
         self.scanResult = result
         self.items = result.items
+        environment.activityLogStore.recordScan(result, title: "Smart Scan completed")
         self.isScanning = false
         self.isPaused = false
         self.scanTask = nil
@@ -146,6 +147,7 @@ public final class SmartScanViewModel: ObservableObject {
             }
         }
         self.lastCleanResult = cleanResult
+        environment.activityLogStore.recordCleanup(cleanResult, title: "Smart cleanup completed")
 
         // Remove cleaned items from local state
         let failedURLs = Set(cleanResult.failures.map(\.url))

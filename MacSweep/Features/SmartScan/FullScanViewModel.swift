@@ -51,6 +51,7 @@ public final class FullScanViewModel: ObservableObject {
         guard activeScanID == scanID, !control.isCancelled else { return }
 
         scanResult = result
+        environment.activityLogStore.recordScan(result, title: "Full Scan completed")
         items = result.items.map { item in
             var item = item
             item.isSelected = item.risk == .safe
@@ -135,6 +136,7 @@ public final class FullScanViewModel: ObservableObject {
             }
         }
         lastCleanResult = result
+        environment.activityLogStore.recordCleanup(result, title: "Full cleanup completed")
         let failedURLs = Set(result.failures.map(\.url))
         items.removeAll { item in
             item.isSelected && !failedURLs.contains(item.url)
