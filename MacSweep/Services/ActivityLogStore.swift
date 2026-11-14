@@ -91,6 +91,21 @@ public final class ActivityLogStore: ObservableObject {
         defaults.removeObject(forKey: Self.storageKey)
     }
 
+    public func csvReport() -> String {
+        let header = "Date,Type,Status,Title,Detail,Items,Bytes,Duration Seconds"
+        let rows = entries.map { entry in
+            [
+                entry.date.ISO8601Format(), entry.kind.title, entry.status.rawValue,
+                entry.title, entry.detail, String(entry.itemCount), String(entry.byteCount), String(format: "%.2f", entry.duration)
+            ].map(csvField).joined(separator: ",")
+        }
+        return ([header] + rows).joined(separator: "\n")
+    }
+
+    private func csvField(_ value: String) -> String {
+        "\"\(value.replacingOccurrences(of: "\"", with: "\"\""))\""
+    }
+
     private func status(success: Int, failures: Int) -> ActivityLogEntry.Status {
         if failures == 0 { return .success }
         return success > 0 ? .warning : .failure

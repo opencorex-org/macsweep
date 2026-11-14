@@ -1,4 +1,6 @@
+import AppKit
 import SwiftUI
+import UniformTypeIdentifiers
 
 public struct ActivityLogView: View {
     @ObservedObject private var store: ActivityLogStore
@@ -90,6 +92,9 @@ public struct ActivityLogView: View {
                     showingClearConfirmation = true
                 }
                 .disabled(store.entries.isEmpty)
+
+                Button("Export", systemImage: "square.and.arrow.up") { exportReport() }
+                    .disabled(store.entries.isEmpty)
             }
 
             HStack(spacing: 12) {
@@ -136,6 +141,14 @@ public struct ActivityLogView: View {
     private var latestActivityText: String {
         guard let date = store.entries.first?.date else { return "—" }
         return date.formatted(.relative(presentation: .named))
+    }
+
+    private func exportReport() {
+        let panel = NSSavePanel()
+        panel.nameFieldStringValue = "MacSweep Activity Report.csv"
+        panel.allowedContentTypes = [.commaSeparatedText]
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        try? store.csvReport().write(to: url, atomically: true, encoding: .utf8)
     }
 }
 
