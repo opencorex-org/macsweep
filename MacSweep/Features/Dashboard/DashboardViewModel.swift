@@ -15,6 +15,19 @@ public final class DashboardViewModel: ObservableObject {
         self.environment = environment
     }
 
+    public var healthScore: Int {
+        guard let diskSpace else { return 0 }
+        var score = 100
+        let used = diskSpace.usedPercentage
+        if used >= 0.99 { score -= 55 }
+        else if used >= 0.95 { score -= 40 }
+        else if used >= 0.90 { score -= 25 }
+        else if used >= 0.80 { score -= 12 }
+        if cleanableBytes >= 20_000_000_000 { score -= 15 }
+        else if cleanableBytes >= 5_000_000_000 { score -= 8 }
+        return max(0, score)
+    }
+
     public func refreshDiskSpace() {
         self.diskSpace = try? environment.diskSpaceService.getDiskSpace()
     }

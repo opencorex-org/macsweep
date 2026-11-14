@@ -2,10 +2,12 @@ import SwiftUI
 
 public struct ScanSummaryView: View {
     public let result: CleanResult
+    public let verifiedBytesFreed: Int64?
     public let onScanAgain: () -> Void
 
-    public init(result: CleanResult, onScanAgain: @escaping () -> Void = {}) {
+    public init(result: CleanResult, verifiedBytesFreed: Int64? = nil, onScanAgain: @escaping () -> Void = {}) {
         self.result = result
+        self.verifiedBytesFreed = verifiedBytesFreed
         self.onScanAgain = onScanAgain
     }
 
@@ -44,6 +46,15 @@ public struct ScanSummaryView: View {
                     icon: "sparkles",
                     color: .green
                 )
+
+                if let verifiedBytesFreed {
+                    StatCard(
+                        title: "Verified Free Space",
+                        value: ByteFormatter.format(verifiedBytesFreed),
+                        icon: "checkmark.circle",
+                        color: .teal
+                    )
+                }
 
                 StatCard(
                     title: "Cleaned Items",

@@ -22,7 +22,7 @@ public struct OptimiseView: View {
                     subtitle: "Removing approved clutter while protecting system and personal files…"
                 )
             } else if let result = viewModel.lastCleanResult {
-                ScanSummaryView(result: result) {
+                ScanSummaryView(result: result, verifiedBytesFreed: viewModel.verifiedBytesFreed) {
                     Task { await viewModel.analyse() }
                 }
             } else if !viewModel.hasAnalysed {
@@ -42,7 +42,7 @@ public struct OptimiseView: View {
         .sheet(isPresented: $showingConfirmation) {
             ConfirmationDialog(
                 title: "Apply Selected Optimisations?",
-                message: "Permanently remove \(viewModel.selectedCount) approved items (\(ByteFormatter.format(viewModel.selectedBytes)))? Protected system paths remain excluded.",
+                message: "Preview: \(viewModel.safeSelectedCount) safe and \(viewModel.cautionSelectedCount) caution items, totalling \(ByteFormatter.format(viewModel.selectedBytes)). Cleanup is permanent and cannot be recovered; protected paths and ignored items remain excluded.",
                 confirmTitle: "Optimise \(ByteFormatter.format(viewModel.selectedBytes))",
                 isDestructive: true,
                 onConfirm: {
@@ -108,6 +108,12 @@ public struct OptimiseView: View {
                     SecondaryButton(title: "Analyse Again", iconName: "arrow.clockwise") {
                         Task { await viewModel.analyse() }
                     }
+                    Button("Safe Clean", systemImage: "checkmark.shield.fill") {
+                        viewModel.selectRecommended()
+                        showingConfirmation = true
+                    }
+                    .buttonStyle(.bordered)
+                    .disabled(!viewModel.items.contains { $0.risk == .safe })
                     PrimaryButton(
                         title: "Optimise \(ByteFormatter.format(viewModel.selectedBytes))",
                         iconName: "wand.and.stars"

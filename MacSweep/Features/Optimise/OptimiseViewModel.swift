@@ -9,6 +9,7 @@ public final class OptimiseViewModel: ObservableObject {
     @Published public private(set) var cleanProgress: CleanProgress?
     @Published public private(set) var hasAnalysed = false
     @Published public private(set) var lastCleanResult: CleanResult?
+    @Published public private(set) var verifiedBytesFreed: Int64?
     @Published public var items: [CleanupItem] = []
 
     private let environment: AppEnvironment
@@ -24,6 +25,8 @@ public final class OptimiseViewModel: ObservableObject {
     public var selectedBytes: Int64 { selectedItems.reduce(0) { $0 + $1.size } }
     public var reclaimableBytes: Int64 { items.reduce(0) { $0 + $1.size } }
     public var categoryCount: Int { Set(items.map(\.category)).count }
+    public var safeSelectedCount: Int { selectedItems.filter { $0.risk == .safe }.count }
+    public var cautionSelectedCount: Int { selectedItems.filter { $0.risk == .caution }.count }
 
     public func analyse() async {
         guard !isScanning, !isCleaning else { return }
@@ -32,6 +35,7 @@ public final class OptimiseViewModel: ObservableObject {
         isScanning = true
         hasAnalysed = false
         lastCleanResult = nil
+        verifiedBytesFreed = nil
         items = []
         scanProgress = ScanProgress(totalCategoriesCount: CleanupCategory.allCases.count)
 
@@ -48,7 +52,7 @@ public final class OptimiseViewModel: ObservableObject {
         guard !control.isCancelled else { return }
 
         items = result.items
-            .filter { $0.risk != .high }
+            .filter { $0.risk != .high && !environment.ignoreListStore.contains($0) }
             .map { item in
                 var item = item
                 item.isSelected = item.risk == .safe
@@ -94,6 +98,7 @@ public final class OptimiseViewModel: ObservableObject {
         let selected = selectedItems
         guard !isCleaning, !isScanning, !selected.isEmpty else { return }
         isCleaning = true
+        let availableBefore = try? environment.diskSpaceService.getDiskSpace().availableCapacity
         cleanProgress = CleanProgress(
             currentItemName: selected.first?.displayName ?? "Preparing optimisation…",
             currentItemPath: selected.first?.url.path ?? "",
@@ -110,6 +115,10 @@ public final class OptimiseViewModel: ObservableObject {
             }
         }
         lastCleanResult = result
+        if let before = availableBefore,
+           let after = try? environment.diskSpaceService.getDiskSpace().availableCapacity {
+            verifiedBytesFreed = max(0, after - before)
+        }
         environment.activityLogStore.recordCleanup(result, title: "Optimisation completed")
 
         let failedURLs = Set(result.failures.map(\.url))
