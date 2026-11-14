@@ -471,6 +471,9 @@
     "Application language" : {
 
     },
+    "Application theme" : {
+
+    },
     "Apply & Quit" : {
       "localizations" : {
         "ar" : {
@@ -1580,6 +1583,9 @@
 
     },
     "The application bundle could not be moved to Trash." : {
+
+    },
+    "Theme" : {
 
     },
     "This setting becomes the default threshold for future Large Files scans." : {

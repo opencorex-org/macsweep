@@ -3,6 +3,7 @@ import SwiftUI
 @main
 struct MacSweepApp: App {
     @StateObject private var environment = AppEnvironment()
+    @AppStorage(AppTheme.preferenceKey) private var storedTheme = AppThemePreference.light.rawValue
 
     init() {
         // Apply the user's saved language preference before any window is shown.
@@ -13,6 +14,7 @@ struct MacSweepApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(environment)
+                .preferredColorScheme(theme.colorScheme)
         }
         .windowStyle(.titleBar)
         .windowToolbarStyle(.unified)
@@ -24,5 +26,9 @@ struct MacSweepApp: App {
                 .disabled(!environment.updateService.isConfigured)
             }
         }
+    }
+
+    private var theme: AppThemePreference {
+        AppThemePreference(rawValue: storedTheme) ?? .light
     }
 }

@@ -1,13 +1,14 @@
 import SwiftUI
 
 private enum SettingsPane: String, CaseIterable, Identifiable {
-    case general, scanning, notifications, privacy, about
+    case general, appearance, scanning, notifications, privacy, about
 
     var id: String { rawValue }
 
     var title: String {
         switch self {
         case .general: "General"
+        case .appearance: "Appearance"
         case .scanning: "Scanning"
         case .notifications: "Notifications"
         case .privacy: "Privacy & Access"
@@ -18,6 +19,7 @@ private enum SettingsPane: String, CaseIterable, Identifiable {
     var subtitle: String {
         switch self {
         case .general: "Startup, updates, and language"
+        case .appearance: "Choose how MacSweep looks"
         case .scanning: "File detection preferences"
         case .notifications: "Cleanup alerts and banners"
         case .privacy: "Permissions and data handling"
@@ -28,6 +30,7 @@ private enum SettingsPane: String, CaseIterable, Identifiable {
     var icon: String {
         switch self {
         case .general: "gearshape.fill"
+        case .appearance: "paintbrush.fill"
         case .scanning: "magnifyingglass"
         case .notifications: "bell.badge.fill"
         case .privacy: "hand.raised.fill"
@@ -38,6 +41,7 @@ private enum SettingsPane: String, CaseIterable, Identifiable {
     var tint: Color {
         switch self {
         case .general: .blue
+        case .appearance: .indigo
         case .scanning: .orange
         case .notifications: .purple
         case .privacy: .green
@@ -137,6 +141,8 @@ public struct SettingsView: View {
                     switch selectedPane {
                     case .general:
                         GeneralSettings(viewModel: viewModel)
+                    case .appearance:
+                        AppearanceSettings(viewModel: viewModel)
                     case .scanning:
                         ScanSettings(viewModel: viewModel)
                     case .notifications:
@@ -153,6 +159,47 @@ public struct SettingsView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+private struct AppearanceSettings: View {
+    @ObservedObject var viewModel: SettingsViewModel
+
+    var body: some View {
+        VStack(spacing: 16) {
+            SettingsCard(
+                title: "Theme",
+                subtitle: "Changes apply instantly throughout MacSweep",
+                icon: "circle.lefthalf.filled",
+                tint: .indigo
+            ) {
+                VStack(alignment: .leading, spacing: 14) {
+                    Picker("Theme", selection: themeBinding) {
+                        ForEach(AppThemePreference.allCases) { theme in
+                            Label(theme.title, systemImage: theme.icon)
+                                .tag(theme)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .labelsHidden()
+                    .accessibilityLabel("Application theme")
+
+                    Label(viewModel.selectedTheme.detail, systemImage: viewModel.selectedTheme.icon)
+                        .font(.system(size: 11))
+                        .foregroundColor(.msSecondaryLabel)
+                        .contentTransition(.opacity)
+                        .animation(.easeInOut(duration: AppTheme.animationDuration), value: viewModel.selectedTheme)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .top)
+    }
+
+    private var themeBinding: Binding<AppThemePreference> {
+        Binding(
+            get: { viewModel.selectedTheme },
+            set: { viewModel.selectedTheme = $0 }
+        )
     }
 }
 
