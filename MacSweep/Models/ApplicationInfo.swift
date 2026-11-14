@@ -88,6 +88,51 @@ public enum LeftoverType: String, Codable, Sendable {
     case caches
     case logs
     case containers
+    case groupContainers
     case savedState
     case httpStorage
+    case webKit
+    case cookies
+    case applicationScripts
+    case launchAgent
+    case launchDaemon
+    case helperTool
+    case crashReports
+    case sdkSupport
+
+    public var displayName: String {
+        switch self {
+        case .preferences: "Preferences"
+        case .applicationSupport: "Application Support"
+        case .caches: "Caches"
+        case .logs: "Logs"
+        case .containers: "App Container"
+        case .groupContainers: "Group Container"
+        case .savedState: "Saved State"
+        case .httpStorage: "HTTP Storage"
+        case .webKit: "WebKit Data"
+        case .cookies: "Cookies"
+        case .applicationScripts: "Application Scripts"
+        case .launchAgent: "Launch Agent"
+        case .launchDaemon: "Launch Daemon"
+        case .helperTool: "Helper Tool"
+        case .crashReports: "Crash Reports"
+        case .sdkSupport: "App-owned SDK / Support Data"
+        }
+    }
+
+    public var iconName: String {
+        switch self {
+        case .preferences: "slider.horizontal.3"
+        case .applicationSupport, .sdkSupport: "folder.fill"
+        case .caches: "internaldrive.fill"
+        case .logs, .crashReports: "doc.text.fill"
+        case .containers, .groupContainers: "shippingbox.fill"
+        case .savedState: "clock.arrow.circlepath"
+        case .httpStorage, .webKit, .cookies: "globe"
+        case .applicationScripts: "applescript.fill"
+        case .launchAgent, .launchDaemon: "bolt.fill"
+        case .helperTool: "wrench.and.screwdriver.fill"
+        }
+    }
 }

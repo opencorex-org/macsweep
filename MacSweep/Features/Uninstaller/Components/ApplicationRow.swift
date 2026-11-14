@@ -33,7 +33,7 @@ public struct ApplicationRow: View {
                     .font(.system(size: 13, weight: isSelected ? .bold : .semibold))
                     .foregroundColor(.msLabel)
 
-                Text(app.version.isEmpty ? app.bundleIdentifier : "v\(app.version) • \(app.leftovers.count) leftover\(app.leftovers.count == 1 ? "" : "s")")
+                Text(app.version.isEmpty ? app.bundleIdentifier : "v\(app.version) • \(app.leftovers.count) associated item\(app.leftovers.count == 1 ? "" : "s")")
                     .font(.system(size: 11))
                     .foregroundColor(.msSecondaryLabel)
                     .lineLimit(1)

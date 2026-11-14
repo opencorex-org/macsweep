@@ -1,4 +1,6 @@
+import AppKit
 import SwiftUI
+import UniformTypeIdentifiers
 
 public struct UninstallerView: View {
     @EnvironmentObject private var environment: AppEnvironment
@@ -23,12 +25,24 @@ public struct UninstallerView: View {
                     Text("App Uninstaller")
                         .font(.system(size: 18, weight: .bold))
                         .foregroundColor(.msLabel)
-                    Text("Completely remove applications along with their hidden leftovers & caches")
+                    Text("Find apps in standard, nested, Homebrew, external, and user locations—then remove verified support data")
                         .font(.system(size: 12))
                         .foregroundColor(.msSecondaryLabel)
                 }
 
                 Spacer()
+
+                if !viewModel.applications.isEmpty {
+                    Text("\(viewModel.applications.count) apps")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundColor(.msSecondaryLabel)
+                }
+
+                Button("Add Application…", systemImage: "plus") {
+                    chooseApplication()
+                }
+                .buttonStyle(.bordered)
+                .disabled(viewModel.isLoading || viewModel.isUninstalling)
 
                 SecondaryButton(title: "Scan Apps", iconName: "arrow.clockwise") {
                     Task { await viewModel.loadApplications() }
@@ -52,7 +66,7 @@ public struct UninstallerView: View {
                     viewModel.dismissUninstallResult()
                 }
             } else if viewModel.isLoading {
-                LoadingView(title: "Scanning Installed Applications...")
+                LoadingView(title: "Scanning Installed Applications...", subtitle: "Checking nested folders, external volumes, Homebrew apps, and associated support data")
             } else if viewModel.applications.isEmpty {
                 EmptyStateView(
                     title: "Scan Applications",
@@ -119,7 +133,7 @@ public struct UninstallerView: View {
             if let selectedApp = viewModel.selectedApp {
                 ConfirmationDialog(
                     title: "Approve Uninstalling \(selectedApp.name)?",
-                    message: "MacSweep will move the application and \(selectedApp.leftovers.count) associated item\(selectedApp.leftovers.count == 1 ? "" : "s") (\(selectedApp.formattedTotalSize)) to the macOS Trash. You can restore them until Trash is emptied.",
+                    message: "MacSweep will move the app and \(selectedApp.leftovers.count) verified item\(selectedApp.leftovers.count == 1 ? "" : "s")—including matching caches, containers, preferences, helpers, launch services, logs, and app-owned SDK/support data—to Trash (\(selectedApp.formattedTotalSize)). Shared package receipts and ambiguous shared SDKs remain protected.",
                     confirmTitle: "Approve & Move to Trash",
                     isDestructive: true,
                     onConfirm: {
@@ -174,6 +188,17 @@ public struct UninstallerView: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
         .background(Color.orange.opacity(0.08))
+    }
+
+    private func chooseApplication() {
+        let panel = NSOpenPanel()
+        panel.allowedContentTypes = [.applicationBundle]
+        panel.canChooseFiles = true
+        panel.canChooseDirectories = false
+        panel.allowsMultipleSelection = false
+        panel.prompt = "Inspect Application"
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        Task { await viewModel.addApplication(at: url) }
     }
 }
 

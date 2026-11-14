@@ -104,6 +104,9 @@
     "%lld" : {
 
     },
+    "%lld apps" : {
+
+    },
     "%lld could not be moved." : {
 
     },
@@ -324,6 +327,9 @@
 
     },
     "Activity type" : {
+
+    },
+    "Add Application…" : {
 
     },
     "Add Folder…" : {
@@ -713,9 +719,6 @@
     "Clear web browser caches, cookies, and tracking artifacts" : {
 
     },
-    "Completely remove applications along with their hidden leftovers & caches" : {
-
-    },
     "Completely Uninstall" : {
 
     },
@@ -790,6 +793,9 @@
     "Find and remove identical file copies across folders" : {
 
     },
+    "Find apps in standard, nested, Homebrew, external, and user locations—then remove verified support data" : {
+
+    },
     "Find safe opportunities to reclaim storage and remove accumulated clutter." : {
 
     },
@@ -826,7 +832,7 @@
     "Ignored Categories" : {
 
     },
-    "Installed Files & Leftovers" : {
+    "Installed Files & Associated Data" : {
 
     },
     "Internal" : {
@@ -1188,6 +1194,9 @@
         }
       }
     },
+    "Moved to Trash • Recoverable" : {
+
+    },
     "No readable contents found" : {
 
     },
@@ -1198,6 +1207,9 @@
 
     },
     "Off" : {
+
+    },
+    "Only strongly matched app data is included. Shared package receipts, system files, and ambiguous vendor SDKs are preserved." : {
 
     },
     "Open" : {
