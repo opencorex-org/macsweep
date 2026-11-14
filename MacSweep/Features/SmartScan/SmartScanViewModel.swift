@@ -60,7 +60,11 @@ public final class SmartScanViewModel: ObservableObject {
         guard activeScanID == scanID, !control.isCancelled else { return }
 
         self.scanResult = result
-        self.items = result.items
+        self.items = result.items.map { item in
+            var item = item
+            item.isSelected = item.risk == .safe
+            return item
+        }
         environment.activityLogStore.recordScan(result, title: "Smart Scan completed")
         self.isScanning = false
         self.isPaused = false

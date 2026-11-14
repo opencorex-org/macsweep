@@ -80,5 +80,8 @@ public struct SidebarView: View {
         .task {
             diskSpace = try? environment.diskSpaceService.getDiskSpace()
         }
+        .onReceive(environment.activityLogStore.$entries) { _ in
+            diskSpace = try? environment.diskSpaceService.getDiskSpace()
+        }
     }
 }

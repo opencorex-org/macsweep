@@ -6,6 +6,8 @@ public final class SettingsViewModel: ObservableObject {
     @AppStorage("launchAtLogin") public var launchAtLogin: Bool = false
     @AppStorage("largeFileThresholdMB") public var largeFileThresholdMB: Int = 100
     @AppStorage("enableNotifications") public var enableNotifications: Bool = true
+    @AppStorage(StorageAlertService.storageAlertsEnabledKey) public var storageAlertsEnabled: Bool = true
+    @AppStorage(StorageAlertService.warningThresholdKey) public var storageWarningThreshold: Int = 90
     @AppStorage("AppSelectedLanguageCode") public var selectedLanguageCode: String = "en"
     @AppStorage(AppTheme.preferenceKey) public var selectedThemeRawValue: String = AppThemePreference.light.rawValue
 

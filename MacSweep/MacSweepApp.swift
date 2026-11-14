@@ -2,6 +2,7 @@ import SwiftUI
 
 @main
 struct MacSweepApp: App {
+    @Environment(\.scenePhase) private var scenePhase
     @StateObject private var environment = AppEnvironment()
     @AppStorage(AppTheme.preferenceKey) private var storedTheme = AppThemePreference.light.rawValue
 
@@ -15,6 +16,13 @@ struct MacSweepApp: App {
             ContentView()
                 .environmentObject(environment)
                 .preferredColorScheme(theme.colorScheme)
+                .task {
+                    await environment.storageAlertService.start()
+                }
+                .onChange(of: scenePhase) { _, phase in
+                    guard phase == .active else { return }
+                    Task { await environment.storageAlertService.checkStorage() }
+                }
         }
         .windowStyle(.titleBar)
         .windowToolbarStyle(.unified)

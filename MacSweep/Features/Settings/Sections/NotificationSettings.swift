@@ -1,6 +1,8 @@
 import SwiftUI
+import UserNotifications
 
 public struct NotificationSettings: View {
+    @EnvironmentObject private var environment: AppEnvironment
     @ObservedObject var viewModel: SettingsViewModel
 
     public var body: some View {
@@ -11,38 +13,126 @@ public struct NotificationSettings: View {
                 icon: "bell.fill",
                 tint: .purple
             ) {
-                SettingsToggleRow(
-                    title: "Cleanup completion notifications",
-                    detail: "Show a system notification after a cleanup finishes",
-                    icon: "checkmark.circle",
-                    isOn: $viewModel.enableNotifications
-                )
+                VStack(spacing: 14) {
+                    SettingsToggleRow(
+                        title: "Allow system notifications",
+                        detail: "Show important MacSweep alerts and completion banners",
+                        icon: "bell.badge",
+                        isOn: notificationBinding
+                    )
+
+                    Divider().padding(.leading, 33)
+
+                    SettingsToggleRow(
+                        title: "Storage capacity alerts",
+                        detail: "Warn before storage is full and send a critical alert at 99%",
+                        icon: "internaldrive.fill",
+                        isOn: storageAlertBinding
+                    )
+                    .disabled(!viewModel.enableNotifications)
+
+                    Divider().padding(.leading, 33)
+
+                    HStack {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("Early warning threshold")
+                                .font(.system(size: 12, weight: .medium))
+                            Text("The critical alert always triggers at 99% used")
+                                .font(.system(size: 10))
+                                .foregroundColor(.msSecondaryLabel)
+                        }
+                        Spacer()
+                        Picker("Early warning threshold", selection: $viewModel.storageWarningThreshold) {
+                            ForEach([85, 90, 95, 98], id: \.self) { threshold in
+                                Text("\(threshold)% used").tag(threshold)
+                            }
+                        }
+                        .labelsHidden()
+                        .frame(width: 120)
+                        .onChange(of: viewModel.storageWarningThreshold) { _, _ in
+                            Task { await environment.storageAlertService.settingsDidChange() }
+                        }
+                    }
+                    .disabled(!viewModel.enableNotifications || !viewModel.storageAlertsEnabled)
+                }
             }
 
             HStack(spacing: 12) {
                 ZStack {
                     Circle()
-                        .fill((viewModel.enableNotifications ? Color.green : Color.gray).opacity(0.13))
-                    Image(systemName: viewModel.enableNotifications ? "bell.badge.fill" : "bell.slash.fill")
-                        .foregroundColor(viewModel.enableNotifications ? .green : .gray)
+                        .fill(statusColor.opacity(0.13))
+                    Image(systemName: statusIcon)
+                        .foregroundColor(statusColor)
                 }
                 .frame(width: 38, height: 38)
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(viewModel.enableNotifications ? "Notifications are enabled" : "Notifications are paused")
+                    Text(statusTitle)
                         .font(.system(size: 12, weight: .semibold))
-                    Text(viewModel.enableNotifications
-                         ? "MacSweep will notify you when cleanup tasks finish."
-                         : "Cleanup tasks will finish silently while the app is in the background.")
+                    Text(statusDetail)
                         .font(.system(size: 10))
                         .foregroundColor(.msSecondaryLabel)
                 }
                 Spacer()
+
+                if environment.storageAlertService.authorizationStatus == .denied {
+                    Button("Open Notification Settings") {
+                        environment.storageAlertService.openNotificationSettings()
+                    }
+                    .buttonStyle(.bordered)
+                }
             }
             .padding(16)
             .background(Color.msSecondaryBackground)
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
         .frame(maxWidth: .infinity, alignment: .top)
+    }
+
+    private var notificationBinding: Binding<Bool> {
+        Binding(
+            get: { viewModel.enableNotifications },
+            set: { enabled in
+                viewModel.enableNotifications = enabled
+                Task { await environment.storageAlertService.settingsDidChange() }
+            }
+        )
+    }
+
+    private var storageAlertBinding: Binding<Bool> {
+        Binding(
+            get: { viewModel.storageAlertsEnabled },
+            set: { enabled in
+                viewModel.storageAlertsEnabled = enabled
+                Task { await environment.storageAlertService.settingsDidChange() }
+            }
+        )
+    }
+
+    private var statusColor: Color {
+        if environment.storageAlertService.authorizationStatus == .denied { return .orange }
+        return viewModel.enableNotifications ? .green : .gray
+    }
+
+    private var statusIcon: String {
+        if environment.storageAlertService.authorizationStatus == .denied { return "exclamationmark.bell.fill" }
+        return viewModel.enableNotifications ? "bell.badge.fill" : "bell.slash.fill"
+    }
+
+    private var statusTitle: String {
+        if environment.storageAlertService.authorizationStatus == .denied {
+            return "Notifications are blocked by macOS"
+        }
+        return viewModel.enableNotifications ? "Storage monitoring is active" : "Notifications are paused"
+    }
+
+    private var statusDetail: String {
+        if environment.storageAlertService.authorizationStatus == .denied {
+            return "Allow notifications in System Settings to receive storage alerts."
+        }
+        if viewModel.enableNotifications && viewModel.storageAlertsEnabled {
+            return "Warning at \(viewModel.storageWarningThreshold)% and critical alert at 99% used."
+        }
+        return "MacSweep will not show storage capacity alerts."
     }
 }

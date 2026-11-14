@@ -35,6 +35,13 @@ public nonisolated struct DeletionService: Sendable {
 
         do {
             try FileManager.default.removeItem(at: url)
+            guard !FileManager.default.fileExists(atPath: url.path) else {
+                return CleanOperationResult(
+                    url: url,
+                    success: false,
+                    error: "The item is still in use and could not be fully removed"
+                )
+            }
             Logger.cleaner.info("Permanently removed: \(url.lastPathComponent, privacy: .public)")
             return CleanOperationResult(url: url, success: true)
         } catch {

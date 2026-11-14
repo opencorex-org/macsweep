@@ -31,7 +31,7 @@ public struct ScanSummaryView: View {
                     .font(.system(size: 24, weight: .bold))
                     .foregroundColor(.msLabel)
 
-                Text("Successfully reclaimed \(ByteFormatter.format(result.totalBytesReclaimed)) of disk space")
+                Text("Removed \(ByteFormatter.format(result.totalBytesReclaimed)) of cache and junk data")
                     .font(.system(size: 14, weight: .medium))
                     .foregroundColor(.msSecondaryLabel)
             }
@@ -39,7 +39,7 @@ public struct ScanSummaryView: View {
             // Stat Cards Grid
             HStack(spacing: 16) {
                 StatCard(
-                    title: "Reclaimed Space",
+                    title: "Removed Data",
                     value: ByteFormatter.format(result.totalBytesReclaimed),
                     icon: "sparkles",
                     color: .green
@@ -75,6 +75,50 @@ public struct ScanSummaryView: View {
             .padding(.vertical, 8)
             .background(Color.primary.opacity(0.04))
             .cornerRadius(8)
+
+            if !result.failures.isEmpty {
+                VStack(alignment: .leading, spacing: 8) {
+                    Label("Items That Need Attention", systemImage: "exclamationmark.triangle.fill")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(.msCaution)
+
+                    ForEach(Array(result.failures.prefix(3).enumerated()), id: \.offset) { _, failure in
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(failure.url.lastPathComponent)
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundColor(.msLabel)
+                                .lineLimit(1)
+                            Text(failure.error ?? "The item could not be removed")
+                                .font(.system(size: 10))
+                                .foregroundColor(.msSecondaryLabel)
+                                .lineLimit(2)
+                        }
+                    }
+
+                    if result.failures.count > 3 {
+                        Text("And \(result.failures.count - 3) more…")
+                            .font(.system(size: 10, weight: .medium))
+                            .foregroundColor(.msSecondaryLabel)
+                    }
+                }
+                .padding(12)
+                .frame(maxWidth: 480, alignment: .leading)
+                .background(Color.msCaution.opacity(0.07))
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            }
+
+            HStack(alignment: .top, spacing: 8) {
+                Image(systemName: "info.circle.fill")
+                    .foregroundColor(.msAccent)
+                Text("macOS may keep removed cache storage reserved while an app still has files open. Quit affected apps—or restart your Mac—then scan again to verify the released space.")
+                    .font(.system(size: 11))
+                    .foregroundColor(.msSecondaryLabel)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(12)
+            .frame(maxWidth: 480)
+            .background(Color.msAccent.opacity(0.07))
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
 
             Button(action: onScanAgain) {
                 HStack(spacing: 8) {

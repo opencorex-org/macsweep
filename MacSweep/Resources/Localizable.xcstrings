@@ -222,6 +222,16 @@
         }
       }
     },
+    "%lld selected • %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld selected • %2$@"
+          }
+        }
+      }
+    },
     "%lld selected • %@ of %@" : {
       "localizations" : {
         "en" : {
@@ -323,6 +333,9 @@
 
     },
     "All components above will be moved to external storage and symlinked transparently." : {
+
+    },
+    "And %lld more…" : {
 
     },
     "App Components & Associated Data" : {
@@ -747,6 +760,9 @@
     "Find and remove identical file copies across folders" : {
 
     },
+    "Find safe opportunities to reclaim storage and remove accumulated clutter." : {
+
+    },
     "Find, inspect, and safely manage files consuming substantial disk space" : {
 
     },
@@ -775,6 +791,9 @@
 
     },
     "Internal" : {
+
+    },
+    "Items That Need Attention" : {
 
     },
     "Keep Newest (Select Older)" : {
@@ -938,6 +957,9 @@
 
     },
     "Mac Storage Optimized!" : {
+
+    },
+    "macOS may keep removed cache storage reserved while an app still has files open. Quit affected apps—or restart your Mac—then scan again to verify the released space." : {
 
     },
     "MacSweep" : {
@@ -1148,6 +1170,12 @@
     "Open Privacy Settings" : {
 
     },
+    "Optimisation Recommendations" : {
+
+    },
+    "Optimise Your Mac" : {
+
+    },
     "Optimize system performance, clean junk files, analyze disk usage, and manage developer caches." : {
 
     },
@@ -1195,10 +1223,16 @@
         }
       }
     },
+    "Recommended" : {
+
+    },
     "Recommended Only" : {
 
     },
     "Refresh volumes" : {
+
+    },
+    "Removed %@ of cache and junk data" : {
 
     },
     "Rescan applications and folders" : {
@@ -1501,6 +1535,9 @@
     "Review Developer Files" : {
 
     },
+    "Review each recommendation before applying changes." : {
+
+    },
     "Review Scan Results" : {
 
     },
@@ -1599,9 +1636,6 @@
           }
         }
       }
-    },
-    "Successfully reclaimed %@ of disk space" : {
-
     },
     "System caches & temporary items" : {
 

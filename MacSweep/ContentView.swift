@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 public struct ContentView: View {
     @EnvironmentObject private var environment: AppEnvironment
@@ -14,6 +15,8 @@ public struct ContentView: View {
                 switch selectedItem {
                 case .dashboard:
                     DashboardView(environment: environment)
+                case .optimise:
+                    OptimiseView(environment: environment)
                 case .activityLog:
                     ActivityLogView(store: environment.activityLogStore)
                 case .fullScan:
@@ -46,6 +49,9 @@ public struct ContentView: View {
             }
         }
         .environmentObject(coordinator)
+        .onReceive(environment.storageAlertService.$openOptimiseRequest.dropFirst()) { _ in
+            coordinator.navigate(to: .optimise)
+        }
         .sheet(isPresented: $coordinator.showOnboarding) {
             OnboardingView {
                 coordinator.showOnboarding = false

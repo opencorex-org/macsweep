@@ -100,7 +100,7 @@ public struct ActivityLogView: View {
                     tint: .green
                 )
                 ActivitySummaryCard(
-                    title: "Space Reclaimed",
+                    title: "Data Removed",
                     value: ByteFormatter.format(reclaimedBytes),
                     icon: "internaldrive.fill",
                     tint: .msAccent
