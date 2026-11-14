@@ -17,12 +17,15 @@ public struct SidebarView: View {
                     Section(header: Text(group.rawValue).font(.system(size: 11, weight: .bold)).foregroundColor(.msSecondaryLabel)) {
                         ForEach(NavigationItem.allCases.filter { $0.group == group }) { item in
                             NavigationLink(value: item) {
-                                Label {
-                                    Text(item.displayName)
-                                        .font(.system(size: 13, weight: .medium))
-                                } icon: {
+                                HStack(alignment: .top, spacing: 8) {
                                     Image(systemName: item.iconName)
-                                        .foregroundColor(selection == item ? .msAccent : .msSecondaryLabel)
+                                        .font(.system(size: 14, weight: .regular))
+                                        .frame(width: 20)
+                                        .foregroundColor(selection == item ? Color(nsColor: .labelColor) : Color(nsColor: .secondaryLabelColor))
+                                    Text(item.displayName)
+                                        .lineLimit(1)
+                                        .font(.system(size: 13, weight: .medium))
+                                        .foregroundColor(selection == item ? Color(nsColor: .labelColor) : Color(nsColor: .secondaryLabelColor))
                                 }
                             }
                             .tag(item)
