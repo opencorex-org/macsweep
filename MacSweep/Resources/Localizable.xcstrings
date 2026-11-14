@@ -683,9 +683,6 @@
     "Cleanup Completed with Some Skips" : {
 
     },
-    "Cleanup tasks will finish silently while the app is in the background." : {
-
-    },
     "Clear" : {
 
     },
@@ -743,6 +740,9 @@
 
     },
     "Duplicates Finder" : {
+
+    },
+    "Early warning threshold" : {
 
     },
     "External" : {
@@ -1121,9 +1121,6 @@
     "MacSweep Overview" : {
 
     },
-    "MacSweep will notify you when cleanup tasks finish." : {
-
-    },
     "Make MacSweep work your way" : {
 
     },
@@ -1158,13 +1155,10 @@
     "Not enough space" : {
 
     },
-    "Notifications are enabled" : {
-
-    },
-    "Notifications are paused" : {
-
-    },
     "Open" : {
+
+    },
+    "Open Notification Settings" : {
 
     },
     "Open Privacy Settings" : {
@@ -1647,6 +1641,9 @@
 
     },
     "The application bundle could not be moved to Trash." : {
+
+    },
+    "The critical alert always triggers at 99% used" : {
 
     },
     "Theme" : {
