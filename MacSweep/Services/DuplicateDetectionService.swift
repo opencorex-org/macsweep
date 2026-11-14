@@ -7,7 +7,7 @@ public actor DuplicateDetectionService {
     public init() {}
 
     /// Discovers duplicate files in the given directories.
-    public func findDuplicates(in directories: [URL]) async -> [DuplicateGroup] {
+    public func findDuplicates(in directories: [URL], allowedExtensions: Set<String>? = nil) async -> [DuplicateGroup] {
         Logger.scanner.info("Starting duplicate detection")
         var fileBySizeGroup: [Int64: [URL]] = [:]
 
@@ -16,6 +16,8 @@ public actor DuplicateDetectionService {
             for await metadata in FileEnumerator.enumerate(directory: dir, includeHidden: false) {
                 if Task.isCancelled { return [] }
                 guard !metadata.isDirectory && metadata.size >= AppConstants.Defaults.duplicateMinimumSize else { continue }
+                if let allowedExtensions,
+                   !allowedExtensions.contains(metadata.url.pathExtension.lowercased()) { continue }
                 fileBySizeGroup[metadata.size, default: []].append(metadata.url)
             }
         }

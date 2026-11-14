@@ -54,7 +54,49 @@ public struct NotificationSettings: View {
                         }
                     }
                     .disabled(!viewModel.enableNotifications || !viewModel.storageAlertsEnabled)
+
+                    Divider().padding(.leading, 33)
+
+                    SettingsToggleRow(
+                        title: "External drive alerts",
+                        detail: "Warn when a connected drive reaches the same capacity threshold",
+                        icon: "externaldrive.badge.exclamationmark",
+                        isOn: $viewModel.externalStorageAlertsEnabled
+                    )
+                    .disabled(!viewModel.enableNotifications)
                 }
+            }
+
+            SettingsCard(
+                title: "Smart Scan Schedule",
+                subtitle: "Reminders only—files are never deleted automatically",
+                icon: "calendar.badge.clock",
+                tint: .blue
+            ) {
+                HStack {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("Scan reminder").font(.system(size: 12, weight: .medium))
+                        Text("Open MacSweep to review each recommendation")
+                            .font(.system(size: 10)).foregroundColor(.msSecondaryLabel)
+                    }
+                    Spacer()
+                    Picker("Scan reminder", selection: $viewModel.scheduledScanFrequency) {
+                        Text("Off").tag("off")
+                        Text("Daily").tag("daily")
+                        Text("Weekly").tag("weekly")
+                    }
+                    .labelsHidden().frame(width: 110)
+                }
+            }
+
+            HStack {
+                Button("Snooze storage alerts for 24 hours", systemImage: "bell.slash") {
+                    environment.storageAlertService.snoozeAlerts()
+                }
+                .buttonStyle(.bordered)
+                Spacer()
+                Text("Scheduled reminders continue after the snooze ends.")
+                    .font(.system(size: 10)).foregroundColor(.msSecondaryLabel)
             }
 
             HStack(spacing: 12) {

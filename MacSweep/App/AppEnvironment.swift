@@ -24,6 +24,8 @@ public final class AppEnvironment: ObservableObject {
     public let appFolderMoverService: AppFolderMoverService
     public let activityLogStore: ActivityLogStore
     public let storageAlertService: StorageAlertService
+    public let maintenanceInsightsService: MaintenanceInsightsService
+    public let ignoreListStore: IgnoreListStore
 
     public init() {
         let diskSpaceService = DiskSpaceService()
@@ -36,9 +38,12 @@ public final class AppEnvironment: ObservableObject {
         self.largeFileService = LargeFileService()
         self.applicationService = ApplicationService()
         self.updateService = UpdateService()
-        self.volumeService = VolumeService()
+        let volumeService = VolumeService()
+        self.volumeService = volumeService
         self.appFolderMoverService = AppFolderMoverService()
         self.activityLogStore = ActivityLogStore()
-        self.storageAlertService = StorageAlertService(diskSpaceService: diskSpaceService)
+        self.maintenanceInsightsService = MaintenanceInsightsService()
+        self.ignoreListStore = IgnoreListStore()
+        self.storageAlertService = StorageAlertService(diskSpaceService: diskSpaceService, volumeService: volumeService)
     }
 }

@@ -13,6 +13,7 @@ public enum NavigationItem: String, CaseIterable, Identifiable, Hashable, Sendab
     case dashboard
     case optimise
     case activityLog
+    case insights
     case fullScan
     case smartScan
     case storageAnalyzer
@@ -33,6 +34,7 @@ public enum NavigationItem: String, CaseIterable, Identifiable, Hashable, Sendab
         case .dashboard: return "Dashboard"
         case .optimise: return "Optimise"
         case .activityLog: return "Activity Log"
+        case .insights: return "Insights"
         case .fullScan: return "Full Scan"
         case .smartScan: return "Smart Scan"
         case .storageAnalyzer: return "Storage Analyzer"
@@ -53,6 +55,7 @@ public enum NavigationItem: String, CaseIterable, Identifiable, Hashable, Sendab
         case .dashboard: return "gauge.medium"
         case .optimise: return "wand.and.stars"
         case .activityLog: return "clock.arrow.circlepath"
+        case .insights: return "waveform.path.ecg.rectangle.fill"
         case .fullScan: return "magnifyingglass.circle.fill"
         case .smartScan: return "sparkles"
         case .storageAnalyzer: return "chart.pie.fill"
@@ -70,7 +73,7 @@ public enum NavigationItem: String, CaseIterable, Identifiable, Hashable, Sendab
 
     public var group: NavigationGroup {
         switch self {
-        case .dashboard, .optimise, .activityLog: return .overview
+        case .dashboard, .optimise, .activityLog, .insights: return .overview
         case .fullScan, .smartScan, .developerCleaner, .privacy: return .cleanup
         case .storageAnalyzer, .duplicates, .largeFiles, .startupItems, .uninstaller, .appMover, .storageManager: return .tools
         case .settings: return .preferences

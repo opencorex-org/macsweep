@@ -8,6 +8,8 @@ public final class SettingsViewModel: ObservableObject {
     @AppStorage("enableNotifications") public var enableNotifications: Bool = true
     @AppStorage(StorageAlertService.storageAlertsEnabledKey) public var storageAlertsEnabled: Bool = true
     @AppStorage(StorageAlertService.warningThresholdKey) public var storageWarningThreshold: Int = 90
+    @AppStorage(StorageAlertService.externalAlertsEnabledKey) public var externalStorageAlertsEnabled: Bool = true
+    @AppStorage(StorageAlertService.scheduledScanKey) public var scheduledScanFrequency: String = "weekly"
     @AppStorage("AppSelectedLanguageCode") public var selectedLanguageCode: String = "en"
     @AppStorage(AppTheme.preferenceKey) public var selectedThemeRawValue: String = AppThemePreference.light.rawValue
 
