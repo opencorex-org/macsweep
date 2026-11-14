@@ -117,6 +117,9 @@
         }
       }
     },
+    "%lld identical files" : {
+
+    },
     "%lld items" : {
 
     },
@@ -323,7 +326,13 @@
     "Activity type" : {
 
     },
+    "Add Folder…" : {
+
+    },
     "Adjust minimum size" : {
+
+    },
+    "All" : {
 
     },
     "All (%lld)" : {
@@ -333,6 +342,9 @@
 
     },
     "All components above will be moved to external storage and symlinked transparently." : {
+
+    },
+    "Analyse" : {
 
     },
     "And %lld more…" : {
@@ -659,6 +671,9 @@
     "Capacity" : {
 
     },
+    "Category" : {
+
+    },
     "Check Again" : {
 
     },
@@ -669,6 +684,9 @@
 
     },
     "Check Now" : {
+
+    },
+    "Check Storage Now" : {
 
     },
     "Choose Destination Drive" : {
@@ -701,10 +719,16 @@
     "Completely Uninstall" : {
 
     },
+    "Content hashes are compared; originals are never removed automatically." : {
+
+    },
     "Could Not Move" : {
 
     },
     "Currently on External Drive" : {
+
+    },
+    "Daily" : {
 
     },
     "Dashboard" : {
@@ -739,10 +763,16 @@
     "Done" : {
 
     },
+    "Duplicate Photos" : {
+
+    },
     "Duplicates Finder" : {
 
     },
     "Early warning threshold" : {
+
+    },
+    "Export" : {
 
     },
     "External" : {
@@ -785,6 +815,15 @@
 
     },
     "Grant access before uninstalling protected application containers and support files." : {
+
+    },
+    "Ignore" : {
+
+    },
+    "Ignore List" : {
+
+    },
+    "Ignored Categories" : {
 
     },
     "Installed Files & Leftovers" : {
@@ -954,6 +993,9 @@
 
     },
     "Looking for applications and data folders…" : {
+
+    },
+    "Mac Health Score" : {
 
     },
     "Mac Storage Optimized!" : {
@@ -1155,13 +1197,25 @@
     "Not enough space" : {
 
     },
+    "Off" : {
+
+    },
     "Open" : {
+
+    },
+    "Open MacSweep" : {
+
+    },
+    "Open MacSweep to review each recommendation" : {
 
     },
     "Open Notification Settings" : {
 
     },
     "Open Privacy Settings" : {
+
+    },
+    "Open Time Machine Settings" : {
 
     },
     "Optimisation Recommendations" : {
@@ -1204,6 +1258,9 @@
     "Quick Tools" : {
 
     },
+    "Quit MacSweep" : {
+
+    },
     "Real-time system health, storage allocation, and maintenance tools" : {
 
     },
@@ -1224,6 +1281,9 @@
 
     },
     "Refresh volumes" : {
+
+    },
+    "Remove" : {
 
     },
     "Removed %@ of cache and junk data" : {
@@ -1523,6 +1583,12 @@
     "Resume" : {
 
     },
+    "Reveal in Finder" : {
+
+    },
+    "Review" : {
+
+    },
     "Review completed MacSweep operations" : {
 
     },
@@ -1532,7 +1598,13 @@
     "Review each recommendation before applying changes." : {
 
     },
+    "Review recent files, caches, installers, apps, photos, and snapshots" : {
+
+    },
     "Review Scan Results" : {
+
+    },
+    "Safe Clean" : {
 
     },
     "Safe Items Only" : {
@@ -1542,6 +1614,9 @@
 
     },
     "Scan Paused" : {
+
+    },
+    "Scan reminder" : {
 
     },
     "Scanning Applications & Folders…" : {
@@ -1554,6 +1629,9 @@
 
     },
     "Scanning volumes…" : {
+
+    },
+    "Scheduled reminders continue after the snooze ends." : {
 
     },
     "Search activity" : {
@@ -1606,6 +1684,9 @@
         }
       }
     },
+    "Snooze storage alerts for 24 hours" : {
+
+    },
     "Some caches, app containers, logs, and files will be inaccessible." : {
 
     },
@@ -1618,7 +1699,16 @@
     "Stop" : {
 
     },
+    "Storage %lld%% used" : {
+
+    },
     "Storage Analyzer" : {
+
+    },
+    "Storage Insights" : {
+
+    },
+    "Storage unavailable" : {
 
     },
     "Successfully moved %@ and its data (%@) to external drive.\nSymbolic links were created — %@ will work normally from the external drive." : {
@@ -1686,6 +1776,9 @@
         }
       }
     },
+    "View Insights" : {
+
+    },
     "Visual disk space breakdown" : {
 
     },
@@ -1693,6 +1786,9 @@
 
     },
     "Wasted %@" : {
+
+    },
+    "Weekly" : {
 
     },
     "Welcome to MacSweep" : {
