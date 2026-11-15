@@ -15,6 +15,7 @@ public final class StorageAlertService: NSObject, ObservableObject, UNUserNotifi
     @Published public private(set) var authorizationStatus: UNAuthorizationStatus = .notDetermined
     @Published public private(set) var openOptimiseRequest = 0
     @Published public private(set) var openSmartScanRequest = 0
+    @Published public private(set) var currentDiskSpace: DiskSpace?
 
     private enum AlertLevel: String {
         case warning
@@ -63,7 +64,7 @@ public final class StorageAlertService: NSObject, ObservableObject, UNUserNotifi
 
         monitorTask = Task { [weak self] in
             while !Task.isCancelled {
-                try? await Task.sleep(for: .seconds(1_800))
+                try? await Task.sleep(for: .seconds(60))
                 guard !Task.isCancelled else { return }
                 await self?.checkStorage()
             }
@@ -88,9 +89,13 @@ public final class StorageAlertService: NSObject, ObservableObject, UNUserNotifi
     }
 
     public func checkStorage(force: Bool = false) async {
+        guard let diskSpace = try? diskSpaceService.getDiskSpace() else { return }
+        currentDiskSpace = diskSpace
+
+        // Monitoring remains active for the dashboard and menu bar even when the
+        // user has disabled notification banners.
         guard alertsAreEnabled, authorizationStatus == .authorized else { return }
         if let snoozedUntil = defaults.object(forKey: Self.snoozedUntilKey) as? Date, snoozedUntil > Date(), !force { return }
-        guard let diskSpace = try? diskSpaceService.getDiskSpace() else { return }
 
         recordUsage(diskSpace.usedPercentage)
         await sendScheduledScanReminderIfNeeded()
