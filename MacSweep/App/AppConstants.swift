@@ -8,6 +8,7 @@ public enum AppConstants {
         public static let organization = "OpenCorex"
         public static let bundleIdentifier = "org.opencorex.macsweep"
         public static let repositoryURL = URL(string: "https://github.com/opencorex-org/macsweep")!
+        public static let sponsorURL = URL(string: "https://github.com/sponsors/opencorex-org")!
         public static let releasesURL = URL(string: "https://api.github.com/repos/opencorex-org/macsweep/releases/latest")!
     }
 
