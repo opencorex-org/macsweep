@@ -163,7 +163,7 @@ private struct StatCard: View {
                 Image(systemName: icon)
                     .foregroundColor(color)
                     .font(.system(size: 12))
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(.system(size: 11, weight: .medium))
                     .foregroundColor(.msSecondaryLabel)
             }

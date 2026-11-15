@@ -22,7 +22,7 @@ public struct SecondaryButton: View {
                     Image(systemName: iconName)
                         .font(.system(size: 13, weight: .medium))
                 }
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(.system(size: 13, weight: .medium))
             }
             .padding(.horizontal, 14)

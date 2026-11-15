@@ -33,7 +33,7 @@ public struct PrimaryButton: View {
                     Image(systemName: iconName)
                         .font(.system(size: 14, weight: .semibold))
                 }
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(.system(size: 13, weight: .semibold))
             }
             .padding(.horizontal, 16)

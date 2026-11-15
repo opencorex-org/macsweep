@@ -14,7 +14,7 @@ public struct SidebarView: View {
         VStack(spacing: 0) {
             List(selection: $selection) {
                 ForEach(NavigationGroup.allCases) { group in
-                    Section(header: Text(group.rawValue).font(.system(size: 11, weight: .bold)).foregroundColor(.msSecondaryLabel)) {
+                    Section(header: Text(LocalizedStringKey(group.rawValue)).font(.system(size: 11, weight: .bold)).foregroundColor(.msSecondaryLabel)) {
                         ForEach(NavigationItem.allCases.filter { $0.group == group }) { item in
                             NavigationLink(value: item) {
                                 HStack(alignment: .top, spacing: 8) {
@@ -22,7 +22,7 @@ public struct SidebarView: View {
                                         .font(.system(size: 14, weight: .regular))
                                         .frame(width: 20)
                                         .foregroundColor(selection == item ? Color(nsColor: .labelColor) : Color(nsColor: .secondaryLabelColor))
-                                    Text(item.displayName)
+                                    Text(LocalizedStringKey(item.displayName))
                                         .lineLimit(1)
                                         .font(.system(size: 13, weight: .medium))
                                         .foregroundColor(selection == item ? Color(nsColor: .labelColor) : Color(nsColor: .secondaryLabelColor))

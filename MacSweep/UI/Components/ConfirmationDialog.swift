@@ -35,11 +35,11 @@ public struct ConfirmationDialog: View {
                     .foregroundColor(isDestructive ? .msHighRisk : .msAccent)
 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(title)
+                    Text(LocalizedStringKey(title))
                         .font(.system(size: 15, weight: .bold))
                         .foregroundColor(.msLabel)
 
-                    Text(message)
+                    Text(LocalizedStringKey(message))
                         .font(.system(size: 13))
                         .foregroundColor(.msSecondaryLabel)
                         .fixedSize(horizontal: false, vertical: true)
@@ -52,7 +52,7 @@ public struct ConfirmationDialog: View {
                 SecondaryButton(title: cancelTitle, action: onCancel)
 
                 Button(action: onConfirm) {
-                    Text(confirmTitle)
+                    Text(LocalizedStringKey(confirmTitle))
                         .font(.system(size: 13, weight: .semibold))
                         .padding(.horizontal, 16)
                         .padding(.vertical, 7)

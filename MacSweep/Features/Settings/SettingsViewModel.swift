@@ -10,14 +10,7 @@ public final class SettingsViewModel: ObservableObject {
     @AppStorage(StorageAlertService.warningThresholdKey) public var storageWarningThreshold: Int = 90
     @AppStorage(StorageAlertService.externalAlertsEnabledKey) public var externalStorageAlertsEnabled: Bool = true
     @AppStorage(StorageAlertService.scheduledScanKey) public var scheduledScanFrequency: String = "weekly"
-    @AppStorage("AppSelectedLanguageCode") public var selectedLanguageCode: String = "en"
     @AppStorage(AppTheme.preferenceKey) public var selectedThemeRawValue: String = AppThemePreference.light.rawValue
-
-    /// Convenience wrapper that maps the stored code to/from `AppLanguage`.
-    public var selectedLanguage: AppLanguage {
-        get { AppLanguage.from(code: selectedLanguageCode) }
-        set { selectedLanguageCode = newValue.rawValue }
-    }
 
     /// Typed access to the persisted application appearance.
     public var selectedTheme: AppThemePreference {

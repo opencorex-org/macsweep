@@ -28,11 +28,11 @@ public struct EmptyStateView: View {
                 .foregroundColor(.msSecondaryLabel)
 
             VStack(spacing: 6) {
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.msLabel)
 
-                Text(subtitle)
+                Text(LocalizedStringKey(subtitle))
                     .font(.system(size: 13))
                     .foregroundColor(.msSecondaryLabel)
                     .multilineTextAlignment(.center)

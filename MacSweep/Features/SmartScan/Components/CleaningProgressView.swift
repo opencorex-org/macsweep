@@ -97,11 +97,11 @@ public struct CleaningProgressView: View {
 
             // MARK: - Status Titles
             VStack(spacing: 8) {
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(.system(size: 22, weight: .bold))
                     .foregroundColor(.msLabel)
 
-                Text(subtitle)
+                Text(LocalizedStringKey(subtitle))
                     .font(.system(size: 13))
                     .foregroundColor(.msSecondaryLabel)
                     .multilineTextAlignment(.center)
@@ -114,7 +114,7 @@ public struct CleaningProgressView: View {
                         HStack(spacing: 6) {
                             Image(systemName: category.iconName)
                                 .font(.system(size: 11, weight: .bold))
-                            Text(category.displayName)
+                            Text(LocalizedStringKey(category.displayName))
                                 .font(.system(size: 11, weight: .semibold))
                         }
                         .foregroundColor(category.tintColor)

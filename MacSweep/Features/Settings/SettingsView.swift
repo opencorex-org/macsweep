@@ -70,17 +70,17 @@ public struct SettingsView: View {
         VStack(alignment: .leading, spacing: 0) {
             VStack(alignment: .leading, spacing: 4) {
                 Text("Settings")
-                    .font(.system(size: 22, weight: .bold))
+                    .font(.system(size: 19, weight: .bold))
                     .foregroundColor(.msLabel)
                 Text("Make MacSweep work your way")
                     .font(.system(size: 11))
                     .foregroundColor(.msSecondaryLabel)
             }
-            .padding(.horizontal, 16)
-            .padding(.top, 20)
-            .padding(.bottom, 14)
+            .padding(.horizontal, 14)
+            .padding(.top, 16)
+            .padding(.bottom, 10)
 
-            VStack(spacing: 5) {
+            VStack(spacing: 3) {
                 ForEach(SettingsPane.allCases) { pane in
                     Button {
                         withAnimation(.easeInOut(duration: AppTheme.animationDuration)) {
@@ -89,21 +89,22 @@ public struct SettingsView: View {
                     } label: {
                         HStack(spacing: 10) {
                             ZStack {
-                                RoundedRectangle(cornerRadius: 7, style: .continuous)
+                                RoundedRectangle(cornerRadius: 6, style: .continuous)
                                     .fill(pane.tint.opacity(selectedPane == pane ? 0.18 : 0.10))
                                 Image(systemName: pane.icon)
                                     .font(.system(size: 12, weight: .semibold))
                                     .foregroundColor(pane.tint)
                             }
-                            .frame(width: 28, height: 28)
+                            .frame(width: 25, height: 25)
 
-                            Text(pane.title)
+                            Text(LocalizedStringKey(pane.title))
                                 .font(.system(size: 12, weight: selectedPane == pane ? .semibold : .medium))
                                 .foregroundColor(.msLabel)
+                                .lineLimit(1)
                             Spacer()
                         }
-                        .padding(.horizontal, 9)
-                        .padding(.vertical, 6)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
                         .background {
                             RoundedRectangle(cornerRadius: 8, style: .continuous)
                                 .fill(selectedPane == pane ? Color.msAccent.opacity(0.11) : .clear)
@@ -120,9 +121,9 @@ public struct SettingsView: View {
             Label("Preferences save automatically", systemImage: "checkmark.circle.fill")
                 .font(.system(size: 10, weight: .medium))
                 .foregroundColor(.msSecondaryLabel)
-                .padding(16)
+                .padding(14)
         }
-        .frame(width: 210)
+        .frame(width: 188)
         .background(Color.msSecondaryBackground.opacity(0.55))
     }
 
@@ -153,8 +154,9 @@ public struct SettingsView: View {
                         AboutSettings()
                     }
                 }
-                .frame(maxWidth: 720)
-                .padding(24)
+                .frame(maxWidth: 680)
+                .padding(.horizontal, 18)
+                .padding(.vertical, 16)
                 .frame(maxWidth: .infinity, alignment: .top)
             }
         }
@@ -166,17 +168,21 @@ private struct AppearanceSettings: View {
     @ObservedObject var viewModel: SettingsViewModel
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 12) {
             SettingsCard(
                 title: "Theme",
                 subtitle: "Changes apply instantly throughout MacSweep",
                 icon: "circle.lefthalf.filled",
                 tint: .indigo
             ) {
-                VStack(alignment: .leading, spacing: 14) {
+                VStack(alignment: .leading, spacing: 10) {
                     Picker("Theme", selection: themeBinding) {
                         ForEach(AppThemePreference.allCases) { theme in
-                            Label(theme.title, systemImage: theme.icon)
+                            Label {
+                                Text(LocalizedStringKey(theme.title))
+                            } icon: {
+                                Image(systemName: theme.icon)
+                            }
                                 .tag(theme)
                         }
                     }
@@ -184,7 +190,11 @@ private struct AppearanceSettings: View {
                     .labelsHidden()
                     .accessibilityLabel("Application theme")
 
-                    Label(viewModel.selectedTheme.detail, systemImage: viewModel.selectedTheme.icon)
+                    Label {
+                        Text(LocalizedStringKey(viewModel.selectedTheme.detail))
+                    } icon: {
+                        Image(systemName: viewModel.selectedTheme.icon)
+                    }
                         .font(.system(size: 11))
                         .foregroundColor(.msSecondaryLabel)
                         .contentTransition(.opacity)
@@ -210,28 +220,28 @@ struct SettingsPageHeader: View {
     let tint: Color
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 10) {
             ZStack {
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
                     .fill(tint.opacity(0.14))
                 Image(systemName: icon)
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(tint)
             }
-            .frame(width: 40, height: 40)
+            .frame(width: 34, height: 34)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.system(size: 18, weight: .bold))
+                Text(LocalizedStringKey(title))
+                    .font(.system(size: 16, weight: .bold))
                     .foregroundColor(.msLabel)
-                Text(subtitle)
+                Text(LocalizedStringKey(subtitle))
                     .font(.system(size: 11))
                     .foregroundColor(.msSecondaryLabel)
             }
             Spacer()
         }
-        .padding(.horizontal, 24)
-        .padding(.vertical, 14)
+        .padding(.horizontal, 18)
+        .padding(.vertical, 10)
         .background(Color.msBackground)
     }
 }
@@ -259,33 +269,34 @@ struct SettingsCard<Content: View>: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack(spacing: 10) {
+            HStack(spacing: 9) {
                 Image(systemName: icon)
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundColor(tint)
                     .frame(width: 20)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(title)
+                    Text(LocalizedStringKey(title))
                         .font(.system(size: 13, weight: .bold))
                         .foregroundColor(.msLabel)
                     if let subtitle {
-                        Text(subtitle)
+                        Text(LocalizedStringKey(subtitle))
                             .font(.system(size: 10))
                             .foregroundColor(.msSecondaryLabel)
                     }
                 }
                 Spacer()
             }
-            .padding(16)
+            .padding(.horizontal, 13)
+            .padding(.vertical, 11)
 
-            Divider().padding(.leading, 46)
+            Divider().padding(.leading, 42)
 
-            content.padding(16)
+            content.padding(13)
         }
         .background(Color.msSecondaryBackground)
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
         .overlay {
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .stroke(Color.msSeparator.opacity(0.55), lineWidth: 1)
         }
     }
@@ -305,15 +316,64 @@ struct SettingsToggleRow: View {
                     .foregroundColor(.msSecondaryLabel)
                     .frame(width: 22)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(title)
+                    Text(LocalizedStringKey(title))
                         .font(.system(size: 12, weight: .medium))
                         .foregroundColor(.msLabel)
-                    Text(detail)
+                    Text(LocalizedStringKey(detail))
                         .font(.system(size: 10))
                         .foregroundColor(.msSecondaryLabel)
                 }
             }
         }
         .toggleStyle(.switch)
+        .controlSize(.small)
+        .frame(minHeight: 32)
+    }
+}
+
+struct SettingsInlineRow<Control: View>: View {
+    let title: String
+    let detail: String?
+    let icon: String?
+    let control: Control
+
+    init(
+        title: String,
+        detail: String? = nil,
+        icon: String? = nil,
+        @ViewBuilder control: () -> Control
+    ) {
+        self.title = title
+        self.detail = detail
+        self.icon = icon
+        self.control = control()
+    }
+
+    var body: some View {
+        HStack(alignment: .center, spacing: 11) {
+            if let icon {
+                Image(systemName: icon)
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundColor(.msSecondaryLabel)
+                    .frame(width: 22)
+            }
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(LocalizedStringKey(title))
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundColor(.msLabel)
+                if let detail {
+                    Text(LocalizedStringKey(detail))
+                        .font(.system(size: 10))
+                        .foregroundColor(.msSecondaryLabel)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+
+            Spacer(minLength: 16)
+            control
+                .controlSize(.small)
+        }
+        .frame(minHeight: 32)
     }
 }

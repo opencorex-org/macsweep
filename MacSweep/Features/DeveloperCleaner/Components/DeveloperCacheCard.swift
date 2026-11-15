@@ -21,7 +21,7 @@ public struct DeveloperCacheCard: View {
                         .foregroundColor(tintColor)
                 }
 
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(.system(size: 14, weight: .bold))
                     .foregroundColor(.msLabel)
 

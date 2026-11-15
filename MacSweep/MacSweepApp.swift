@@ -5,17 +5,15 @@ import SwiftUI
 struct MacSweepApp: App {
     @Environment(\.scenePhase) private var scenePhase
     @StateObject private var environment = AppEnvironment()
+    @StateObject private var localizationStore = LocalizationStore()
     @AppStorage(AppTheme.preferenceKey) private var storedTheme = AppThemePreference.light.rawValue
-
-    init() {
-        // Apply the user's saved language preference before any window is shown.
-        LanguageManager.shared.applyOnLaunch()
-    }
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(environment)
+                .environmentObject(localizationStore)
+                .environment(\.locale, localizationStore.locale)
                 .preferredColorScheme(theme.colorScheme)
                 .task {
                     await environment.storageAlertService.start()
@@ -37,9 +35,15 @@ struct MacSweepApp: App {
         }
 
         MenuBarExtra {
-            StorageMenuView(environment: environment)
+            StorageMenuView(
+                alertService: environment.storageAlertService
+            )
+            .environmentObject(localizationStore)
+            .environment(\.locale, localizationStore.locale)
         } label: {
-            Label("MacSweep", systemImage: "internaldrive")
+            StorageMenuLabel(alertService: environment.storageAlertService)
+                .environmentObject(localizationStore)
+                .environment(\.locale, localizationStore.locale)
         }
         .menuBarExtraStyle(.menu)
     }
@@ -47,15 +51,27 @@ struct MacSweepApp: App {
     private var theme: AppThemePreference {
         AppThemePreference(rawValue: storedTheme) ?? .light
     }
+
+}
+
+private struct StorageMenuLabel: View {
+    @ObservedObject var alertService: StorageAlertService
+
+    var body: some View {
+        if let diskSpace = alertService.currentDiskSpace {
+            Label("\(Int((diskSpace.usedPercentage * 100).rounded()))%", systemImage: "internaldrive")
+        } else {
+            Label("MacSweep", systemImage: "internaldrive")
+        }
+    }
 }
 
 private struct StorageMenuView: View {
-    @ObservedObject var environment: AppEnvironment
-    @State private var diskSpace: DiskSpace?
+    @ObservedObject var alertService: StorageAlertService
 
     var body: some View {
         Group {
-            if let diskSpace {
+            if let diskSpace = alertService.currentDiskSpace {
                 Text("Storage \(Int((diskSpace.usedPercentage * 100).rounded()))% used")
                 Text("\(diskSpace.formattedAvailable) available")
             } else {
@@ -63,13 +79,16 @@ private struct StorageMenuView: View {
             }
             Divider()
             Button("Check Storage Now") {
-                diskSpace = try? environment.diskSpaceService.getDiskSpace()
-                Task { await environment.storageAlertService.checkStorage(force: true) }
+                Task { await alertService.checkStorage(force: true) }
             }
             Button("Open MacSweep") { NSApplication.shared.activate(ignoringOtherApps: true) }
             Divider()
             Button("Quit MacSweep") { NSApplication.shared.terminate(nil) }
         }
-        .onAppear { diskSpace = try? environment.diskSpaceService.getDiskSpace() }
+        .onAppear {
+            if alertService.currentDiskSpace == nil {
+                Task { await alertService.checkStorage() }
+            }
+        }
     }
 }

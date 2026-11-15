@@ -39,7 +39,7 @@ public struct QuickActionCard: View {
 
                 VStack(alignment: .leading, spacing: 3) {
                     HStack(spacing: 6) {
-                        Text(title)
+                        Text(LocalizedStringKey(title))
                             .font(.system(size: 13, weight: .bold))
                             .foregroundColor(.msLabel)
 
@@ -52,7 +52,7 @@ public struct QuickActionCard: View {
                             .cornerRadius(4)
                     }
 
-                    Text(subtitle)
+                    Text(LocalizedStringKey(subtitle))
                         .font(.system(size: 11))
                         .foregroundColor(.msSecondaryLabel)
                         .lineLimit(1)

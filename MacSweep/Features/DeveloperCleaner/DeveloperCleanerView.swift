@@ -171,9 +171,9 @@ public struct DeveloperCleanerView: View {
             Image(systemName: category.iconName)
                 .foregroundColor(category.tintColor)
             VStack(alignment: .leading, spacing: 1) {
-                Text(category.displayName)
+                Text(LocalizedStringKey(category.displayName))
                     .font(.system(size: 13, weight: .bold))
-                Text(category.subtitle)
+                Text(LocalizedStringKey(category.subtitle))
                     .font(.system(size: 10))
                     .foregroundColor(.msSecondaryLabel)
             }

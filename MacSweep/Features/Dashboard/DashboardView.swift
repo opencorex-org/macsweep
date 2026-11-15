@@ -167,10 +167,10 @@ private struct HealthBadge: View {
             }
 
             VStack(alignment: .leading, spacing: 1) {
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(.system(size: 11, weight: .bold))
                     .foregroundColor(.msLabel)
-                Text(subtitle)
+                Text(LocalizedStringKey(subtitle))
                     .font(.system(size: 10))
                     .foregroundColor(.msSecondaryLabel)
             }

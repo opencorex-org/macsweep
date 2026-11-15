@@ -74,7 +74,7 @@ public struct ApplicationDetailView: View {
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(leftover.name)
                                         .font(.system(size: 12, weight: .medium))
-                                    Text(leftover.type.displayName)
+                                    Text(LocalizedStringKey(leftover.type.displayName))
                                         .font(.system(size: 10))
                                         .foregroundColor(.msSecondaryLabel)
 

@@ -36,12 +36,12 @@ public struct LoadingView: View {
             ActivityIndicatorView(size: 32)
 
             VStack(spacing: 4) {
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(.system(size: 15, weight: .medium))
                     .foregroundColor(.msLabel)
 
                 if let subtitle = subtitle {
-                    Text(subtitle)
+                    Text(LocalizedStringKey(subtitle))
                         .font(.system(size: 12))
                         .foregroundColor(.msSecondaryLabel)
                 }

@@ -22,11 +22,11 @@ public struct ErrorView: View {
                 .foregroundColor(.msHighRisk)
 
             VStack(spacing: 6) {
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.msLabel)
 
-                Text(message)
+                Text(LocalizedStringKey(message))
                     .font(.system(size: 13))
                     .foregroundColor(.msSecondaryLabel)
                     .multilineTextAlignment(.center)

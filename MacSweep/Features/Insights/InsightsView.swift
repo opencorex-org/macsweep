@@ -100,7 +100,9 @@ public struct InsightsView: View {
     private var filters: some View {
         Picker("Category", selection: $selectedKind) {
             Text("All").tag(nil as MaintenanceInsight.Kind?)
-            ForEach(MaintenanceInsight.Kind.allCases, id: \.self) { kind in Text(kind.title).tag(kind as MaintenanceInsight.Kind?) }
+            ForEach(MaintenanceInsight.Kind.allCases, id: \.self) { kind in
+                Text(LocalizedStringKey(kind.title)).tag(kind as MaintenanceInsight.Kind?)
+            }
         }
         .pickerStyle(.segmented)
     }

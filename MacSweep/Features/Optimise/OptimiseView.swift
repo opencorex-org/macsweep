@@ -180,7 +180,7 @@ public struct OptimiseView: View {
             Image(systemName: icon).foregroundColor(tint)
             VStack(alignment: .leading, spacing: 1) {
                 Text(value).font(.system(size: 13, weight: .bold))
-                Text(title).font(.system(size: 10)).foregroundColor(.msSecondaryLabel)
+                Text(LocalizedStringKey(title)).font(.system(size: 10)).foregroundColor(.msSecondaryLabel)
             }
             Spacer()
         }
@@ -204,7 +204,7 @@ private struct OptimiseCategoryHeader: View {
             .labelsHidden()
             .toggleStyle(.checkbox)
             Image(systemName: category.iconName).foregroundColor(category.tintColor)
-            Text(category.displayName).font(.system(size: 12, weight: .bold))
+            Text(LocalizedStringKey(category.displayName)).font(.system(size: 12, weight: .bold))
             Spacer()
             Text(ByteFormatter.format(items.reduce(0) { $0 + $1.size }))
                 .font(.system(size: 11))

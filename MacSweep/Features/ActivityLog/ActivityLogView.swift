@@ -81,7 +81,11 @@ public struct ActivityLogView: View {
                 Picker("Activity type", selection: $selectedKind) {
                     Text("All Activity").tag(nil as ActivityLogEntry.Kind?)
                     ForEach(ActivityLogEntry.Kind.allCases) { kind in
-                        Label(kind.title, systemImage: kind.icon)
+                        Label {
+                            Text(LocalizedStringKey(kind.title))
+                        } icon: {
+                            Image(systemName: kind.icon)
+                        }
                             .tag(kind as ActivityLogEntry.Kind?)
                     }
                 }
@@ -170,7 +174,7 @@ private struct ActivitySummaryCard: View {
                     .font(.system(size: 13, weight: .bold))
                     .foregroundColor(.msLabel)
                     .lineLimit(1)
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(.system(size: 10))
                     .foregroundColor(.msSecondaryLabel)
             }
