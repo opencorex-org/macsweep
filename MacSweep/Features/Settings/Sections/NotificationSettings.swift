@@ -6,14 +6,14 @@ public struct NotificationSettings: View {
     @ObservedObject var viewModel: SettingsViewModel
 
     public var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 12) {
             SettingsCard(
                 title: "Alerts & System Banners",
                 subtitle: "Stay informed when background work completes",
                 icon: "bell.fill",
                 tint: .purple
             ) {
-                VStack(spacing: 14) {
+                VStack(spacing: 10) {
                     SettingsToggleRow(
                         title: "Allow system notifications",
                         detail: "Show important MacSweep alerts and completion banners",
@@ -33,15 +33,11 @@ public struct NotificationSettings: View {
 
                     Divider().padding(.leading, 33)
 
-                    HStack {
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text("Early warning threshold")
-                                .font(.system(size: 12, weight: .medium))
-                            Text("The critical alert always triggers at 99% used")
-                                .font(.system(size: 10))
-                                .foregroundColor(.msSecondaryLabel)
-                        }
-                        Spacer()
+                    SettingsInlineRow(
+                        title: "Early warning threshold",
+                        detail: "The critical alert always triggers at 99% used",
+                        icon: "gauge.with.dots.needle.67percent"
+                    ) {
                         Picker("Early warning threshold", selection: $viewModel.storageWarningThreshold) {
                             ForEach([85, 90, 95, 98], id: \.self) { threshold in
                                 Text("\(threshold)% used").tag(threshold)
@@ -73,13 +69,11 @@ public struct NotificationSettings: View {
                 icon: "calendar.badge.clock",
                 tint: .blue
             ) {
-                HStack {
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text("Scan reminder").font(.system(size: 12, weight: .medium))
-                        Text("Open MacSweep to review each recommendation")
-                            .font(.system(size: 10)).foregroundColor(.msSecondaryLabel)
-                    }
-                    Spacer()
+                SettingsInlineRow(
+                    title: "Scan reminder",
+                    detail: "Open MacSweep to review each recommendation",
+                    icon: "calendar.badge.clock"
+                ) {
                     Picker("Scan reminder", selection: $viewModel.scheduledScanFrequency) {
                         Text("Off").tag("off")
                         Text("Daily").tag("daily")
@@ -98,6 +92,7 @@ public struct NotificationSettings: View {
                 Text("Scheduled reminders continue after the snooze ends.")
                     .font(.system(size: 10)).foregroundColor(.msSecondaryLabel)
             }
+            .controlSize(.small)
 
             HStack(spacing: 12) {
                 ZStack {
@@ -124,9 +119,9 @@ public struct NotificationSettings: View {
                     .buttonStyle(.bordered)
                 }
             }
-            .padding(16)
+            .padding(13)
             .background(Color.msSecondaryBackground)
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
         }
         .frame(maxWidth: .infinity, alignment: .top)
     }
