@@ -95,16 +95,55 @@
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				ar,
+				bg,
+				bn,
+				cs,
+				da,
+				de,
+				el,
 				en,
+				es,
+				et,
+				fi,
+				fr,
+				ga,
+				gu,
+				hi,
+				hr,
+				hu,
+				it,
+				ja,
+				kn,
+				ko,
+				lt,
+				lv,
+				ml,
+				mr,
+				mt,
+				nl,
+				pl,
+				pt,
+				"pt-BR",
+				ro,
+				ru,
+				si,
+				sk,
+				sl,
+				sv,
+				ta,
+				te,
+				"zh-Hans",
+				"zh-Hant",
 				Base,
 			);
 			mainGroup = E09477D9303BE110000677B9;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 77;
-			productRefGroup = E09477E3303BE110000677B9 /* Products */;
 			packageReferences = (
 				A10000000000000000000003 /* XCRemoteSwiftPackageReference "Sparkle" */,
 			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = E09477E3303BE110000677B9 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (

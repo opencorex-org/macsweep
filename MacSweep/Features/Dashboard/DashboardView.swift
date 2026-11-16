@@ -51,6 +51,26 @@ public struct DashboardView: View {
                 }
                 .fixedSize(horizontal: false, vertical: true)
 
+                HStack(spacing: 14) {
+                    ZStack {
+                        Circle().stroke(Color.msSeparator.opacity(0.4), lineWidth: 7)
+                        Circle().trim(from: 0, to: Double(viewModel.healthScore) / 100)
+                            .stroke(healthColor, style: StrokeStyle(lineWidth: 7, lineCap: .round))
+                            .rotationEffect(.degrees(-90))
+                        Text("\(viewModel.healthScore)").font(.system(size: 18, weight: .bold))
+                    }
+                    .frame(width: 58, height: 58)
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("Mac Health Score").font(.system(size: 14, weight: .bold))
+                        Text(healthDescription).font(.system(size: 11)).foregroundColor(.msSecondaryLabel)
+                    }
+                    Spacer()
+                    Button("View Insights", systemImage: "waveform.path.ecg") { coordinator.navigate(to: .insights) }
+                        .buttonStyle(.bordered)
+                }
+                .padding(14)
+                .background(Color.msSecondaryBackground, in: RoundedRectangle(cornerRadius: 12))
+
                 // Quick Tools Section
                 VStack(alignment: .leading, spacing: 14) {
                     HStack {
@@ -118,6 +138,18 @@ public struct DashboardView: View {
             viewModel.refreshDiskSpace()
         }
     }
+
+    private var healthColor: Color {
+        if viewModel.healthScore >= 80 { return .green }
+        if viewModel.healthScore >= 55 { return .orange }
+        return .red
+    }
+
+    private var healthDescription: String {
+        if viewModel.healthScore >= 80 { return "Storage levels look healthy. Keep reviewing recommendations regularly." }
+        if viewModel.healthScore >= 55 { return "Some storage maintenance is recommended." }
+        return "Storage needs attention soon to keep macOS responsive."
+    }
 }
 
 private struct StorageTrendCard: View {
@@ -165,10 +197,10 @@ private struct HealthBadge: View {
             }
 
             VStack(alignment: .leading, spacing: 1) {
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(.system(size: 11, weight: .bold))
                     .foregroundColor(.msLabel)
-                Text(subtitle)
+                Text(LocalizedStringKey(subtitle))
                     .font(.system(size: 10))
                     .foregroundColor(.msSecondaryLabel)
             }

@@ -18,15 +18,18 @@ public struct SidebarView: View {
         VStack(spacing: 0) {
             List(selection: $selection) {
                 ForEach(NavigationGroup.allCases) { group in
-                    Section(header: Text(group.rawValue).font(.system(size: 11, weight: .bold)).foregroundColor(.msSecondaryLabel)) {
+                    Section(header: Text(LocalizedStringKey(group.rawValue)).font(.system(size: 11, weight: .bold)).foregroundColor(.msSecondaryLabel)) {
                         ForEach(NavigationItem.allCases.filter { $0.group == group }) { item in
                             NavigationLink(value: item) {
-                                Label {
-                                    Text(item.displayName)
-                                        .font(.system(size: 13, weight: .medium))
-                                } icon: {
+                                HStack(alignment: .top, spacing: 8) {
                                     Image(systemName: item.iconName)
-                                        .foregroundColor(selection == item ? .msAccent : .msSecondaryLabel)
+                                        .font(.system(size: 14, weight: .regular))
+                                        .frame(width: 20)
+                                        .foregroundColor(selection == item ? Color(nsColor: .labelColor) : Color(nsColor: .secondaryLabelColor))
+                                    Text(LocalizedStringKey(item.displayName))
+                                        .lineLimit(1)
+                                        .font(.system(size: 13, weight: .medium))
+                                        .foregroundColor(selection == item ? Color(nsColor: .labelColor) : Color(nsColor: .secondaryLabelColor))
                                 }
                             }
                             .tag(item)
@@ -102,6 +105,9 @@ public struct SidebarView: View {
         guard let updated = try? environment.diskSpaceService.getDiskSpace() else { return }
         withAnimation(.easeInOut(duration: 0.2)) {
             diskSpace = updated
+        }
+        .onReceive(environment.activityLogStore.$entries) { _ in
+            diskSpace = try? environment.diskSpaceService.getDiskSpace()
         }
     }
 }

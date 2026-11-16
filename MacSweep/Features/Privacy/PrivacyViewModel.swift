@@ -28,11 +28,18 @@ public final class PrivacyViewModel: ObservableObject {
         items.filter(\.isSelected).count
     }
 
-    public init() {}
+    private let environment: AppEnvironment
+
+    public init(environment: AppEnvironment) { self.environment = environment }
 
     public func scanPrivacyItems() async {
         guard !isScanning else { return }
         isScanning = true
+        if environment.ignoreListStore.categories.contains(.browserPrivacy) {
+            items = []
+            isScanning = false
+            return
+        }
 
         var discovered: [PrivacyItem] = []
         let home = FileManager.default.homeDirectoryForCurrentUser
@@ -51,7 +58,8 @@ public final class PrivacyViewModel: ObservableObject {
         for (browser, bundleID, icon, targets) in definitions {
             for (title, relativePath) in targets {
                 let url = home.appendingPathComponent(relativePath)
-                guard FileManager.default.fileExists(atPath: url.path) else { continue }
+                guard !environment.ignoreListStore.contains(url),
+                      FileManager.default.fileExists(atPath: url.path) else { continue }
                 let values = try? url.resourceValues(forKeys: [.isDirectoryKey, .fileSizeKey, .totalFileAllocatedSizeKey])
                 let size = values?.isDirectory == true
                     ? await FileEnumerator.directorySize(url)
@@ -75,32 +83,37 @@ public final class PrivacyViewModel: ObservableObject {
         guard !isCleaning else { return }
         isCleaning = true
 
-        let fm = FileManager.default
-        let started = Date()
-        var idsToRemove: [UUID] = []
-        var reclaimed: Int64 = 0
         var blocked = Set<String>()
-        for item in items where item.isSelected {
+        let selected = items.filter(\.isSelected)
+        let cleanable = selected.filter { item in
             if let bundleID = item.bundleIdentifier,
                !NSRunningApplication.runningApplications(withBundleIdentifier: bundleID).isEmpty {
                 blocked.insert(item.browserName)
-                continue
+                return false
             }
-            do {
-                try fm.removeItem(at: item.path)
-                idsToRemove.append(item.id)
-                reclaimed += item.size
-            } catch {
-                // Ignore
-            }
+            return true
         }
-        items.removeAll { idsToRemove.contains($0.id) }
+
         statusMessage = blocked.isEmpty
-            ? "Privacy cleanup finished."
+            ? nil
             : "Close \(blocked.sorted().joined(separator: ", ")) before cleaning its active profile."
-        let result = CleanResult(totalItemsProcessed: idsToRemove.count + blocked.count, successCount: idsToRemove.count, failureCount: blocked.count, totalBytesReclaimed: reclaimed, duration: Date().timeIntervalSince(started))
+
+        guard !cleanable.isEmpty else {
+            isCleaning = false
+            return
+        }
+
+        let cleanupItems = cleanable.map { item in
+            let isDirectory = (try? item.path.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false
+            return CleanupItem(url: item.path, name: "\(item.browserName) \(item.title)", size: item.size, category: .browserPrivacy, risk: .caution, isDirectory: isDirectory, modificationDate: Date(), isSelected: true)
+        }
+        let result = await environment.cleanEngine.clean(items: cleanupItems)
+        environment.activityLogStore.recordCleanup(result, title: "Browser privacy cleanup completed")
         history?.record(source: "Privacy Cleaner", result: result)
-        notifications?.send(title: "Privacy cleanup finished", body: "Removed \(idsToRemove.count) browser data items using \(ByteFormatter.format(reclaimed)).")
+        notifications?.send(title: "Privacy cleanup finished", body: "Removed \(result.successCount) browser data items using \(result.formattedReclaimed).")
+        let failed = Set(result.failures.map(\.url))
+        let cleanedIDs = Set(cleanable.filter { !failed.contains($0.path) }.map(\.id))
+        items.removeAll { cleanedIDs.contains($0.id) }
         isCleaning = false
     }
 }

@@ -61,6 +61,13 @@ public final class SmartScanViewModel: ObservableObject {
 
         self.scanResult = result
         self.items = environment.exclusionService.filter(result.items)
+            .filter { !environment.ignoreListStore.contains($0) }
+            .map { item in
+            var item = item
+            item.isSelected = item.risk == .safe
+            return item
+        }
+        environment.activityLogStore.recordScan(result, title: "Smart Scan completed")
         self.isScanning = false
         self.isPaused = false
         self.scanTask = nil
@@ -146,6 +153,7 @@ public final class SmartScanViewModel: ObservableObject {
             }
         }
         self.lastCleanResult = cleanResult
+        environment.activityLogStore.recordCleanup(cleanResult, title: "Smart cleanup completed")
         environment.cleanupHistoryService.record(source: "Smart Scan", result: cleanResult)
         environment.notificationService.send(title: "Smart cleanup finished", body: "Reclaimed \(cleanResult.formattedReclaimed) from \(cleanResult.successCount) items.")
 

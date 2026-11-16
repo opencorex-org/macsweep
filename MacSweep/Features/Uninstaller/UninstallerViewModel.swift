@@ -13,6 +13,7 @@ public final class UninstallerViewModel: ObservableObject {
     @Published public private(set) var uninstallingApp: ApplicationInfo?
 
     private let service: ApplicationService
+    private let activityLogStore: ActivityLogStore
 
     public var filteredApplications: [ApplicationInfo] {
         if searchText.isEmpty {
@@ -20,12 +21,14 @@ public final class UninstallerViewModel: ObservableObject {
         }
         return applications.filter {
             $0.name.localizedCaseInsensitiveContains(searchText) ||
-            $0.bundleIdentifier.localizedCaseInsensitiveContains(searchText)
+            $0.bundleIdentifier.localizedCaseInsensitiveContains(searchText) ||
+            $0.bundleURL.path.localizedCaseInsensitiveContains(searchText)
         }
     }
 
-    public init(service: ApplicationService = ApplicationService()) {
+    public init(service: ApplicationService = ApplicationService(), activityLogStore: ActivityLogStore) {
         self.service = service
+        self.activityLogStore = activityLogStore
     }
 
     public func loadApplications() async {
@@ -34,10 +37,21 @@ public final class UninstallerViewModel: ObservableObject {
         uninstallResult = nil
         let apps = await service.discoverApplications()
         self.applications = apps
-        if let selectedBundleID = selectedApp?.bundleIdentifier {
-            selectedApp = apps.first { $0.bundleIdentifier == selectedBundleID }
+        if let selectedPath = selectedApp?.bundleURL.standardizedFileURL.path {
+            selectedApp = apps.first { $0.bundleURL.standardizedFileURL.path == selectedPath }
         }
         self.isLoading = false
+    }
+
+    public func addApplication(at url: URL) async {
+        guard !isLoading, !isUninstalling else { return }
+        isLoading = true
+        defer { isLoading = false }
+        guard let app = await service.inspectApplication(at: url) else { return }
+        applications.removeAll { $0.bundleURL.standardizedFileURL.path == app.bundleURL.standardizedFileURL.path }
+        applications.append(app)
+        applications.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+        selectedApp = app
     }
 
     public func uninstallApplication(_ app: ApplicationInfo, history: CleanupHistoryService? = nil, notifications: NotificationService? = nil) async {
@@ -66,6 +80,7 @@ public final class UninstallerViewModel: ObservableObject {
         }
 
         uninstallResult = result
+        activityLogStore.recordUninstall(result)
         let cleanResult = CleanResult(totalItemsProcessed: result.totalItemsCount, successCount: result.movedItemsCount, failureCount: result.failures.count, totalBytesReclaimed: result.movedBytes, duration: result.duration)
         history?.record(source: "App Uninstaller: \(app.name)", result: cleanResult)
         notifications?.send(title: "App uninstall finished", body: "Moved \(result.movedItemsCount) items to Trash and reclaimed \(ByteFormatter.format(result.movedBytes)).")

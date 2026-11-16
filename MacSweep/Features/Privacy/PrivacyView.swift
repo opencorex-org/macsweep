@@ -2,10 +2,12 @@ import SwiftUI
 
 public struct PrivacyView: View {
     @EnvironmentObject private var environment: AppEnvironment
-    @StateObject private var viewModel = PrivacyViewModel()
+    @StateObject private var viewModel: PrivacyViewModel
     @State private var showConfirmDialog = false
 
-    public init() {}
+    public init(environment: AppEnvironment) {
+        _viewModel = StateObject(wrappedValue: PrivacyViewModel(environment: environment))
+    }
 
     public var body: some View {
         VStack(spacing: 0) {
@@ -76,7 +78,7 @@ public struct PrivacyView: View {
         .sheet(isPresented: $showConfirmDialog) {
             ConfirmationDialog(
                 title: "Clean Selected Privacy Items?",
-                message: "Are you sure you want to clean \(viewModel.selectedCount) selected privacy items (\(ByteFormatter.format(viewModel.selectedBytes)))?",
+                message: "Permanently remove \(viewModel.selectedCount) selected browser caches (\(ByteFormatter.format(viewModel.selectedBytes)))? Cookies, passwords, bookmarks, and sign-in data are not selected.",
                 confirmTitle: "Clean Data",
                 isDestructive: true,
                 onConfirm: {

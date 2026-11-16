@@ -34,11 +34,11 @@ public struct ScanCategoryRow: View {
             }
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(category.displayName)
+                Text(LocalizedStringKey(category.displayName))
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundColor(.msLabel)
 
-                Text(category.subtitle)
+                Text(LocalizedStringKey(category.subtitle))
                     .font(.system(size: 11))
                     .foregroundColor(.msSecondaryLabel)
                     .lineLimit(1)

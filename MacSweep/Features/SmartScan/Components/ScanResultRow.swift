@@ -36,7 +36,7 @@ public struct ScanResultRow: View {
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundColor(.msLabel)
 
-                Text(item.risk.displayName)
+                Text(LocalizedStringKey(item.risk.displayName))
                     .font(.system(size: 10, weight: .medium))
                     .foregroundColor(item.risk.color)
             }

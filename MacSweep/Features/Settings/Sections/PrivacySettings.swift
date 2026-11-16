@@ -5,14 +5,14 @@ public struct PrivacySettings: View {
     @ObservedObject var permissionManager: PermissionManager
 
     public var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 12) {
             SettingsCard(
                 title: "Full Disk Access",
                 subtitle: "Required for complete scans and safe removal",
                 icon: "externaldrive.badge.checkmark",
                 tint: permissionManager.hasFullDiskAccess ? .green : .orange
             ) {
-                VStack(spacing: 16) {
+                VStack(spacing: 11) {
                     HStack(spacing: 12) {
                         ZStack {
                             Circle()
@@ -21,7 +21,7 @@ public struct PrivacySettings: View {
                                 .font(.system(size: 18))
                                 .foregroundColor(statusColor)
                         }
-                        .frame(width: 42, height: 42)
+                        .frame(width: 36, height: 36)
 
                         VStack(alignment: .leading, spacing: 3) {
                             Text(permissionManager.hasFullDiskAccess ? "Access Granted" : "Access Not Granted")
@@ -50,6 +50,7 @@ public struct PrivacySettings: View {
 
                         Spacer()
                     }
+                    .controlSize(.small)
                 }
             }
 
@@ -59,7 +60,7 @@ public struct PrivacySettings: View {
                 icon: "lock.shield.fill",
                 tint: .green
             ) {
-                VStack(spacing: 14) {
+                VStack(spacing: 10) {
                     privacyRow(
                         icon: "internaldrive.fill",
                         title: "Local processing",
@@ -94,9 +95,9 @@ public struct PrivacySettings: View {
                 .foregroundColor(.green)
                 .frame(width: 22)
             VStack(alignment: .leading, spacing: 2) {
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(.system(size: 12, weight: .medium))
-                Text(detail)
+                Text(LocalizedStringKey(detail))
                     .font(.system(size: 10))
                     .foregroundColor(.msSecondaryLabel)
             }

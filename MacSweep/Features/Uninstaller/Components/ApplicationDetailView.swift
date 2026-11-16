@@ -26,6 +26,12 @@ public struct ApplicationDetailView: View {
                     Text("Version \(app.version.isEmpty ? "Unknown" : app.version) • \(app.leftovers.count) associated item\(app.leftovers.count == 1 ? "" : "s")")
                         .font(.system(size: 11))
                         .foregroundColor(.msSecondaryLabel)
+
+                    Text(app.bundleURL.path)
+                        .font(.system(size: 9, design: .monospaced))
+                        .foregroundColor(.msSecondaryLabel.opacity(0.8))
+                        .lineLimit(1)
+                        .truncationMode(.middle)
                 }
 
                 Spacer()
@@ -36,9 +42,15 @@ public struct ApplicationDetailView: View {
 
             // Installed Component Breakdown
             VStack(alignment: .leading, spacing: 10) {
-                Text("Installed Files & Leftovers")
-                    .font(.system(size: 13, weight: .bold))
-                    .foregroundColor(.msLabel)
+                HStack {
+                    Text("Installed Files & Associated Data")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(.msLabel)
+                    Spacer()
+                    Text("Moved to Trash • Recoverable")
+                        .font(.system(size: 10, weight: .medium))
+                        .foregroundColor(.msSafe)
+                }
 
                 ScrollView {
                     VStack(spacing: 6) {
@@ -57,12 +69,12 @@ public struct ApplicationDetailView: View {
 
                         ForEach(app.leftovers) { leftover in
                             HStack {
-                                Image(systemName: "doc.fill")
+                                Image(systemName: leftover.type.iconName)
                                     .foregroundColor(.gray)
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(leftover.name)
                                         .font(.system(size: 12, weight: .medium))
-                                    Text(leftover.type.rawValue)
+                                    Text(LocalizedStringKey(leftover.type.displayName))
                                         .font(.system(size: 10))
                                         .foregroundColor(.msSecondaryLabel)
 
@@ -86,6 +98,13 @@ public struct ApplicationDetailView: View {
             }
 
             Spacer()
+
+            Label(
+                "Only strongly matched app data is included. Shared package receipts, system files, and ambiguous vendor SDKs are preserved.",
+                systemImage: "checkmark.shield.fill"
+            )
+            .font(.system(size: 10))
+            .foregroundColor(.msSecondaryLabel)
 
             // Uninstall Action
             HStack {

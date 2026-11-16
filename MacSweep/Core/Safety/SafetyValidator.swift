@@ -42,14 +42,19 @@ public nonisolated final class SafetyValidator: Sendable {
             return .rejected(reason: "Sensitive credential file type")
         }
 
-        // Step 5: Resolve symlinks and verify boundaries
-        if policy.verifySymlinks && PathValidator.isSymlink(url) {
+        // Step 5: Resolve the complete path so symlinked parent directories cannot
+        // disguise a candidate located inside a protected area.
+        if policy.verifySymlinks {
             let resolved = url.resolvingSymlinksInPath()
             let resolvedPath = resolved.path
 
             if ProtectedPaths.isSystemProtected(resolvedPath) {
                 Logger.safety.error("Symlink escape to system path: \(path, privacy: .private) → \(resolvedPath, privacy: .private)")
                 return .rejected(reason: "Symlink points to protected system path")
+            }
+            if ProtectedPaths.isUserProtected(resolvedPath, homeDirectory: homeDirectory) {
+                Logger.safety.error("Symlink escape to protected user path: \(path, privacy: .private) → \(resolvedPath, privacy: .private)")
+                return .rejected(reason: "Symlink points to protected user configuration")
             }
         }
 

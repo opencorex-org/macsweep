@@ -4,23 +4,19 @@ public struct ScanSettings: View {
     @ObservedObject var viewModel: SettingsViewModel
 
     public var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 12) {
             SettingsCard(
                 title: "Large File Detection",
                 subtitle: "Choose the minimum file size shown in scan results",
                 icon: "doc.badge.arrow.up.fill",
                 tint: .orange
             ) {
-                VStack(alignment: .leading, spacing: 16) {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text("Minimum file size")
-                                .font(.system(size: 12, weight: .medium))
-                            Text("Smaller files are excluded from Large Files scans")
-                                .font(.system(size: 10))
-                                .foregroundColor(.msSecondaryLabel)
-                        }
-                        Spacer()
+                VStack(alignment: .leading, spacing: 12) {
+                    SettingsInlineRow(
+                        title: "Minimum file size",
+                        detail: "Smaller files are excluded from Large Files scans",
+                        icon: "doc.badge.arrow.up"
+                    ) {
                         Text(formattedThreshold)
                             .font(.system(size: 13, weight: .bold, design: .rounded))
                             .foregroundColor(.orange)
@@ -37,6 +33,7 @@ public struct ScanSettings: View {
                         step: 10
                     )
                     .labelsHidden()
+                    .controlSize(.small)
 
                     HStack(spacing: 8) {
                         ForEach([50, 100, 500, 1000], id: \.self) { size in
@@ -59,7 +56,7 @@ public struct ScanSettings: View {
                     .foregroundColor(.msSecondaryLabel)
                 Spacer()
             }
-            .padding(14)
+            .padding(11)
             .background(Color.blue.opacity(0.07))
             .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
         }

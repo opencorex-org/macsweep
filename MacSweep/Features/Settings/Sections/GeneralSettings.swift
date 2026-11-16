@@ -2,14 +2,19 @@ import SwiftUI
 
 public struct GeneralSettings: View {
     @EnvironmentObject private var environment: AppEnvironment
+    @EnvironmentObject private var localizationStore: LocalizationStore
     @ObservedObject var viewModel: SettingsViewModel
-    @State private var showRestartAlert = false
-    @State private var pendingLanguage: AppLanguage? = nil
 
     // Group AppLanguage cases for sectioned display
     private let languageGroups: [(String, [AppLanguage])] = [
         ("English",  [.english]),
-        ("European", [.french, .german, .spanish, .italian, .portuguese, .dutch, .polish, .russian]),
+        ("European Union", [
+            .bulgarian, .croatian, .czech, .danish, .dutch, .estonian,
+            .finnish, .french, .german, .greek, .hungarian, .irish, .italian,
+            .latvian, .lithuanian, .maltese, .polish, .portuguese, .romanian,
+            .slovak, .slovenian, .spanish, .swedish
+        ]),
+        ("Additional European", [.portugueseBrazil, .russian]),
         ("Indian",   [.hindi, .tamil, .telugu, .bengali, .kannada, .malayalam, .marathi, .gujarati]),
         ("Chinese",  [.chineseSimplified, .chineseTraditional]),
         ("Other",    [.japanese, .korean, .arabic]),
@@ -17,14 +22,14 @@ public struct GeneralSettings: View {
     ]
 
     public var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 12) {
             SettingsCard(
                 title: "Startup & Updates",
                 subtitle: "Control how MacSweep starts and stays current",
                 icon: "arrow.triangle.2.circlepath",
                 tint: .blue
             ) {
-                VStack(spacing: 14) {
+                VStack(spacing: 10) {
                     SettingsToggleRow(
                         title: "Launch at login",
                         detail: "Open MacSweep automatically when you sign in",
@@ -64,15 +69,11 @@ public struct GeneralSettings: View {
 
                     Divider().padding(.leading, 33)
 
-                    HStack {
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text("Check manually")
-                                .font(.system(size: 12, weight: .medium))
-                            Text("Look for a new signed release now")
-                                .font(.system(size: 10))
-                                .foregroundColor(.msSecondaryLabel)
-                        }
-                        Spacer()
+                    SettingsInlineRow(
+                        title: "Check manually",
+                        detail: "Look for a new signed release now",
+                        icon: "arrow.clockwise"
+                    ) {
                         Button("Check Now") {
                             environment.updateService.checkForUpdates()
                         }
@@ -88,28 +89,19 @@ public struct GeneralSettings: View {
                 icon: "globe",
                 tint: .purple
             ) {
-                HStack(spacing: 14) {
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text("Application language")
-                            .font(.system(size: 12, weight: .medium))
-                        Text("A restart is required after changing languages")
-                            .font(.system(size: 10))
-                            .foregroundColor(.msSecondaryLabel)
-                    }
-
-                    Spacer()
-
+                SettingsInlineRow(
+                    title: "Application language",
+                    detail: "Language changes apply immediately",
+                    icon: "character.bubble"
+                ) {
                     Picker("Language", selection: Binding(
-                        get: { viewModel.selectedLanguage },
+                        get: { localizationStore.language },
                         set: { newLang in
-                            if newLang != viewModel.selectedLanguage {
-                                pendingLanguage = newLang
-                                showRestartAlert = true
-                            }
+                            localizationStore.select(newLang)
                         }
                     )) {
                         ForEach(languageGroups, id: \.0) { groupName, languages in
-                            Section(header: Text(groupName)) {
+                            Section(header: Text(LocalizedStringKey(groupName))) {
                                 ForEach(languages) { lang in
                                     Text(lang.nativeName).tag(lang)
                                 }
@@ -118,24 +110,10 @@ public struct GeneralSettings: View {
                     }
                     .labelsHidden()
                     .pickerStyle(.menu)
-                    .frame(width: 180)
+                    .frame(width: 170)
                 }
             }
         }
         .frame(maxWidth: .infinity, alignment: .top)
-        .alert("Restart Required", isPresented: $showRestartAlert) {
-            Button("Apply & Quit") {
-                if let lang = pendingLanguage {
-                    LanguageManager.shared.setLanguage(lang)
-                    viewModel.selectedLanguageCode = lang.rawValue
-                }
-                NSApplication.shared.terminate(nil)
-            }
-            Button("Cancel", role: .cancel) {
-                pendingLanguage = nil
-            }
-        } message: {
-            Text("MacSweep needs to restart to apply the new language. Your work will not be lost.")
-        }
     }
 }

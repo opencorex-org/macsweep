@@ -146,7 +146,7 @@ public struct FullScanView: View {
             .labelsHidden()
             .toggleStyle(.checkbox)
             Image(systemName: category.iconName).foregroundColor(category.tintColor)
-            Text(category.displayName).font(.system(size: 13, weight: .bold))
+            Text(LocalizedStringKey(category.displayName)).font(.system(size: 13, weight: .bold))
             Spacer()
             Text(ByteFormatter.format(items.reduce(0) { $0 + $1.size }))
                 .font(.system(size: 11))

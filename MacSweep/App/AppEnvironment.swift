@@ -22,6 +22,10 @@ public final class AppEnvironment: ObservableObject {
     public let updateService: UpdateService
     public let volumeService: VolumeService
     public let appFolderMoverService: AppFolderMoverService
+    public let activityLogStore: ActivityLogStore
+    public let storageAlertService: StorageAlertService
+    public let maintenanceInsightsService: MaintenanceInsightsService
+    public let ignoreListStore: IgnoreListStore
     public let cleanupHistoryService: CleanupHistoryService
     public let exclusionService: ExclusionService
     public let notificationService: NotificationService
@@ -40,7 +44,8 @@ public final class AppEnvironment: ObservableObject {
     )
 
     public init() {
-        self.diskSpaceService = DiskSpaceService()
+        let diskSpaceService = DiskSpaceService()
+        self.diskSpaceService = diskSpaceService
         self.fileSystemService = FileSystemService()
         self.permissionManager = PermissionManager()
         self.safetyValidator = SafetyValidator()
@@ -49,8 +54,13 @@ public final class AppEnvironment: ObservableObject {
         self.largeFileService = LargeFileService()
         self.applicationService = ApplicationService()
         self.updateService = UpdateService()
-        self.volumeService = VolumeService()
+        let volumeService = VolumeService()
+        self.volumeService = volumeService
         self.appFolderMoverService = AppFolderMoverService()
+        self.activityLogStore = ActivityLogStore()
+        self.maintenanceInsightsService = MaintenanceInsightsService()
+        self.ignoreListStore = IgnoreListStore()
+        self.storageAlertService = StorageAlertService(diskSpaceService: diskSpaceService, volumeService: volumeService)
         self.cleanupHistoryService = CleanupHistoryService()
         self.exclusionService = ExclusionService()
         self.notificationService = NotificationService()

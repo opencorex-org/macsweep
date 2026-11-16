@@ -5,6 +5,8 @@ import Combine
 
 /// Represents a supported app language with its locale code and native display name.
 public enum AppLanguage: String, CaseIterable, Identifiable {
+    public static let preferenceKey = "AppSelectedLanguageCode"
+
     // English
     case english    = "en"
 
@@ -14,9 +16,26 @@ public enum AppLanguage: String, CaseIterable, Identifiable {
     case spanish    = "es"
     case italian    = "it"
     case portuguese = "pt"
+    case portugueseBrazil = "pt-BR"
     case dutch      = "nl"
     case polish     = "pl"
     case russian    = "ru"
+    case bulgarian  = "bg"
+    case croatian   = "hr"
+    case czech      = "cs"
+    case danish     = "da"
+    case estonian   = "et"
+    case finnish    = "fi"
+    case greek      = "el"
+    case hungarian  = "hu"
+    case irish      = "ga"
+    case latvian    = "lv"
+    case lithuanian = "lt"
+    case maltese    = "mt"
+    case romanian   = "ro"
+    case slovak     = "sk"
+    case slovenian  = "sl"
+    case swedish    = "sv"
 
     // Indian
     case hindi      = "hi"
@@ -50,10 +69,27 @@ public enum AppLanguage: String, CaseIterable, Identifiable {
         case .german:             return "Deutsch"
         case .spanish:            return "Español"
         case .italian:            return "Italiano"
-        case .portuguese:         return "Português"
+        case .portuguese:         return "Português (Portugal)"
+        case .portugueseBrazil:   return "Português (Brasil)"
         case .dutch:              return "Nederlands"
         case .polish:             return "Polski"
         case .russian:            return "Русский"
+        case .bulgarian:          return "Български"
+        case .croatian:           return "Hrvatski"
+        case .czech:              return "Čeština"
+        case .danish:             return "Dansk"
+        case .estonian:           return "Eesti"
+        case .finnish:            return "Suomi"
+        case .greek:              return "Ελληνικά"
+        case .hungarian:          return "Magyar"
+        case .irish:              return "Gaeilge"
+        case .latvian:            return "Latviešu"
+        case .lithuanian:         return "Lietuvių"
+        case .maltese:            return "Malti"
+        case .romanian:           return "Română"
+        case .slovak:             return "Slovenčina"
+        case .slovenian:          return "Slovenščina"
+        case .swedish:            return "Svenska"
         case .hindi:              return "हिन्दी"
         case .tamil:              return "தமிழ்"
         case .telugu:             return "తెలుగు"
@@ -76,7 +112,10 @@ public enum AppLanguage: String, CaseIterable, Identifiable {
         switch self {
         case .english:
             return "English"
-        case .french, .german, .spanish, .italian, .portuguese, .dutch, .polish, .russian:
+        case .french, .german, .spanish, .italian, .portuguese, .portugueseBrazil,
+             .dutch, .polish, .russian, .bulgarian, .croatian, .czech, .danish,
+             .estonian, .finnish, .greek, .hungarian, .irish, .latvian,
+             .lithuanian, .maltese, .romanian, .slovak, .slovenian, .swedish:
             return "European"
         case .hindi, .tamil, .telugu, .bengali, .kannada, .malayalam, .marathi, .gujarati:
             return "Indian"
@@ -94,45 +133,24 @@ public enum AppLanguage: String, CaseIterable, Identifiable {
         AppLanguage(rawValue: code) ?? .english
     }
 }
-
-// MARK: - LanguageManager
-
-/// Singleton that manages in-app language preference.
-/// On language change the preference is persisted and an app restart is
-/// required for macOS to load the new bundle language resources.
+/// Single source of truth for the in-app locale. Views observe this object,
+/// while persistence remains an implementation detail of the store.
 @MainActor
-public final class LanguageManager: ObservableObject {
+public final class LocalizationStore: ObservableObject {
+    @Published public private(set) var language: AppLanguage
+    private let defaults: UserDefaults
 
-    public static let shared = LanguageManager()
+    public var locale: Locale { Locale(identifier: language.rawValue) }
 
-    // The UserDefaults key used to store the user's language choice.
-    private static let userDefaultsKey = "AppSelectedLanguageCode"
-
-    @Published public private(set) var currentLanguage: AppLanguage
-
-    private init() {
-        let savedCode = UserDefaults.standard.string(forKey: Self.userDefaultsKey) ?? "en"
-        currentLanguage = AppLanguage.from(code: savedCode)
+    public init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
+        let savedCode = defaults.string(forKey: AppLanguage.preferenceKey) ?? AppLanguage.english.rawValue
+        self.language = AppLanguage.from(code: savedCode)
     }
 
-    // MARK: - Public API
-
-    /// Call once at app startup (before any window is shown) to apply the saved language.
-    public func applyOnLaunch() {
-        let code = UserDefaults.standard.string(forKey: Self.userDefaultsKey) ?? "en"
-        UserDefaults.standard.set([code], forKey: "AppleLanguages")
-        UserDefaults.standard.synchronize()
-    }
-
-    /// Change the app language. Saves the preference and returns `true` if a restart
-    /// is required (i.e., the language actually changed).
-    @discardableResult
-    public func setLanguage(_ language: AppLanguage) -> Bool {
-        guard language != currentLanguage else { return false }
-        currentLanguage = language
-        UserDefaults.standard.set(language.rawValue, forKey: Self.userDefaultsKey)
-        UserDefaults.standard.set([language.rawValue], forKey: "AppleLanguages")
-        UserDefaults.standard.synchronize()
-        return true
+    public func select(_ language: AppLanguage) {
+        guard self.language != language else { return }
+        self.language = language
+        defaults.set(language.rawValue, forKey: AppLanguage.preferenceKey)
     }
 }

@@ -60,7 +60,7 @@ public struct ScanProgressView: View {
                         HStack(spacing: 6) {
                             Image(systemName: category.iconName)
                                 .font(.system(size: 11, weight: .bold))
-                            Text(category.displayName)
+                            Text(LocalizedStringKey(category.displayName))
                                 .font(.system(size: 12, weight: .semibold))
                         }
                         .foregroundColor(category.tintColor)

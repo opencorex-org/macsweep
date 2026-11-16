@@ -180,7 +180,7 @@ private struct ScanCategoryHeader: View {
             Image(systemName: category.iconName)
                 .foregroundColor(category.tintColor)
 
-            Text(category.displayName)
+            Text(LocalizedStringKey(category.displayName))
                 .font(.system(size: 13, weight: .bold))
 
             Spacer()
