@@ -35,9 +35,8 @@ struct MacSweepApp: App {
         }
 
         MenuBarExtra {
-            StorageMenuView(
-                alertService: environment.storageAlertService
-            )
+            MenuBarView()
+                .environmentObject(environment)
             .environmentObject(localizationStore)
             .environment(\.locale, localizationStore.locale)
         } label: {
@@ -45,7 +44,7 @@ struct MacSweepApp: App {
                 .environmentObject(localizationStore)
                 .environment(\.locale, localizationStore.locale)
         }
-        .menuBarExtraStyle(.menu)
+        .menuBarExtraStyle(.window)
     }
 
     private var theme: AppThemePreference {
@@ -62,33 +61,6 @@ private struct StorageMenuLabel: View {
             Label("\(Int((diskSpace.usedPercentage * 100).rounded()))%", systemImage: "internaldrive")
         } else {
             Label("MacSweep", systemImage: "internaldrive")
-        }
-    }
-}
-
-private struct StorageMenuView: View {
-    @ObservedObject var alertService: StorageAlertService
-
-    var body: some View {
-        Group {
-            if let diskSpace = alertService.currentDiskSpace {
-                Text("Storage \(Int((diskSpace.usedPercentage * 100).rounded()))% used")
-                Text("\(diskSpace.formattedAvailable) available")
-            } else {
-                Text("Storage unavailable")
-            }
-            Divider()
-            Button("Check Storage Now") {
-                Task { await alertService.checkStorage(force: true) }
-            }
-            Button("Open MacSweep") { NSApplication.shared.activate(ignoringOtherApps: true) }
-            Divider()
-            Button("Quit MacSweep") { NSApplication.shared.terminate(nil) }
-        }
-        .onAppear {
-            if alertService.currentDiskSpace == nil {
-                Task { await alertService.checkStorage() }
-            }
         }
     }
 }

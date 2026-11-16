@@ -1,7 +1,7 @@
 import SwiftUI
 
 private enum SettingsPane: String, CaseIterable, Identifiable {
-    case general, appearance, scanning, notifications, privacy, about
+    case general, appearance, scanning, maintenance, notifications, privacy, about
 
     var id: String { rawValue }
 
@@ -10,6 +10,7 @@ private enum SettingsPane: String, CaseIterable, Identifiable {
         case .general: "General"
         case .appearance: "Appearance"
         case .scanning: "Scanning"
+        case .maintenance: "Maintenance"
         case .notifications: "Notifications"
         case .privacy: "Privacy & Access"
         case .about: "About"
@@ -21,6 +22,7 @@ private enum SettingsPane: String, CaseIterable, Identifiable {
         case .general: "Startup, updates, and language"
         case .appearance: "Choose how MacSweep looks"
         case .scanning: "File detection preferences"
+        case .maintenance: "Automation, exclusions, history, and rules"
         case .notifications: "Cleanup alerts and banners"
         case .privacy: "Permissions and data handling"
         case .about: "Version and application details"
@@ -32,6 +34,7 @@ private enum SettingsPane: String, CaseIterable, Identifiable {
         case .general: "gearshape.fill"
         case .appearance: "paintbrush.fill"
         case .scanning: "magnifyingglass"
+        case .maintenance: "wrench.and.screwdriver.fill"
         case .notifications: "bell.badge.fill"
         case .privacy: "hand.raised.fill"
         case .about: "info.circle.fill"
@@ -43,6 +46,7 @@ private enum SettingsPane: String, CaseIterable, Identifiable {
         case .general: .blue
         case .appearance: .indigo
         case .scanning: .orange
+        case .maintenance: .teal
         case .notifications: .purple
         case .privacy: .green
         case .about: .msAccent
@@ -146,6 +150,8 @@ public struct SettingsView: View {
                         AppearanceSettings(viewModel: viewModel)
                     case .scanning:
                         ScanSettings(viewModel: viewModel)
+                    case .maintenance:
+                        MaintenanceSettings(viewModel: viewModel)
                     case .notifications:
                         NotificationSettings(viewModel: viewModel)
                     case .privacy:

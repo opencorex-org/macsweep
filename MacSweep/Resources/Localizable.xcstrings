@@ -200,6 +200,9 @@
         }
       }
     },
+    "%@" : {
+
+    },
     "%@  of  %@" : {
       "localizations" : {
         "bg" : {
@@ -784,6 +787,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ · %@"
+          }
+        }
+      }
+    },
+    "%@ • .%@ • older than %lldd" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ • .%2$@ • older than %3$lldd"
           }
         }
       }
@@ -1963,6 +1976,9 @@
           }
         }
       }
+    },
+    "%@ impact" : {
+
     },
     "%@ only has %@ free. This item needs %@." : {
       "localizations" : {
@@ -3528,6 +3544,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld 應用程式"
+          }
+        }
+      }
+    },
+    "%@: %@ free" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@ free"
+          }
+        }
+      }
+    },
+    "%lld cleaned / %lld failed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld cleaned / %2$lld failed"
           }
         }
       }
@@ -8432,6 +8468,9 @@
         }
       }
     },
+    "%lldd" : {
+
+    },
     "• %@: %@" : {
       "localizations" : {
         "bg" : {
@@ -9996,6 +10035,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "1GB"
+          }
+        }
+      }
+    },
+    "90-day change: %@%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "90-day change: %1$@%2$@"
           }
         }
       }
@@ -11962,6 +12011,12 @@
           }
         }
       }
+    },
+    "Add" : {
+
+    },
+    "Add Folder…" : {
+
     },
     "Adjust minimum size" : {
       "localizations" : {
@@ -15501,6 +15556,9 @@
           }
         }
       }
+    },
+    "Analyze external drives when connected" : {
+
     },
     "App Components & Associated Data" : {
       "localizations" : {
@@ -22879,6 +22937,9 @@
           }
         }
       }
+    },
+    "Automatically clean safety-approved items" : {
+
     },
     "Calculating folder sizes…" : {
       "localizations" : {
@@ -30350,6 +30411,9 @@
         }
       }
     },
+    "Clear History" : {
+
+    },
     "Clear web browser caches, cookies, and tracking artifacts" : {
       "localizations" : {
         "bg" : {
@@ -37819,6 +37883,12 @@
         }
       }
     },
+    "Export Report…" : {
+
+    },
+    "Extension" : {
+
+    },
     "External" : {
       "localizations" : {
         "bg" : {
@@ -40963,6 +41033,9 @@
         }
       }
     },
+    "Folder path" : {
+
+    },
     "Found so far:" : {
       "localizations" : {
         "bg" : {
@@ -41158,6 +41231,9 @@
           }
         }
       }
+    },
+    "Free Space Trend" : {
+
     },
     "Full App Move to External Applications" : {
       "localizations" : {
@@ -47058,6 +47134,15 @@
           }
         }
       }
+    },
+    "Include developer cache sources" : {
+
+    },
+    "Include enabled custom rules" : {
+
+    },
+    "Installed Files & Leftovers" : {
+
     },
     "Internal" : {
       "localizations" : {
@@ -59152,6 +59237,9 @@
         }
       }
     },
+    "No cleanups recorded yet." : {
+
+    },
     "No readable contents found" : {
       "localizations" : {
         "bg" : {
@@ -63280,6 +63368,12 @@
           }
         }
       }
+    },
+    "Open MacSweep" : {
+
+    },
+    "Open Preview" : {
+
     },
     "Open Privacy Settings" : {
       "localizations" : {
@@ -69573,6 +69667,9 @@
         }
       }
     },
+    "Profile" : {
+
+    },
     "Quick Tools" : {
       "localizations" : {
         "bg" : {
@@ -70161,6 +70258,9 @@
           }
         }
       }
+    },
+    "Quit MacSweep" : {
+
     },
     "Real-time system health, storage allocation, and maintenance tools" : {
       "localizations" : {
@@ -74973,6 +75073,9 @@
         }
       }
     },
+    "Reveal in Finder" : {
+
+    },
     "Review Developer Files" : {
       "localizations" : {
         "bg" : {
@@ -76346,6 +76449,18 @@
           }
         }
       }
+    },
+    "Rule name" : {
+
+    },
+    "Run Maintenance Now" : {
+
+    },
+    "Run Now" : {
+
+    },
+    "Running…" : {
+
     },
     "Safe Items Only" : {
       "localizations" : {
@@ -80283,6 +80398,9 @@
         }
       }
     },
+    "Scan profile" : {
+
+    },
     "Scanning Applications & Folders…" : {
       "localizations" : {
         "bg" : {
@@ -82640,6 +82758,12 @@
           }
         }
       }
+    },
+    "Scanning…" : {
+
+    },
+    "Schedule" : {
+
     },
     "Search apps or folders…" : {
       "localizations" : {

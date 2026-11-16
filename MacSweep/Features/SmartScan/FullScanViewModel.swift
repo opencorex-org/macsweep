@@ -52,7 +52,10 @@ public final class FullScanViewModel: ObservableObject {
 
         scanResult = result
         environment.activityLogStore.recordScan(result, title: "Full Scan completed")
-        items = result.items.filter { !environment.ignoreListStore.contains($0) }.map { item in
+        let customItems = await environment.customRuleService.scan()
+        items = environment.exclusionService.filter(result.items + customItems)
+            .filter { !environment.ignoreListStore.contains($0) }
+            .map { item in
             var item = item
             item.isSelected = item.risk == .safe
             return item
@@ -137,6 +140,8 @@ public final class FullScanViewModel: ObservableObject {
         }
         lastCleanResult = result
         environment.activityLogStore.recordCleanup(result, title: "Full cleanup completed")
+        environment.cleanupHistoryService.record(source: "Full Scan", result: result)
+        environment.notificationService.send(title: "Full cleanup finished", body: "Reclaimed \(result.formattedReclaimed) from \(result.successCount) items.")
         let failedURLs = Set(result.failures.map(\.url))
         items.removeAll { item in
             item.isSelected && !failedURLs.contains(item.url)

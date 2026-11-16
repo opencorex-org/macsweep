@@ -54,7 +54,7 @@ public final class UninstallerViewModel: ObservableObject {
         selectedApp = app
     }
 
-    public func uninstallApplication(_ app: ApplicationInfo) async {
+    public func uninstallApplication(_ app: ApplicationInfo, history: CleanupHistoryService? = nil, notifications: NotificationService? = nil) async {
         guard !isUninstalling else { return }
         isUninstalling = true
         uninstallResult = nil
@@ -81,6 +81,9 @@ public final class UninstallerViewModel: ObservableObject {
 
         uninstallResult = result
         activityLogStore.recordUninstall(result)
+        let cleanResult = CleanResult(totalItemsProcessed: result.totalItemsCount, successCount: result.movedItemsCount, failureCount: result.failures.count, totalBytesReclaimed: result.movedBytes, duration: result.duration)
+        history?.record(source: "App Uninstaller: \(app.name)", result: cleanResult)
+        notifications?.send(title: "App uninstall finished", body: "Moved \(result.movedItemsCount) items to Trash and reclaimed \(ByteFormatter.format(result.movedBytes)).")
         isUninstalling = false
     }
 

@@ -37,7 +37,7 @@ public final class LargeFilesViewModel: ObservableObject {
         self.thresholdInMB = storedThreshold?.int64Value ?? 100
     }
 
-    public func scanLargeFiles() async {
+    public func scanLargeFiles(exclusions: ExclusionService? = nil) async {
         guard !isScanning else { return }
         isScanning = true
         files = []
@@ -63,7 +63,7 @@ public final class LargeFilesViewModel: ObservableObject {
             }
         }
         self.scanResult = result
-        self.files = result.files
+        self.files = result.files.filter { exclusions?.contains($0.url) != true }
         self.isScanning = false
     }
 
@@ -85,16 +85,19 @@ public final class LargeFilesViewModel: ObservableObject {
         }
     }
 
-    public func removeSelectedFiles() async {
+    public func removeSelectedFiles(history: CleanupHistoryService? = nil, notifications: NotificationService? = nil) async {
         guard !isCleaning, selectedCount > 0 else { return }
         isCleaning = true
 
+        let started = Date()
         var idsToRemove: [UUID] = []
+        var reclaimed: Int64 = 0
         var failures: [String] = []
         for file in files where file.isSelected {
             do {
                 _ = try TrashService.moveToTrash(file.url)
                 idsToRemove.append(file.id)
+                reclaimed += file.size
             } catch {
                 failures.append("\(file.name): \(error.localizedDescription)")
             }
@@ -104,6 +107,9 @@ public final class LargeFilesViewModel: ObservableObject {
         lastActionMessage = idsToRemove.isEmpty
             ? "No files were moved to Trash."
             : "Moved \(idsToRemove.count) file\(idsToRemove.count == 1 ? "" : "s") to Trash."
+        let result = CleanResult(totalItemsProcessed: idsToRemove.count + failures.count, successCount: idsToRemove.count, failureCount: failures.count, totalBytesReclaimed: reclaimed, duration: Date().timeIntervalSince(started))
+        history?.record(source: "Large Files", result: result)
+        notifications?.send(title: "Large file cleanup finished", body: "Moved \(idsToRemove.count) files to Trash and reclaimed \(ByteFormatter.format(reclaimed)).")
         isCleaning = false
     }
 

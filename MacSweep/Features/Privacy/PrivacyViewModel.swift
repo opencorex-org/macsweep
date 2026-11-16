@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 import Combine
 
@@ -8,6 +9,7 @@ public struct PrivacyItem: Identifiable, Sendable {
     public let iconName: String
     public let path: URL
     public let size: Int64
+    public let bundleIdentifier: String?
     public var isSelected: Bool
 }
 
@@ -16,6 +18,7 @@ public final class PrivacyViewModel: ObservableObject {
     @Published public private(set) var isScanning: Bool = false
     @Published public private(set) var isCleaning: Bool = false
     @Published public var items: [PrivacyItem] = []
+    @Published public private(set) var statusMessage: String?
 
     public var selectedBytes: Int64 {
         items.filter(\.isSelected).reduce(0) { $0 + $1.size }
@@ -41,38 +44,28 @@ public final class PrivacyViewModel: ObservableObject {
         var discovered: [PrivacyItem] = []
         let home = FileManager.default.homeDirectoryForCurrentUser
 
-        // Safari Caches & History
-        let safariCache = home.appendingPathComponent("Library/Caches/com.apple.Safari")
-        if !environment.ignoreListStore.contains(safariCache), let size = await (try? FileEnumerator.directorySize(safariCache)), size > 0 {
-            discovered.append(PrivacyItem(browserName: "Safari", title: "Cache & Web Data", iconName: "safari.fill", path: safariCache, size: size, isSelected: true))
-        }
-
-        // Chrome Caches
-        let chromeCache = home.appendingPathComponent("Library/Caches/Google/Chrome")
-        if !environment.ignoreListStore.contains(chromeCache), let size = await (try? FileEnumerator.directorySize(chromeCache)), size > 0 {
-            discovered.append(PrivacyItem(browserName: "Google Chrome", title: "Cache & Cookies", iconName: "globe", path: chromeCache, size: size, isSelected: true))
-        }
-
-        // Firefox Caches
-        let firefoxCache = home.appendingPathComponent("Library/Caches/org.mozilla.firefox")
-        if !environment.ignoreListStore.contains(firefoxCache), let size = await (try? FileEnumerator.directorySize(firefoxCache)), size > 0 {
-            discovered.append(PrivacyItem(browserName: "Firefox", title: "Cache", iconName: "globe", path: firefoxCache, size: size, isSelected: true))
-        }
-
-        // Arc Caches
-        let arcCache = home.appendingPathComponent("Library/Caches/company.thebrowser.Browser")
-        if !environment.ignoreListStore.contains(arcCache), let size = await (try? FileEnumerator.directorySize(arcCache)), size > 0 {
-            discovered.append(PrivacyItem(browserName: "Arc", title: "Cache", iconName: "globe", path: arcCache, size: size, isSelected: true))
-        }
-
-        let extraBrowsers = [
-            ("Microsoft Edge", "Microsoft Edge"),
-            ("Brave", "BraveSoftware/Brave-Browser")
+        let definitions: [(String, String, String, [(String, String)])] = [
+            ("Safari", "com.apple.Safari", "safari.fill", [("Cache", "Library/Caches/com.apple.Safari"), ("History", "Library/Safari/History.db"), ("Cookies", "Library/Cookies/Cookies.binarycookies")]),
+            ("Google Chrome", "com.google.Chrome", "globe", [("Cache", "Library/Caches/Google/Chrome"), ("Cookies", "Library/Application Support/Google/Chrome/Default/Cookies"), ("History", "Library/Application Support/Google/Chrome/Default/History")]),
+            ("Firefox", "org.mozilla.firefox", "globe", [("Cache", "Library/Caches/Firefox")]),
+            ("Arc", "company.thebrowser.Browser", "globe", [("Cache", "Library/Caches/company.thebrowser.Browser"), ("Cookies", "Library/Application Support/Arc/User Data/Default/Cookies"), ("History", "Library/Application Support/Arc/User Data/Default/History")]),
+            ("Microsoft Edge", "com.microsoft.edgemac", "globe", [("Cache", "Library/Caches/Microsoft Edge"), ("Cookies", "Library/Application Support/Microsoft Edge/Default/Cookies"), ("History", "Library/Application Support/Microsoft Edge/Default/History")]),
+            ("Brave", "com.brave.Browser", "globe", [("Cache", "Library/Caches/BraveSoftware/Brave-Browser"), ("Cookies", "Library/Application Support/BraveSoftware/Brave-Browser/Default/Cookies"), ("History", "Library/Application Support/BraveSoftware/Brave-Browser/Default/History")]),
+            ("Opera", "com.operasoftware.Opera", "globe", [("Cache", "Library/Caches/com.operasoftware.Opera"), ("Cookies", "Library/Application Support/com.operasoftware.Opera/Cookies"), ("History", "Library/Application Support/com.operasoftware.Opera/History")]),
+            ("Vivaldi", "com.vivaldi.Vivaldi", "globe", [("Cache", "Library/Caches/Vivaldi"), ("Cookies", "Library/Application Support/Vivaldi/Default/Cookies"), ("History", "Library/Application Support/Vivaldi/Default/History")])
         ]
-        for (name, relativePath) in extraBrowsers {
-            let cache = home.appendingPathComponent("Library/Caches/\(relativePath)")
-            if !environment.ignoreListStore.contains(cache), let size = await (try? FileEnumerator.directorySize(cache)), size > 0 {
-                discovered.append(PrivacyItem(browserName: name, title: "Cache", iconName: "globe", path: cache, size: size, isSelected: true))
+
+        for (browser, bundleID, icon, targets) in definitions {
+            for (title, relativePath) in targets {
+                let url = home.appendingPathComponent(relativePath)
+                guard !environment.ignoreListStore.contains(url),
+                      FileManager.default.fileExists(atPath: url.path) else { continue }
+                let values = try? url.resourceValues(forKeys: [.isDirectoryKey, .fileSizeKey, .totalFileAllocatedSizeKey])
+                let size = values?.isDirectory == true
+                    ? await FileEnumerator.directorySize(url)
+                    : Int64(values?.totalFileAllocatedSize ?? values?.fileSize ?? 0)
+                guard size > 0 else { continue }
+                discovered.append(PrivacyItem(browserName: browser, title: title, iconName: icon, path: url, size: size, bundleIdentifier: bundleID, isSelected: title == "Cache"))
             }
         }
 
@@ -86,18 +79,41 @@ public final class PrivacyViewModel: ObservableObject {
         }
     }
 
-    public func cleanPrivacyItems() async {
+    public func cleanPrivacyItems(history: CleanupHistoryService? = nil, notifications: NotificationService? = nil) async {
         guard !isCleaning else { return }
         isCleaning = true
 
+        var blocked = Set<String>()
         let selected = items.filter(\.isSelected)
-        let cleanupItems = selected.map {
-            CleanupItem(url: $0.path, name: $0.browserName, size: $0.size, category: .browserPrivacy, risk: .caution, isDirectory: true, modificationDate: Date(), isSelected: true)
+        let cleanable = selected.filter { item in
+            if let bundleID = item.bundleIdentifier,
+               !NSRunningApplication.runningApplications(withBundleIdentifier: bundleID).isEmpty {
+                blocked.insert(item.browserName)
+                return false
+            }
+            return true
+        }
+
+        statusMessage = blocked.isEmpty
+            ? nil
+            : "Close \(blocked.sorted().joined(separator: ", ")) before cleaning its active profile."
+
+        guard !cleanable.isEmpty else {
+            isCleaning = false
+            return
+        }
+
+        let cleanupItems = cleanable.map { item in
+            let isDirectory = (try? item.path.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false
+            return CleanupItem(url: item.path, name: "\(item.browserName) \(item.title)", size: item.size, category: .browserPrivacy, risk: .caution, isDirectory: isDirectory, modificationDate: Date(), isSelected: true)
         }
         let result = await environment.cleanEngine.clean(items: cleanupItems)
-        environment.activityLogStore.recordCleanup(result, title: "Browser cache cleanup completed")
+        environment.activityLogStore.recordCleanup(result, title: "Browser privacy cleanup completed")
+        history?.record(source: "Privacy Cleaner", result: result)
+        notifications?.send(title: "Privacy cleanup finished", body: "Removed \(result.successCount) browser data items using \(result.formattedReclaimed).")
         let failed = Set(result.failures.map(\.url))
-        items.removeAll { $0.isSelected && !failed.contains($0.path) }
+        let cleanedIDs = Set(cleanable.filter { !failed.contains($0.path) }.map(\.id))
+        items.removeAll { cleanedIDs.contains($0.id) }
         isCleaning = false
     }
 }

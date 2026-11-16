@@ -37,7 +37,7 @@ public struct LargeFilesView: View {
                     iconName: "doc.badge.arrow.up.fill",
                     buttonTitle: "Scan Large Files",
                     buttonAction: {
-                        Task { await viewModel.scanLargeFiles() }
+                        Task { await viewModel.scanLargeFiles(exclusions: environment.exclusionService) }
                     }
                 )
             } else if viewModel.files.isEmpty {
@@ -54,7 +54,7 @@ public struct LargeFilesView: View {
                 isDestructive: true,
                 onConfirm: {
                     showConfirmDialog = false
-                    Task { await viewModel.removeSelectedFiles() }
+                    Task { await viewModel.removeSelectedFiles(history: environment.cleanupHistoryService, notifications: environment.notificationService) }
                 },
                 onCancel: {
                     showConfirmDialog = false
@@ -92,7 +92,7 @@ public struct LargeFilesView: View {
                 isLoading: viewModel.isScanning || viewModel.isCleaning
             ) {
                 if headerButtonStartsScan {
-                    Task { await viewModel.scanLargeFiles() }
+                    Task { await viewModel.scanLargeFiles(exclusions: environment.exclusionService) }
                 } else {
                     showConfirmDialog = true
                 }
@@ -139,7 +139,7 @@ public struct LargeFilesView: View {
             iconName: inaccessibleCount == 0 ? "checkmark.shield.fill" : "lock.trianglebadge.exclamationmark",
             buttonTitle: "Scan Again",
             buttonAction: {
-                Task { await viewModel.scanLargeFiles() }
+                Task { await viewModel.scanLargeFiles(exclusions: environment.exclusionService) }
             }
         )
     }

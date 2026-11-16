@@ -25,6 +25,10 @@
 * **Large File Finder:** Discover large files over configurable thresholds (500 MB to 10 GB+).
 * **Safe Duplicate Detection:** Multi-stage content hash engine for discovering duplicate copies safely.
 * **App Uninstaller:** Complete leftover file discovery for uninstalled applications.
+* **Automation & Profiles:** Daily or weekly Quick, Balanced, Developer, Privacy, and Custom maintenance profiles.
+* **Cleanup History & Exclusions:** Persistent cleanup records, global folder exclusions, and user-defined age/extension rules.
+* **Menu Bar & Notifications:** Quick maintenance, free-space status, external-drive analysis, and native completion notifications.
+* **Storage Trends & Health:** Daily free-space history plus live disk and startup-load health indicators.
 * **Safety First:** Hardcoded system safeguards, symlink resolution, explicit review, and confirmation before cleanup.
 * **Secure Updates:** Automatic updates signed with a dedicated Sparkle EdDSA key.
 * **Privacy First:** 100% local scanning, zero telemetry, zero analytics tracking, zero cloud server uploads.
