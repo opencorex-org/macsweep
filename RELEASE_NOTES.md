@@ -13,7 +13,7 @@ MacSweep 1.3.0 makes cleanup recommendations easier to understand, expands safe 
 - **Project support**: Open the upstream repository or GitHub Sponsors directly from MacSweep.
 - **Reliability improvements**: Better cache discovery, live storage refreshes, scan cancellation, filesystem validation, and cleanup reporting.
 
-> MacSweep is an open-source, ad-hoc-signed build and is not Apple-notarized. On first launch, Control-click MacSweep, choose **Open**, then confirm **Open**.
+> MacSweep is an open-source, ad-hoc-signed build and is not Apple-notarized. On first launch, try to open MacSweep once, then use **System Settings → Privacy & Security → Open Anyway**. Inside onboarding, you can continue with limited access or optionally grant Full Disk Access for more complete scans.
 
 ## Requirements
 

@@ -44,8 +44,11 @@ Download the latest `.dmg` installer from [GitHub Releases](https://github.com/o
 
 1. Download `MacSweep.dmg`.
 2. Open the DMG file and drag **MacSweep** into your `Applications` folder.
-3. The first time you launch it, Control-click MacSweep, choose **Open**, then confirm **Open**.
-4. Grant Full Disk Access when prompted.
+3. Try to open MacSweep once. Because current builds are not Apple-notarized, macOS may block the first launch.
+4. Open **System Settings → Privacy & Security**, scroll to the security message for MacSweep, select **Open Anyway**, then confirm **Open**. macOS Sequoia and later no longer support the older Control-click Gatekeeper override.
+5. In MacSweep onboarding, continue with limited access or optionally open Privacy & Security to grant Full Disk Access for more complete scan results.
+
+Gatekeeper approval and Full Disk Access are separate macOS protections. MacSweep cannot request Gatekeeper approval from inside the app because Gatekeeper runs before the app is allowed to launch. See [Apple’s guidance for safely opening Mac apps](https://support.apple.com/102445).
 
 ### Building From Source
 ```bash

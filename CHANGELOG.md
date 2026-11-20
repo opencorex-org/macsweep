@@ -14,6 +14,7 @@ All notable changes to MacSweep are documented here.
 ### Changed
 
 - Redesigned Settings with consistently aligned controls, compact menus, and clearer scanning, notification, and maintenance options.
+- Privacy-first onboarding now explains local processing and offers limited access before the optional Full Disk Access flow.
 - Full Scan now distinguishes recommended items from findings that require review and includes sandboxed application logs.
 - Dashboard, uninstaller, privacy, and cleanup workflows provide clearer status, safety, and verification details.
 - Storage monitoring and sidebar capacity indicators update as cleanup activity occurs.

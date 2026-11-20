@@ -2,6 +2,10 @@
 
 MacSweep is distributed through `opencorex-org/macsweep` as an open-source, ad-hoc-signed macOS application. Published releases include a DMG for users and a Sparkle-signed ZIP plus appcast for updates. No paid Apple Developer account or App Store submission is required.
 
+Because ad-hoc signatures cannot establish a verified developer identity, Gatekeeper can require users to approve the first launch in **System Settings → Privacy & Security**. MacSweep cannot present an in-app override because Gatekeeper makes this decision before the executable runs. Avoid documenting the legacy Control-click override for macOS Sequoia or later.
+
+The only supported way to remove this unverified-developer flow for direct downloads is to sign releases with a Developer ID Application certificate, submit them to Apple’s notary service, and staple the accepted ticket to the distributed artifact. This requires an Apple Developer Program account and release credentials that must never be committed to the repository.
+
 ## Release artifacts
 
 Every stable release publishes:
