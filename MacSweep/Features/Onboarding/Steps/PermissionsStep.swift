@@ -5,38 +5,48 @@ public struct PermissionsStep: View {
     public let onNext: () -> Void
 
     public var body: some View {
-        VStack(spacing: 20) {
-            Image(systemName: "lock.shield.fill")
-                .font(.system(size: 44))
-                .foregroundColor(.msAccent)
+        VStack(spacing: 16) {
+            Image(systemName: viewModel.hasFullDiskAccess ? "checkmark.shield.fill" : "externaldrive.badge.questionmark")
+                .font(.system(size: 40))
+                .foregroundColor(viewModel.hasFullDiskAccess ? .green : .msAccent)
 
             VStack(spacing: 6) {
-                Text("Full Disk Access Required")
+                Text(viewModel.hasFullDiskAccess ? "Full Disk Access Enabled" : "Choose Scan Access")
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.msLabel)
 
-                Text("To clean system caches, user logs, and developer artifacts, MacSweep needs Full Disk Access permission.")
+                Text(viewModel.hasFullDiskAccess
+                     ? "MacSweep can inspect protected cache and log locations for more complete results."
+                     : "MacSweep works with limited access. Full Disk Access improves coverage, but macOS only allows you to grant it in System Settings.")
                     .font(.system(size: 13))
                     .foregroundColor(.msSecondaryLabel)
                     .multilineTextAlignment(.center)
-                    .frame(maxWidth: 380)
+                    .frame(maxWidth: 420)
             }
 
-            SecondaryButton(title: "Grant Permission in System Settings", iconName: "lock.fill") {
-                if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_FullDisk") {
-                    NSWorkspace.shared.open(url)
-                }
-            }
-
-            HStack(spacing: 12) {
-                SecondaryButton(title: "Check Status") {
-                    viewModel.checkPermissions()
-                }
-
+            if viewModel.hasFullDiskAccess {
                 PrimaryButton(title: "Continue", iconName: "arrow.right", action: onNext)
+            } else {
+                VStack(spacing: 10) {
+                    PrimaryButton(title: "Continue with Limited Access", iconName: "arrow.right", action: onNext)
+
+                    HStack(spacing: 10) {
+                        SecondaryButton(title: "Open Privacy & Security", iconName: "lock.fill") {
+                            if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_FullDisk") {
+                                NSWorkspace.shared.open(url)
+                            }
+                        }
+
+                        SecondaryButton(title: "Check Status", iconName: "arrow.clockwise") {
+                            viewModel.checkPermissions()
+                        }
+                    }
+                }
             }
-            .padding(.top, 8)
         }
         .padding(32)
+        .onAppear {
+            viewModel.checkPermissions()
+        }
     }
 }
