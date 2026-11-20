@@ -19,10 +19,6 @@ public struct DashboardView: View {
                             Text("MacSweep Overview")
                                 .font(.system(size: 22, weight: .bold))
                                 .foregroundColor(.msLabel)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 3)
-                            .background(Color.msSafe.opacity(0.12))
-                            .cornerRadius(12)
                         }
 
                         Text("Real-time system health, storage allocation, and maintenance tools")

@@ -183,6 +183,10 @@ public actor ScanEngine {
             }
         }
 
+        // General cache roots overlap with some developer-specific scanners.
+        // Keep one conservative, category-specific result for every physical path.
+        allItems = deduplicatedByPath(allItems)
+
         // Sort items by size descending
         allItems.sort { $0.size > $1.size }
 
@@ -204,6 +208,30 @@ public actor ScanEngine {
             duration: duration,
             scannedCategories: Array(Set(allItems.map(\.category)))
         )
+    }
+
+    private func deduplicatedByPath(_ items: [CleanupItem]) -> [CleanupItem] {
+        var unique: [String: CleanupItem] = [:]
+
+        for item in items {
+            let path = item.url.standardizedFileURL.resolvingSymlinksInPath().path
+            guard let existing = unique[path] else {
+                unique[path] = item
+                continue
+            }
+
+            let preferred: CleanupItem
+            if item.risk != existing.risk {
+                preferred = item.risk > existing.risk ? item : existing
+            } else if existing.category == .systemCache && item.category != .systemCache {
+                preferred = item
+            } else {
+                preferred = existing
+            }
+            unique[path] = preferred
+        }
+
+        return Array(unique.values)
     }
 
     /// Runs a developer-only scan targeting dev tool caches.

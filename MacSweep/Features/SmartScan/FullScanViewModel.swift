@@ -20,6 +20,11 @@ public final class FullScanViewModel: ObservableObject {
     public var totalBytes: Int64 { items.reduce(0) { $0 + $1.size } }
     public var selectedBytes: Int64 { items.filter(\.isSelected).reduce(0) { $0 + $1.size } }
     public var selectedCount: Int { items.filter(\.isSelected).count }
+    public var recommendedCount: Int { items.filter { $0.risk == .safe }.count }
+    public var reviewCount: Int { items.filter { $0.risk != .safe }.count }
+    public var recommendedBytes: Int64 {
+        items.filter { $0.risk == .safe }.reduce(0) { $0 + $1.size }
+    }
 
     public init(environment: AppEnvironment) {
         self.environment = environment

@@ -4941,6 +4941,7 @@
       }
     },
     "%lld items found across system and developer categories" : {
+      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
@@ -14176,6 +14177,9 @@
           }
         }
       }
+    },
+    "Analyse every supported cleanup source and show only safety-approved actions. Use Full Scan when you want the complete review." : {
+
     },
     "Analyse Mac" : {
       "extractionState" : "stale",
@@ -30992,6 +30996,9 @@
         }
       }
     },
+    "Comprehensive system, developer, and custom-rule results" : {
+
+    },
     "Content hashes are compared; originals are never removed automatically." : {
       "localizations" : {
         "bg" : {
@@ -40635,6 +40642,7 @@
       }
     },
     "Find safe opportunities to reclaim storage and remove accumulated clutter." : {
+      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
@@ -61788,6 +61796,9 @@
         }
       }
     },
+    "Only safety-approved cleanup items are shown here. Use Full Scan for the complete review." : {
+
+    },
     "Only strongly matched app data is included. Shared package receipts, system files, and ambiguous vendor SDKs are preserved." : {
       "localizations" : {
         "bg" : {
@@ -64544,6 +64555,7 @@
       }
     },
     "Optimisation Recommendations" : {
+      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
@@ -64937,6 +64949,7 @@
       }
     },
     "Optimise Your Mac" : {
+      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
@@ -71031,6 +71044,7 @@
       }
     },
     "Recommended" : {
+      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
@@ -75252,6 +75266,7 @@
       }
     },
     "Review each recommendation before applying changes." : {
+      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
@@ -76636,6 +76651,9 @@
           }
         }
       }
+    },
+    "Safe Recommendations" : {
+
     },
     "Safely removing system caches, logs, and user trash…" : {
       "extractionState" : "stale",
@@ -91591,6 +91609,9 @@
           }
         }
       }
+    },
+    "Storage Recommendations" : {
+
     },
     "Storage unavailable" : {
       "extractionState" : "stale",
