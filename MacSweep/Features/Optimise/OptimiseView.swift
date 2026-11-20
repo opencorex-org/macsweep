@@ -18,8 +18,8 @@ public struct OptimiseView: View {
             } else if viewModel.isCleaning {
                 CleaningProgressView(
                     progress: viewModel.cleanProgress,
-                    title: "Optimising Your Mac",
-                    subtitle: "Removing approved clutter while protecting system and personal files…"
+                    title: "Applying Recommendations",
+                    subtitle: "Removing safety-approved clutter while protecting system and personal files…"
                 )
             } else if let result = viewModel.lastCleanResult {
                 ScanSummaryView(result: result, verifiedBytesFreed: viewModel.verifiedBytesFreed) {
@@ -29,10 +29,10 @@ public struct OptimiseView: View {
                 welcomeView
             } else if viewModel.items.isEmpty {
                 EmptyStateView(
-                    title: "Your Mac Is Optimised",
-                    subtitle: "No safe optimisation recommendations were found.",
+                    title: "No Recommendations Right Now",
+                    subtitle: "No safety-approved cleanup opportunities were found.",
                     iconName: "checkmark.seal.fill",
-                    buttonTitle: "Analyse Again",
+                    buttonTitle: "Check Again",
                     buttonAction: { Task { await viewModel.analyse() } }
                 )
             } else {
@@ -41,9 +41,9 @@ public struct OptimiseView: View {
         }
         .sheet(isPresented: $showingConfirmation) {
             ConfirmationDialog(
-                title: "Apply Selected Optimisations?",
-                message: "Preview: \(viewModel.safeSelectedCount) safe and \(viewModel.cautionSelectedCount) caution items, totalling \(ByteFormatter.format(viewModel.selectedBytes)). Cleanup is permanent and cannot be recovered; protected paths and ignored items remain excluded.",
-                confirmTitle: "Optimise \(ByteFormatter.format(viewModel.selectedBytes))",
+                title: "Clean Recommended Items?",
+                message: "This will permanently remove \(viewModel.selectedCount) safety-approved items totalling \(ByteFormatter.format(viewModel.selectedBytes)). Protected, excluded, and ignored items remain untouched.",
+                confirmTitle: "Clean \(ByteFormatter.format(viewModel.selectedBytes))",
                 isDestructive: true,
                 onConfirm: {
                     showingConfirmation = false
@@ -67,23 +67,24 @@ public struct OptimiseView: View {
             }
 
             VStack(spacing: 7) {
-                Text("Optimise Your Mac")
+                Text("Storage Recommendations")
                     .font(.system(size: 24, weight: .bold))
                     .foregroundColor(.msLabel)
-                Text("Find safe opportunities to reclaim storage and remove accumulated clutter.")
+                Text("Analyse every supported cleanup source and show only safety-approved actions. Use Full Scan when you want the complete review.")
                     .font(.system(size: 13))
                     .foregroundColor(.msSecondaryLabel)
                     .multilineTextAlignment(.center)
+                    .frame(maxWidth: 620)
             }
 
             HStack(spacing: 12) {
-                featureCard("Safe Analysis", icon: "checkmark.shield.fill", tint: .green)
-                featureCard("Smart Selection", icon: "slider.horizontal.3", tint: .blue)
-                featureCard("Full Review", icon: "list.bullet.rectangle", tint: .orange)
+                featureCard("Safe Results Only", icon: "checkmark.shield.fill", tint: .green)
+                featureCard("Preselected for You", icon: "checkmark.circle.fill", tint: .blue)
+                featureCard("All Cleanup Sources", icon: "square.grid.2x2.fill", tint: .purple)
             }
             .frame(maxWidth: 620)
 
-            PrimaryButton(title: "Analyse Mac", iconName: "wand.and.stars") {
+            PrimaryButton(title: "Find Recommendations", iconName: "lightbulb.fill") {
                 Task { await viewModel.analyse() }
             }
             Spacer()
@@ -97,26 +98,20 @@ public struct OptimiseView: View {
             VStack(spacing: 14) {
                 HStack {
                     VStack(alignment: .leading, spacing: 3) {
-                        Text("Optimisation Recommendations")
+                        Text("Safe Recommendations")
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(.msLabel)
-                        Text("Review each recommendation before applying changes.")
+                        Text("Only safety-approved cleanup items are shown here. Use Full Scan for the complete review.")
                             .font(.system(size: 11))
                             .foregroundColor(.msSecondaryLabel)
                     }
                     Spacer()
-                    SecondaryButton(title: "Analyse Again", iconName: "arrow.clockwise") {
+                    SecondaryButton(title: "Check Again", iconName: "arrow.clockwise") {
                         Task { await viewModel.analyse() }
                     }
-                    Button("Safe Clean", systemImage: "checkmark.shield.fill") {
-                        viewModel.selectRecommended()
-                        showingConfirmation = true
-                    }
-                    .buttonStyle(.bordered)
-                    .disabled(!viewModel.items.contains { $0.risk == .safe })
                     PrimaryButton(
-                        title: "Optimise \(ByteFormatter.format(viewModel.selectedBytes))",
-                        iconName: "wand.and.stars"
+                        title: "Clean \(ByteFormatter.format(viewModel.selectedBytes))",
+                        iconName: "checkmark.shield.fill"
                     ) {
                         showingConfirmation = true
                     }
@@ -124,13 +119,12 @@ public struct OptimiseView: View {
                 }
 
                 HStack(spacing: 12) {
-                    metricCard("Reclaimable", value: ByteFormatter.format(viewModel.reclaimableBytes), icon: "internaldrive.fill", tint: .msAccent)
+                    metricCard("Safe to Clean", value: ByteFormatter.format(viewModel.reclaimableBytes), icon: "checkmark.shield.fill", tint: .green)
                     metricCard("Recommendations", value: "\(viewModel.items.count)", icon: "lightbulb.fill", tint: .orange)
                     metricCard("Categories", value: "\(viewModel.categoryCount)", icon: "square.grid.2x2.fill", tint: .purple)
                 }
 
                 HStack(spacing: 14) {
-                    Button("Recommended") { viewModel.selectRecommended() }
                     Button("Select All") { viewModel.selectAll() }
                     Button("Deselect All") { viewModel.deselectAll() }
                     Spacer()

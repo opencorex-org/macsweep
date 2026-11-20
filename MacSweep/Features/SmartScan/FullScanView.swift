@@ -29,7 +29,7 @@ public struct FullScanView: View {
             } else if viewModel.scanResult == nil {
                 EmptyStateView(
                     title: "Full Scan",
-                    subtitle: "Inspect system caches, logs, Trash, and supported developer-tool caches in one comprehensive scan.",
+                    subtitle: "Review system, developer, and custom-rule findings—including caution items—in one comprehensive scan.",
                     iconName: "magnifyingglass.circle.fill",
                     buttonTitle: "Start Full Scan",
                     buttonAction: startScan
