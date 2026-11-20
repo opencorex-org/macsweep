@@ -38,16 +38,21 @@ public struct NotificationSettings: View {
                         detail: "The critical alert always triggers at 99% used",
                         icon: "gauge.with.dots.needle.67percent"
                     ) {
-                        Picker("Early warning threshold", selection: $viewModel.storageWarningThreshold) {
+                        SettingsMenu(value: "\(viewModel.storageWarningThreshold)% used", width: 122) {
                             ForEach([85, 90, 95, 98], id: \.self) { threshold in
-                                Text("\(threshold)% used").tag(threshold)
+                                Button {
+                                    viewModel.storageWarningThreshold = threshold
+                                    Task { await environment.storageAlertService.settingsDidChange() }
+                                } label: {
+                                    if viewModel.storageWarningThreshold == threshold {
+                                        Label("\(threshold)% used", systemImage: "checkmark")
+                                    } else {
+                                        Text("\(threshold)% used")
+                                    }
+                                }
                             }
                         }
-                        .labelsHidden()
-                        .frame(width: 120)
-                        .onChange(of: viewModel.storageWarningThreshold) { _, _ in
-                            Task { await environment.storageAlertService.settingsDidChange() }
-                        }
+                        .accessibilityLabel("Early warning threshold")
                     }
                     .disabled(!viewModel.enableNotifications || !viewModel.storageAlertsEnabled)
 
@@ -74,12 +79,12 @@ public struct NotificationSettings: View {
                     detail: "Open MacSweep to review each recommendation",
                     icon: "calendar.badge.clock"
                 ) {
-                    Picker("Scan reminder", selection: $viewModel.scheduledScanFrequency) {
-                        Text("Off").tag("off")
-                        Text("Daily").tag("daily")
-                        Text("Weekly").tag("weekly")
+                    SettingsMenu(value: reminderTitle, width: 112) {
+                        reminderOption("Off", value: "off")
+                        reminderOption("Daily", value: "daily")
+                        reminderOption("Weekly", value: "weekly")
                     }
-                    .labelsHidden().frame(width: 110)
+                    .accessibilityLabel("Scan reminder")
                 }
             }
 
@@ -171,5 +176,26 @@ public struct NotificationSettings: View {
             return "Warning at \(viewModel.storageWarningThreshold)% and critical alert at 99% used."
         }
         return "MacSweep will not show storage capacity alerts."
+    }
+
+    private var reminderTitle: String {
+        switch viewModel.scheduledScanFrequency {
+        case "daily": "Daily"
+        case "weekly": "Weekly"
+        default: "Off"
+        }
+    }
+
+    @ViewBuilder
+    private func reminderOption(_ title: String, value: String) -> some View {
+        Button {
+            viewModel.scheduledScanFrequency = value
+        } label: {
+            if viewModel.scheduledScanFrequency == value {
+                Label(title, systemImage: "checkmark")
+            } else {
+                Text(title)
+            }
+        }
     }
 }

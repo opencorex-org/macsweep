@@ -2,6 +2,27 @@
 
 All notable changes to MacSweep are documented here.
 
+## [1.3.0] - 2026-11-20
+
+### Added
+
+- A Recommendations workspace that presents only safety-approved cleanup opportunities from a comprehensive scan.
+- Activity history and storage insights for reviewing scans, cleanups, reclaimed space, and system health.
+- Live application localization with an in-app language selector.
+- GitHub Sponsors and upstream repository shortcuts in the application UI.
+
+### Changed
+
+- Redesigned Settings with consistently aligned controls, compact menus, and clearer scanning, notification, and maintenance options.
+- Full Scan now distinguishes recommended items from findings that require review and includes sandboxed application logs.
+- Dashboard, uninstaller, privacy, and cleanup workflows provide clearer status, safety, and verification details.
+- Storage monitoring and sidebar capacity indicators update as cleanup activity occurs.
+
+### Fixed
+
+- Deduplicate overlapping cache and developer scan results before cleanup.
+- Improve safe cache discovery, scan cancellation, and filesystem validation.
+
 ## [1.2.0] - 2026-11-01
 
 ### Added

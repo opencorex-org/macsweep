@@ -7,9 +7,19 @@ public nonisolated struct LogScanner: Sendable {
 
     private var logDirectories: [URL] {
         let home = fileManager.homeDirectoryForCurrentUser
-        return [
-            home.appendingPathComponent("Library/Logs")
-        ]
+        let library = home.appendingPathComponent("Library")
+        var directories = [library.appendingPathComponent("Logs")]
+        directories += nestedLogDirectories(
+            in: library.appendingPathComponent("Containers"),
+            logPath: "Data/Library/Logs"
+        )
+        directories += nestedLogDirectories(
+            in: library.appendingPathComponent("Group Containers"),
+            logPath: "Library/Logs"
+        )
+
+        var seenPaths = Set<String>()
+        return directories.filter { seenPaths.insert($0.standardizedFileURL.path).inserted }
     }
 
     @concurrent
@@ -45,5 +55,25 @@ public nonisolated struct LogScanner: Sendable {
 
         Logger.scanner.info("Log scan complete: \(items.count) items")
         return items
+    }
+
+    private func nestedLogDirectories(in containerRoot: URL, logPath: String) -> [URL] {
+        guard let containers = try? fileManager.contentsOfDirectory(
+            at: containerRoot,
+            includingPropertiesForKeys: [.isDirectoryKey, .isSymbolicLinkKey],
+            options: [.skipsHiddenFiles]
+        ) else { return [] }
+
+        return containers.compactMap { container in
+            let containerValues = try? container.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
+            guard containerValues?.isDirectory == true,
+                  containerValues?.isSymbolicLink != true else { return nil }
+
+            let logsURL = container.appendingPathComponent(logPath, isDirectory: true)
+            let logValues = try? logsURL.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
+            guard logValues?.isDirectory == true,
+                  logValues?.isSymbolicLink != true else { return nil }
+            return logsURL
+        }
     }
 }

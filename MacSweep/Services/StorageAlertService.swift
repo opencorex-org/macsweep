@@ -178,7 +178,7 @@ public final class StorageAlertService: NSObject, ObservableObject, UNUserNotifi
     private func registerNotificationCategory() {
         let action = UNNotificationAction(
             identifier: "OPEN_OPTIMISE",
-            title: "Open Optimise",
+            title: "Open Recommendations",
             options: [.foreground]
         )
         let snooze = UNNotificationAction(identifier: "SNOOZE_ALERTS", title: "Snooze 24 Hours")

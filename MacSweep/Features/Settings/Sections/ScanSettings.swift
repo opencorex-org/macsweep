@@ -11,7 +11,7 @@ public struct ScanSettings: View {
                 icon: "doc.badge.arrow.up.fill",
                 tint: .orange
             ) {
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 14) {
                     SettingsInlineRow(
                         title: "Minimum file size",
                         detail: "Smaller files are excluded from Large Files scans",
@@ -26,24 +26,51 @@ public struct ScanSettings: View {
                             .clipShape(Capsule())
                     }
 
-                    Stepper(
-                        "Adjust minimum size",
-                        value: $viewModel.largeFileThresholdMB,
-                        in: 10...5000,
-                        step: 10
-                    )
-                    .labelsHidden()
-                    .controlSize(.small)
+                    HStack(spacing: 10) {
+                        thresholdButton(icon: "minus", delta: -10)
+
+                        Slider(
+                            value: Binding(
+                                get: { Double(viewModel.largeFileThresholdMB) },
+                                set: { viewModel.largeFileThresholdMB = Int(($0 / 10).rounded()) * 10 }
+                            ),
+                            in: 10...5000
+                        )
+                        .tint(.orange)
+                        .focusEffectDisabled()
+                        .accessibilityLabel("Minimum file size")
+                        .accessibilityValue(formattedThreshold)
+
+                        thresholdButton(icon: "plus", delta: 10)
+                    }
 
                     HStack(spacing: 8) {
                         ForEach([50, 100, 500, 1000], id: \.self) { size in
                             Button(size == 1000 ? "1 GB" : "\(size) MB") {
                                 viewModel.largeFileThresholdMB = size
                             }
-                            .buttonStyle(.bordered)
-                            .tint(viewModel.largeFileThresholdMB == size ? .orange : .secondary)
-                            .controlSize(.small)
+                            .buttonStyle(.plain)
+                            .font(.system(size: 10, weight: .medium))
+                            .foregroundColor(viewModel.largeFileThresholdMB == size ? .orange : .msSecondaryLabel)
+                            .padding(.horizontal, 11)
+                            .frame(height: 26)
+                            .background(
+                                viewModel.largeFileThresholdMB == size
+                                    ? Color.orange.opacity(0.12)
+                                    : Color.primary.opacity(0.045),
+                                in: Capsule()
+                            )
+                            .overlay {
+                                Capsule()
+                                    .stroke(
+                                        viewModel.largeFileThresholdMB == size
+                                            ? Color.orange.opacity(0.28)
+                                            : Color.msSeparator.opacity(0.35),
+                                        lineWidth: 0.5
+                                    )
+                            }
                         }
+                        Spacer()
                     }
                 }
             }
@@ -68,5 +95,22 @@ public struct ScanSettings: View {
             return String(format: "%.1f GB", Double(viewModel.largeFileThresholdMB) / 1000)
         }
         return "\(viewModel.largeFileThresholdMB) MB"
+    }
+
+    private func thresholdButton(icon: String, delta: Int) -> some View {
+        Button {
+            viewModel.largeFileThresholdMB = min(5000, max(10, viewModel.largeFileThresholdMB + delta))
+        } label: {
+            Image(systemName: icon)
+                .font(.system(size: 10, weight: .bold))
+                .frame(width: 26, height: 26)
+                .background(Color.primary.opacity(0.055), in: Circle())
+                .overlay {
+                    Circle().stroke(Color.msSeparator.opacity(0.5), lineWidth: 0.5)
+                }
+        }
+        .buttonStyle(.plain)
+        .disabled(delta < 0 ? viewModel.largeFileThresholdMB <= 10 : viewModel.largeFileThresholdMB >= 5000)
+        .accessibilityLabel(delta < 0 ? "Decrease minimum file size" : "Increase minimum file size")
     }
 }

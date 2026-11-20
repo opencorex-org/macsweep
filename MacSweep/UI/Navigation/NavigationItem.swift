@@ -32,7 +32,7 @@ public enum NavigationItem: String, CaseIterable, Identifiable, Hashable, Sendab
     public var displayName: String {
         switch self {
         case .dashboard: return "Dashboard"
-        case .optimise: return "Optimise"
+        case .optimise: return "Recommendations"
         case .activityLog: return "Activity Log"
         case .insights: return "Insights"
         case .fullScan: return "Full Scan"
@@ -53,7 +53,7 @@ public enum NavigationItem: String, CaseIterable, Identifiable, Hashable, Sendab
     public var iconName: String {
         switch self {
         case .dashboard: return "gauge.medium"
-        case .optimise: return "wand.and.stars"
+        case .optimise: return "lightbulb.fill"
         case .activityLog: return "clock.arrow.circlepath"
         case .insights: return "waveform.path.ecg.rectangle.fill"
         case .fullScan: return "magnifyingglass.circle.fill"

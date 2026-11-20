@@ -25,8 +25,6 @@ public final class OptimiseViewModel: ObservableObject {
     public var selectedBytes: Int64 { selectedItems.reduce(0) { $0 + $1.size } }
     public var reclaimableBytes: Int64 { items.reduce(0) { $0 + $1.size } }
     public var categoryCount: Int { Set(items.map(\.category)).count }
-    public var safeSelectedCount: Int { selectedItems.filter { $0.risk == .safe }.count }
-    public var cautionSelectedCount: Int { selectedItems.filter { $0.risk == .caution }.count }
 
     public func analyse() async {
         guard !isScanning, !isCleaning else { return }
@@ -51,14 +49,22 @@ public final class OptimiseViewModel: ObservableObject {
         let result = await task.value
         guard !control.isCancelled else { return }
 
-        items = result.items
-            .filter { $0.risk != .high && !environment.ignoreListStore.contains($0) }
+        let recommendations = environment.exclusionService.filter(result.items)
+            .filter { $0.risk == .safe && !environment.ignoreListStore.contains($0) }
             .map { item in
                 var item = item
-                item.isSelected = item.risk == .safe
+                item.isSelected = true
                 return item
             }
-        environment.activityLogStore.recordScan(result, title: "Optimisation analysis completed")
+        items = recommendations
+        environment.activityLogStore.recordScan(
+            ScanResult(
+                items: recommendations,
+                duration: result.duration,
+                scannedCategories: Array(Set(recommendations.map(\.category)))
+            ),
+            title: "Recommendations analysis completed"
+        )
         hasAnalysed = true
         finishScan()
     }
@@ -67,12 +73,6 @@ public final class OptimiseViewModel: ObservableObject {
         scanControl?.cancel()
         scanTask?.cancel()
         finishScan()
-    }
-
-    public func selectRecommended() {
-        for index in items.indices {
-            items[index].isSelected = items[index].risk == .safe
-        }
     }
 
     public func selectAll() {
@@ -119,7 +119,7 @@ public final class OptimiseViewModel: ObservableObject {
            let after = try? environment.diskSpaceService.getDiskSpace().availableCapacity {
             verifiedBytesFreed = max(0, after - before)
         }
-        environment.activityLogStore.recordCleanup(result, title: "Optimisation completed")
+        environment.activityLogStore.recordCleanup(result, title: "Recommended cleanup completed")
 
         let failedURLs = Set(result.failures.map(\.url))
         items.removeAll { $0.isSelected && !failedURLs.contains($0.url) }

@@ -29,7 +29,7 @@ public struct FullScanView: View {
             } else if viewModel.scanResult == nil {
                 EmptyStateView(
                     title: "Full Scan",
-                    subtitle: "Inspect system caches, logs, Trash, and supported developer-tool caches in one comprehensive scan.",
+                    subtitle: "Review system, developer, and custom-rule findings—including caution items—in one comprehensive scan.",
                     iconName: "magnifyingglass.circle.fill",
                     buttonTitle: "Start Full Scan",
                     buttonAction: startScan
@@ -74,7 +74,7 @@ public struct FullScanView: View {
                         Text("Full Scan Results")
                             .font(.system(size: 19, weight: .bold))
                             .foregroundColor(.msLabel)
-                        Text("\(viewModel.items.count) items found across system and developer categories")
+                        Text("Comprehensive system, developer, and custom-rule results")
                             .font(.system(size: 12))
                             .foregroundColor(.msSecondaryLabel)
                     }
@@ -91,6 +91,30 @@ public struct FullScanView: View {
                         showConfirmation = true
                     }
                     .disabled(viewModel.selectedCount == 0 || viewModel.isCleaning)
+                }
+
+                HStack(spacing: 12) {
+                    scanMetric(
+                        "Recommended",
+                        value: "\(viewModel.recommendedCount)",
+                        detail: ByteFormatter.format(viewModel.recommendedBytes),
+                        icon: "checkmark.shield.fill",
+                        tint: .green
+                    )
+                    scanMetric(
+                        "Review Required",
+                        value: "\(viewModel.reviewCount)",
+                        detail: "Not selected automatically",
+                        icon: "exclamationmark.triangle.fill",
+                        tint: .orange
+                    )
+                    scanMetric(
+                        "Total Found",
+                        value: ByteFormatter.format(viewModel.totalBytes),
+                        detail: "\(viewModel.items.count) unique items",
+                        icon: "internaldrive.fill",
+                        tint: .blue
+                    )
                 }
 
                 HStack(spacing: 14) {
@@ -151,6 +175,43 @@ public struct FullScanView: View {
             Text(ByteFormatter.format(items.reduce(0) { $0 + $1.size }))
                 .font(.system(size: 11))
                 .foregroundColor(.msSecondaryLabel)
+        }
+    }
+
+    private func scanMetric(
+        _ title: String,
+        value: String,
+        detail: String,
+        icon: String,
+        tint: Color
+    ) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: icon)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundColor(tint)
+                .frame(width: 28, height: 28)
+                .background(tint.opacity(0.1), in: RoundedRectangle(cornerRadius: 7, style: .continuous))
+
+            VStack(alignment: .leading, spacing: 1) {
+                Text(value)
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundColor(.msLabel)
+                Text(LocalizedStringKey(title))
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundColor(.msLabel)
+                Text(detail)
+                    .font(.system(size: 9))
+                    .foregroundColor(.msSecondaryLabel)
+                    .lineLimit(1)
+            }
+            Spacer(minLength: 4)
+        }
+        .padding(10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color.msBackground, in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 9, style: .continuous)
+                .stroke(Color.msSeparator.opacity(0.45), lineWidth: 0.5)
         }
     }
 
