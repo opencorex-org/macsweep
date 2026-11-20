@@ -1,17 +1,17 @@
-# MacSweep 1.2.0
+# MacSweep 1.3.0
 
-MacSweep 1.2.0 adds automated maintenance, cleanup history, exclusions, storage trends, and deeper privacy and startup management.
+MacSweep 1.3.0 makes cleanup recommendations easier to understand, expands safe Full Scan coverage, and refreshes the Settings experience.
 
 ## Highlights
 
-- **Automated maintenance**: Run daily or weekly Quick, Balanced, Developer, Privacy, or Custom profiles, with optional safety-approved auto-cleaning.
-- **Safer control**: Configure global exclusions and custom age/extension cleanup rules, and review persistent cleanup history.
-- **Live storage status**: View storage trends and system health on the Dashboard while the sidebar updates free space in real time during cleanup.
-- **Native macOS integration**: Use menu-bar controls, Notification Center alerts, Launch at Login, and automatic external-drive analysis.
-- **Improved privacy cleanup**: Scan Safari, Chrome, Firefox, Arc, Edge, Brave, Opera, and Vivaldi while protecting active browser profiles.
-- **Recoverable duplicate cleanup**: Preview duplicate files and move selected copies to the macOS Trash.
-- **Better startup insights**: Review publisher, signature, and estimated impact for user LaunchAgents.
-- **Diagnostics**: Export a privacy-safe local JSON report for troubleshooting.
+- **Safe recommendations**: The new Recommendations workspace analyzes all supported cleanup sources but presents only safety-approved actions.
+- **More capable Full Scan**: Review recommended and caution items separately, scan sandboxed application logs, and avoid duplicate cleanup paths.
+- **Storage insights**: Track system health, storage history, scan activity, and verified reclaimed space from the Dashboard and Insights views.
+- **Redesigned Settings**: Use consistently aligned controls, compact menus, clearer notification options, and improved maintenance profiles.
+- **Live localization**: Change the application language immediately from Settings using the expanded string catalog.
+- **Improved application removal**: Inspect application components and associated data with clearer safety information before uninstalling.
+- **Project support**: Open the upstream repository or GitHub Sponsors directly from MacSweep.
+- **Reliability improvements**: Better cache discovery, live storage refreshes, scan cancellation, filesystem validation, and cleanup reporting.
 
 > MacSweep is an open-source, ad-hoc-signed build and is not Apple-notarized. On first launch, Control-click MacSweep, choose **Open**, then confirm **Open**.
 
