@@ -35,6 +35,7 @@ public final class AppEnvironment: ObservableObject {
     public let diagnosticReportService: DiagnosticReportService
     public let externalDriveMonitor: ExternalDriveMonitor
     public lazy var automationService = AutomationService(
+        environment: self,
         scanEngine: scanEngine,
         cleanEngine: cleanEngine,
         exclusionService: exclusionService,

@@ -94,23 +94,24 @@ public struct GeneralSettings: View {
                     detail: "Language changes apply immediately",
                     icon: "character.bubble"
                 ) {
-                    Picker("Language", selection: Binding(
-                        get: { localizationStore.language },
-                        set: { newLang in
-                            localizationStore.select(newLang)
-                        }
-                    )) {
+                    SettingsMenu(value: localizationStore.language.nativeName, width: 180) {
                         ForEach(languageGroups, id: \.0) { groupName, languages in
                             Section(header: Text(LocalizedStringKey(groupName))) {
                                 ForEach(languages) { lang in
-                                    Text(lang.nativeName).tag(lang)
+                                    Button {
+                                        localizationStore.select(lang)
+                                    } label: {
+                                        if localizationStore.language == lang {
+                                            Label(lang.nativeName, systemImage: "checkmark")
+                                        } else {
+                                            Text(lang.nativeName)
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
-                    .labelsHidden()
-                    .pickerStyle(.menu)
-                    .frame(width: 170)
+                    .accessibilityLabel("Application language")
                 }
             }
         }

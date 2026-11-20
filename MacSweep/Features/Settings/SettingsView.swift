@@ -297,7 +297,9 @@ struct SettingsCard<Content: View>: View {
 
             Divider().padding(.leading, 42)
 
-            content.padding(13)
+            content
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(13)
         }
         .background(Color.msSecondaryBackground)
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
@@ -305,39 +307,50 @@ struct SettingsCard<Content: View>: View {
             RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .stroke(Color.msSeparator.opacity(0.55), lineWidth: 1)
         }
+        .frame(maxWidth: .infinity)
     }
 }
 
 struct SettingsToggleRow: View {
+    @Environment(\.isEnabled) private var isEnabled
     let title: String
     let detail: String
     let icon: String
     @Binding var isOn: Bool
 
     var body: some View {
-        Toggle(isOn: $isOn) {
-            HStack(spacing: 11) {
-                Image(systemName: icon)
-                    .font(.system(size: 12, weight: .semibold))
+        HStack(alignment: .center, spacing: 11) {
+            Image(systemName: icon)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundColor(.msSecondaryLabel)
+                .frame(width: 22)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(LocalizedStringKey(title))
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundColor(.msLabel)
+                Text(LocalizedStringKey(detail))
+                    .font(.system(size: 10))
                     .foregroundColor(.msSecondaryLabel)
-                    .frame(width: 22)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(LocalizedStringKey(title))
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(.msLabel)
-                    Text(LocalizedStringKey(detail))
-                        .font(.system(size: 10))
-                        .foregroundColor(.msSecondaryLabel)
-                }
+                    .fixedSize(horizontal: false, vertical: true)
             }
+            .layoutPriority(1)
+
+            Spacer(minLength: 16)
+
+            Toggle(title, isOn: $isOn)
+                .labelsHidden()
+                .toggleStyle(.switch)
+                .controlSize(.small)
         }
-        .toggleStyle(.switch)
-        .controlSize(.small)
         .frame(minHeight: 32)
+        .frame(maxWidth: .infinity)
+        .opacity(isEnabled ? 1 : 0.55)
     }
 }
 
 struct SettingsInlineRow<Control: View>: View {
+    @Environment(\.isEnabled) private var isEnabled
     let title: String
     let detail: String?
     let icon: String?
@@ -375,11 +388,58 @@ struct SettingsInlineRow<Control: View>: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
+            .layoutPriority(1)
 
             Spacer(minLength: 16)
             control
                 .controlSize(.small)
         }
         .frame(minHeight: 32)
+        .frame(maxWidth: .infinity)
+        .opacity(isEnabled ? 1 : 0.55)
+    }
+}
+
+struct SettingsMenu<Content: View>: View {
+    let value: String
+    let width: CGFloat
+    let content: Content
+
+    init(
+        value: String,
+        width: CGFloat = 150,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.value = value
+        self.width = width
+        self.content = content()
+    }
+
+    var body: some View {
+        Menu {
+            content
+        } label: {
+            HStack(spacing: 8) {
+                Text(value)
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundColor(.msLabel)
+                    .lineLimit(1)
+                Spacer(minLength: 8)
+                Image(systemName: "chevron.up.chevron.down")
+                    .font(.system(size: 8, weight: .bold))
+                    .foregroundColor(.msSecondaryLabel)
+            }
+            .padding(.horizontal, 10)
+            .frame(width: width, height: 28)
+            .background(Color.primary.opacity(0.055), in: RoundedRectangle(cornerRadius: 7, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 7, style: .continuous)
+                    .stroke(Color.msSeparator.opacity(0.55), lineWidth: 0.5)
+            }
+            .contentShape(RoundedRectangle(cornerRadius: 7, style: .continuous))
+        }
+        .menuStyle(.borderlessButton)
+        .menuIndicator(.hidden)
+        .fixedSize()
     }
 }

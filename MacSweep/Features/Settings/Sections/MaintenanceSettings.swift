@@ -29,45 +29,98 @@ public struct MaintenanceSettings: View {
     private var automationCard: some View {
         SettingsCard(title: "Automation", subtitle: "Run maintenance without opening the main window", icon: "calendar.badge.clock", tint: .teal) {
             VStack(spacing: 12) {
-                HStack {
-                    Text("Schedule")
-                    Spacer()
-                    Picker("Schedule", selection: Binding(get: { viewModel.scanSchedule }, set: {
-                        viewModel.scanSchedule = $0
-                        environment.automationService.configure()
-                    })) {
-                        ForEach(ScanSchedule.allCases) { Text($0.rawValue).tag($0) }
+                SettingsInlineRow(
+                    title: "Schedule",
+                    detail: "Choose when MacSweep should run a maintenance scan",
+                    icon: "calendar"
+                ) {
+                    SettingsMenu(value: viewModel.scanSchedule.rawValue, width: 132) {
+                        ForEach(ScanSchedule.allCases) { schedule in
+                            Button {
+                                viewModel.scanSchedule = schedule
+                                environment.automationService.configure()
+                            } label: {
+                                if viewModel.scanSchedule == schedule {
+                                    Label(schedule.rawValue, systemImage: "checkmark")
+                                } else {
+                                    Text(schedule.rawValue)
+                                }
+                            }
+                        }
                     }
-                    .labelsHidden()
-                    .frame(width: 130)
+                    .accessibilityLabel("Maintenance schedule")
                 }
-                HStack {
-                    Text("Scan profile")
-                    Spacer()
-                    Picker("Profile", selection: Binding(get: { viewModel.scanProfile }, set: { viewModel.scanProfile = $0 })) {
-                        ForEach(ScanProfile.allCases) { Text($0.rawValue).tag($0) }
+
+                Divider().padding(.leading, 33)
+
+                SettingsInlineRow(
+                    title: "Scan profile",
+                    detail: viewModel.scanProfile.detail,
+                    icon: "scope"
+                ) {
+                    SettingsMenu(value: viewModel.scanProfile.rawValue, width: 152) {
+                        ForEach(ScanProfile.allCases) { profile in
+                            Button {
+                                viewModel.scanProfile = profile
+                            } label: {
+                                if viewModel.scanProfile == profile {
+                                    Label(profile.rawValue, systemImage: "checkmark")
+                                } else {
+                                    Text(profile.rawValue)
+                                }
+                            }
+                        }
                     }
-                    .labelsHidden()
-                    .frame(width: 150)
+                    .accessibilityLabel("Scan profile")
                 }
+
                 if viewModel.scanProfile == .custom {
-                    Toggle("Include developer cache sources", isOn: $viewModel.customProfileDeveloperSources)
-                    Toggle("Include enabled custom rules", isOn: $viewModel.customProfileRules)
+                    Divider().padding(.leading, 33)
+                    SettingsToggleRow(
+                        title: "Include developer cache sources",
+                        detail: "Scan supported development tool caches",
+                        icon: "hammer",
+                        isOn: $viewModel.customProfileDeveloperSources
+                    )
+
+                    Divider().padding(.leading, 33)
+                    SettingsToggleRow(
+                        title: "Include enabled custom rules",
+                        detail: "Run the cleanup rules enabled below",
+                        icon: "slider.horizontal.3",
+                        isOn: $viewModel.customProfileRules
+                    )
                 }
-                Toggle("Automatically clean safety-approved items", isOn: $viewModel.scheduledAutoClean)
-                Toggle("Analyze external drives when connected", isOn: $viewModel.externalDriveAutoScan)
-                HStack {
-                    Text(viewModel.scanProfile.detail)
-                        .font(.system(size: 10))
-                        .foregroundColor(.msSecondaryLabel)
-                    Spacer()
+
+                Divider().padding(.leading, 33)
+                SettingsToggleRow(
+                    title: "Automatically clean safety-approved items",
+                    detail: "Only items classified as safe are removed automatically",
+                    icon: "checkmark.shield",
+                    isOn: $viewModel.scheduledAutoClean
+                )
+
+                Divider().padding(.leading, 33)
+                SettingsToggleRow(
+                    title: "Analyze external drives when connected",
+                    detail: "Inspect newly connected volumes and report their size",
+                    icon: "externaldrive",
+                    isOn: $viewModel.externalDriveAutoScan
+                )
+
+                Divider().padding(.leading, 33)
+                SettingsInlineRow(
+                    title: "Run maintenance now",
+                    detail: "Start the selected scan profile immediately",
+                    icon: "play.circle"
+                ) {
                     Button(environment.automationService.isRunning ? "Running…" : "Run Now") {
                         Task { await environment.automationService.runNow() }
                     }
+                    .buttonStyle(.borderedProminent)
                     .disabled(environment.automationService.isRunning)
                 }
             }
-            .font(.system(size: 12))
         }
     }
 

@@ -299,6 +299,7 @@ public final class AutomationService: ObservableObject {
     @Published public private(set) var isRunning = false
     @Published public private(set) var lastRun: Date?
     private var timer: Timer?
+    private let environment: AppEnvironment
     private let scanEngine: ScanEngine
     private let cleanEngine: CleanEngine
     private let exclusionService: ExclusionService
@@ -307,6 +308,7 @@ public final class AutomationService: ObservableObject {
     private let notificationService: NotificationService
 
     public init(
+        environment: AppEnvironment,
         scanEngine: ScanEngine,
         cleanEngine: CleanEngine,
         exclusionService: ExclusionService,
@@ -314,6 +316,7 @@ public final class AutomationService: ObservableObject {
         historyService: CleanupHistoryService,
         notificationService: NotificationService
     ) {
+        self.environment = environment
         self.scanEngine = scanEngine
         self.cleanEngine = cleanEngine
         self.exclusionService = exclusionService
@@ -345,10 +348,21 @@ public final class AutomationService: ObservableObject {
         case .quick:
             result = await scanEngine.performSmartScan()
         case .privacy:
-            let privacy = PrivacyViewModel()
+            let privacy = PrivacyViewModel(environment: environment)
             await privacy.scanPrivacyItems()
-            let privacyItems = privacy.items.map {
-                CleanupItem(url: $0.path, name: "\($0.browserName) \($0.title)", size: $0.size, category: .browserPrivacy, risk: .caution, isDirectory: (try? $0.path.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) ?? false, modificationDate: Date(), isSelected: false)
+            let privacyItems = privacy.items.map { item in
+                let resourceKeys: Set<URLResourceKey> = [.isDirectoryKey]
+                let isDirectory = (try? item.path.resourceValues(forKeys: resourceKeys).isDirectory) ?? false
+                return CleanupItem(
+                    url: item.path,
+                    name: "\(item.browserName) \(item.title)",
+                    size: item.size,
+                    category: .browserPrivacy,
+                    risk: .caution,
+                    isDirectory: isDirectory,
+                    modificationDate: Date(),
+                    isSelected: false
+                )
             }
             result = ScanResult(items: privacyItems, duration: 0, scannedCategories: [.browserPrivacy])
         case .balanced:

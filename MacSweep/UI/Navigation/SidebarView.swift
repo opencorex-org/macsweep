@@ -96,6 +96,9 @@ public struct SidebarView: View {
                 refreshDiskSpace()
             }
         }
+        .onReceive(environment.activityLogStore.$entries) { _ in
+            refreshDiskSpace()
+        }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { refreshDiskSpace() }
         }
@@ -105,9 +108,6 @@ public struct SidebarView: View {
         guard let updated = try? environment.diskSpaceService.getDiskSpace() else { return }
         withAnimation(.easeInOut(duration: 0.2)) {
             diskSpace = updated
-        }
-        .onReceive(environment.activityLogStore.$entries) { _ in
-            diskSpace = try? environment.diskSpaceService.getDiskSpace()
         }
     }
 }

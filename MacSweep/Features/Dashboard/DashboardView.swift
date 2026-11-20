@@ -32,8 +32,45 @@ public struct DashboardView: View {
 
                     Spacer()
 
-                    SecondaryButton(title: "Full Scan", iconName: "sparkles") {
-                        coordinator.startFullScan()
+                    HStack(spacing: 8) {
+                        Link(destination: AppConstants.App.repositoryURL) {
+                            Image("GitHubMark")
+                                .resizable()
+                                .renderingMode(.template)
+                                .scaledToFit()
+                                .frame(width: 15, height: 15)
+                                .padding(6.5)
+                                .foregroundColor(.msSecondaryLabel)
+                                .background(Color.primary.opacity(0.06), in: Circle())
+                                .overlay(
+                                    Circle()
+                                        .stroke(Color.primary.opacity(0.1), lineWidth: 0.5)
+                                )
+                        }
+                        .buttonStyle(.plain)
+                        .hoverEffect(scale: 1.02)
+                        .help("View MacSweep on GitHub")
+                        .accessibilityLabel("View MacSweep source code on GitHub")
+
+                        Link(destination: AppConstants.App.sponsorURL) {
+                            Label("Sponsor", systemImage: "heart.fill")
+                                .font(.system(size: 11, weight: .semibold))
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 6)
+                                .foregroundColor(.pink)
+                                .background(Color.pink.opacity(0.1), in: Capsule())
+                                .overlay(
+                                    Capsule()
+                                        .stroke(Color.pink.opacity(0.2), lineWidth: 0.5)
+                                )
+                        }
+                        .buttonStyle(.plain)
+                        .hoverEffect(scale: 1.02)
+                        .help("Sponsor MacSweep on GitHub")
+
+                        SecondaryButton(title: "Full Scan", iconName: "sparkles") {
+                            coordinator.startFullScan()
+                        }
                     }
                 }
                 .padding(.horizontal, 4)

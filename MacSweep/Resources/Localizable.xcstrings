@@ -3156,6 +3156,16 @@
         }
       }
     },
+    "%@: %@ free" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@ free"
+          }
+        }
+      }
+    },
     "%lld" : {
       "localizations" : {
         "bg" : {
@@ -3544,16 +3554,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld 應用程式"
-          }
-        }
-      }
-    },
-    "%@: %@ free" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@: %2$@ free"
           }
         }
       }
@@ -11423,6 +11423,9 @@
         }
       }
     },
+    "Add" : {
+
+    },
     "Add Application…" : {
       "localizations" : {
         "bg" : {
@@ -12012,13 +12015,8 @@
         }
       }
     },
-    "Add" : {
-
-    },
-    "Add Folder…" : {
-
-    },
     "Adjust minimum size" : {
+      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
@@ -15557,9 +15555,6 @@
         }
       }
     },
-    "Analyze external drives when connected" : {
-
-    },
     "App Components & Associated Data" : {
       "localizations" : {
         "bg" : {
@@ -18166,7 +18161,6 @@
       }
     },
     "Application language" : {
-      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
@@ -22938,9 +22932,6 @@
         }
       }
     },
-    "Automatically clean safety-approved items" : {
-
-    },
     "Calculating folder sizes…" : {
       "localizations" : {
         "bg" : {
@@ -25495,6 +25486,7 @@
       }
     },
     "Check Storage Now" : {
+      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
@@ -30411,9 +30403,6 @@
         }
       }
     },
-    "Clear History" : {
-
-    },
     "Clear web browser caches, cookies, and tracking artifacts" : {
       "localizations" : {
         "bg" : {
@@ -32380,6 +32369,7 @@
       }
     },
     "Daily" : {
+      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
@@ -33361,6 +33351,9 @@
           }
         }
       }
+    },
+    "Decrease minimum file size" : {
+
     },
     "Delete" : {
       "localizations" : {
@@ -46151,6 +46144,9 @@
         }
       }
     },
+    "Increase minimum file size" : {
+
+    },
     "Indian" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -47134,15 +47130,6 @@
           }
         }
       }
-    },
-    "Include developer cache sources" : {
-
-    },
-    "Include enabled custom rules" : {
-
-    },
-    "Installed Files & Leftovers" : {
-
     },
     "Internal" : {
       "localizations" : {
@@ -48323,6 +48310,7 @@
       }
     },
     "Language" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -55106,6 +55094,9 @@
         }
       }
     },
+    "Maintenance schedule" : {
+
+    },
     "Make MacSweep work your way" : {
       "localizations" : {
         "bg" : {
@@ -56090,7 +56081,6 @@
       }
     },
     "Minimum file size" : {
-      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
@@ -58055,6 +58045,9 @@
         }
       }
     },
+    "No cleanups recorded yet." : {
+
+    },
     "No Developer Clutter Found" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -59236,9 +59229,6 @@
           }
         }
       }
-    },
-    "No cleanups recorded yet." : {
-
     },
     "No readable contents found" : {
       "localizations" : {
@@ -61405,6 +61395,7 @@
       }
     },
     "Off" : {
+      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
@@ -63368,9 +63359,6 @@
           }
         }
       }
-    },
-    "Open MacSweep" : {
-
     },
     "Open Preview" : {
 
@@ -69667,9 +69655,6 @@
         }
       }
     },
-    "Profile" : {
-
-    },
     "Quick Tools" : {
       "localizations" : {
         "bg" : {
@@ -70258,9 +70243,6 @@
           }
         }
       }
-    },
-    "Quit MacSweep" : {
-
     },
     "Real-time system health, storage allocation, and maintenance tools" : {
       "localizations" : {
@@ -75073,9 +75055,6 @@
         }
       }
     },
-    "Reveal in Finder" : {
-
-    },
     "Review Developer Files" : {
       "localizations" : {
         "bg" : {
@@ -75860,6 +75839,9 @@
         }
       }
     },
+    "Rule name" : {
+
+    },
     "Run an analysis or choose another category." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -76056,6 +76038,15 @@
           }
         }
       }
+    },
+    "Run Maintenance Now" : {
+
+    },
+    "Run Now" : {
+
+    },
+    "Running…" : {
+
     },
     "Safe" : {
       "extractionState" : "stale",
@@ -76449,18 +76440,6 @@
           }
         }
       }
-    },
-    "Rule name" : {
-
-    },
-    "Run Maintenance Now" : {
-
-    },
-    "Run Now" : {
-
-    },
-    "Running…" : {
-
     },
     "Safe Items Only" : {
       "localizations" : {
@@ -79414,6 +79393,9 @@
         }
       }
     },
+    "Scan profile" : {
+
+    },
     "Scan reminder" : {
       "localizations" : {
         "bg" : {
@@ -80397,9 +80379,6 @@
           }
         }
       }
-    },
-    "Scan profile" : {
-
     },
     "Scanning Applications & Folders…" : {
       "localizations" : {
@@ -81776,6 +81755,9 @@
         }
       }
     },
+    "Scanning…" : {
+
+    },
     "Scans" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -82758,12 +82740,6 @@
           }
         }
       }
-    },
-    "Scanning…" : {
-
-    },
-    "Schedule" : {
-
     },
     "Search apps or folders…" : {
       "localizations" : {
@@ -88268,6 +88244,12 @@
         }
       }
     },
+    "Sponsor" : {
+
+    },
+    "Sponsor MacSweep on GitHub" : {
+
+    },
     "Sponsor on GitHub" : {
       "localizations" : {
         "bg" : {
@@ -90628,6 +90610,7 @@
       }
     },
     "Storage %lld%% used" : {
+      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
@@ -91610,6 +91593,7 @@
       }
     },
     "Storage unavailable" : {
+      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
@@ -99077,6 +99061,12 @@
         }
       }
     },
+    "View MacSweep on GitHub" : {
+
+    },
+    "View MacSweep source code on GitHub" : {
+
+    },
     "View Source" : {
       "localizations" : {
         "bg" : {
@@ -100453,6 +100443,7 @@
       }
     },
     "Weekly" : {
+      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
