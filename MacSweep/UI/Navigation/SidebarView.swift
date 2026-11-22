@@ -82,6 +82,11 @@ public struct SidebarView: View {
                 .background(Color.msSecondaryBackground.opacity(0.6))
             }
         }
+        .navigationSplitViewColumnWidth(
+            min: 190,
+            ideal: AppConstants.Window.sidebarWidth,
+            max: 260
+        )
         .task {
             refreshDiskSpace()
         }

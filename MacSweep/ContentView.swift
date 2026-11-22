@@ -50,6 +50,7 @@ public struct ContentView: View {
                 DashboardView(environment: environment)
             }
         }
+        .navigationSplitViewStyle(.balanced)
         .environmentObject(coordinator)
         .onReceive(environment.storageAlertService.$openOptimiseRequest.dropFirst()) { _ in
             coordinator.navigate(to: .optimise)

@@ -67,6 +67,23 @@ public struct InsightsView: View {
     }
 
     private var header: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 12) {
+                headerTitle
+                Spacer()
+                headerActions
+            }
+
+            VStack(alignment: .leading, spacing: 12) {
+                headerTitle
+                headerActions
+            }
+        }
+        .padding(16)
+        .background(Color.msSecondaryBackground)
+    }
+
+    private var headerTitle: some View {
         HStack(spacing: 12) {
             Image(systemName: "waveform.path.ecg.rectangle.fill")
                 .font(.system(size: 20))
@@ -77,19 +94,22 @@ public struct InsightsView: View {
                 Text("Storage Insights").font(.system(size: 18, weight: .bold))
                 Text("Review recent files, caches, installers, apps, photos, and snapshots")
                     .font(.system(size: 11)).foregroundColor(.msSecondaryLabel)
+                    .lineLimit(2)
             }
-            Spacer()
+        }
+    }
+
+    private var headerActions: some View {
+        HStack(spacing: 8) {
             Button("Safe Clean", systemImage: "checkmark.shield.fill") { coordinator.navigate(to: .optimise) }
                 .buttonStyle(.borderedProminent)
             Button("Analyse", systemImage: "arrow.clockwise") { Task { await viewModel.scan() } }
                 .disabled(viewModel.isScanning)
         }
-        .padding(16)
-        .background(Color.msSecondaryBackground)
     }
 
     private var summary: some View {
-        HStack(spacing: 12) {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 12)], spacing: 12) {
             insightMetric("Review Items", "\(viewModel.insights.count)", "list.bullet.rectangle", .blue)
             insightMetric("Potential Space", ByteFormatter.format(viewModel.insights.reduce(0) { $0 + $1.size }), "internaldrive", .orange)
             insightMetric("Duplicate Photos", "\(viewModel.duplicateGroups.count) groups", "photo.on.rectangle.angled", .pink)
@@ -98,6 +118,13 @@ public struct InsightsView: View {
     }
 
     private var filters: some View {
+        ViewThatFits(in: .horizontal) {
+            segmentedFilters
+            compactFilters
+        }
+    }
+
+    private var segmentedFilters: some View {
         Picker("Category", selection: $selectedKind) {
             Text("All").tag(nil as MaintenanceInsight.Kind?)
             ForEach(MaintenanceInsight.Kind.allCases, id: \.self) { kind in
@@ -105,6 +132,25 @@ public struct InsightsView: View {
             }
         }
         .pickerStyle(.segmented)
+        .fixedSize(horizontal: true, vertical: false)
+    }
+
+    private var compactFilters: some View {
+        HStack {
+            Text("Category")
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundColor(.msSecondaryLabel)
+            Spacer()
+            Picker("Category", selection: $selectedKind) {
+                Text("All Insights").tag(nil as MaintenanceInsight.Kind?)
+                ForEach(MaintenanceInsight.Kind.allCases, id: \.self) { kind in
+                    Text(LocalizedStringKey(kind.title)).tag(kind as MaintenanceInsight.Kind?)
+                }
+            }
+            .labelsHidden()
+            .pickerStyle(.menu)
+            .frame(minWidth: 170)
+        }
     }
 
     private var filteredInsights: [MaintenanceInsight] {

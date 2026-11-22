@@ -13194,6 +13194,9 @@
         }
       }
     },
+    "All Insights" : {
+
+    },
     "Allow system notifications" : {
       "extractionState" : "stale",
       "localizations" : {
