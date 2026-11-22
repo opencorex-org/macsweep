@@ -2,6 +2,24 @@
 
 All notable changes to MacSweep are documented here.
 
+## [1.3.1] - 2026-11-22
+
+### Added
+
+- A branded drag-to-Applications DMG window with clear first-launch, Open Anyway, limited-access, and Full Disk Access guidance.
+
+### Changed
+
+- Privacy-first onboarding now explains local processing before offering limited access or optional Full Disk Access.
+- Storage Insights, the main sidebar, Dashboard quick tools, cleanup progress, and cleanup summaries now adapt more reliably to the available window size.
+- MacSweep now enforces its supported minimum window dimensions while preserving scrollable cleanup content.
+
+### Fixed
+
+- Detect Full Disk Access using protected macOS TCC databases instead of an optional Time Machine preference file.
+- Refresh permission state when App Uninstaller opens, when the user checks again, and immediately before uninstalling.
+- Prevent cleanup-complete and progress views from appearing blank or clipped after resizing.
+
 ## [1.3.0] - 2026-11-20
 
 ### Added
