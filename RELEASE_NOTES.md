@@ -1,17 +1,15 @@
-# MacSweep 1.3.0
+# MacSweep 1.3.1
 
-MacSweep 1.3.0 makes cleanup recommendations easier to understand, expands safe Full Scan coverage, and refreshes the Settings experience.
+MacSweep 1.3.1 improves installation guidance, permission detection, and responsive behavior throughout the application.
 
 ## Highlights
 
-- **Safe recommendations**: The new Recommendations workspace analyzes all supported cleanup sources but presents only safety-approved actions.
-- **More capable Full Scan**: Review recommended and caution items separately, scan sandboxed application logs, and avoid duplicate cleanup paths.
-- **Storage insights**: Track system health, storage history, scan activity, and verified reclaimed space from the Dashboard and Insights views.
-- **Redesigned Settings**: Use consistently aligned controls, compact menus, clearer notification options, and improved maintenance profiles.
-- **Live localization**: Change the application language immediately from Settings using the expanded string catalog.
-- **Improved application removal**: Inspect application components and associated data with clearer safety information before uninstalling.
-- **Project support**: Open the upstream repository or GitHub Sponsors directly from MacSweep.
-- **Reliability improvements**: Better cache discovery, live storage refreshes, scan cancellation, filesystem validation, and cleanup reporting.
+- **Customized installation experience**: The DMG now presents a branded drag-to-Applications window with first-launch and macOS security guidance.
+- **Reliable permission detection**: Full Disk Access checks now use protected macOS TCC databases instead of an optional preference file.
+- **Improved App Uninstaller access flow**: Permission state refreshes when the screen opens, when access is checked again, and immediately before removal.
+- **Responsive Storage Insights**: The header, summary metrics, category control, and main navigation sidebar adapt cleanly to available space.
+- **Reliable cleanup completion screens**: Progress and result views remain centered at normal sizes and become scrollable when space is constrained.
+- **Privacy-first onboarding**: Users can clearly choose limited access or optionally grant Full Disk Access for more complete scans.
 
 > MacSweep is an open-source, ad-hoc-signed build and is not Apple-notarized. On first launch, try to open MacSweep once, then use **System Settings → Privacy & Security → Open Anyway**. Inside onboarding, you can continue with limited access or optionally grant Full Disk Access for more complete scans.
 

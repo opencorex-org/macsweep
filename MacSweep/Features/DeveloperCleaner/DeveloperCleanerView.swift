@@ -227,6 +227,7 @@ public struct DeveloperCleanerView: View {
             .buttonStyle(.borderedProminent)
         }
         .padding(40)
+        .msCenteredScrollable()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 

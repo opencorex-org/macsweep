@@ -13194,6 +13194,9 @@
         }
       }
     },
+    "All Insights" : {
+
+    },
     "Allow system notifications" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -26866,6 +26869,9 @@
           }
         }
       }
+    },
+    "Choose Scan Access" : {
+
     },
     "Choose the language used throughout the app" : {
       "extractionState" : "stale",
@@ -41826,6 +41832,9 @@
         }
       }
     },
+    "Full Disk Access Enabled" : {
+
+    },
     "Full Disk Access Recommended" : {
       "localizations" : {
         "bg" : {
@@ -42023,6 +42032,7 @@
       }
     },
     "Full Disk Access Required" : {
+      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
@@ -53875,6 +53885,12 @@
         }
       }
     },
+    "MacSweep analyzes your storage locally. File names, contents, and scan results are never uploaded." : {
+
+    },
+    "MacSweep can inspect protected cache and log locations for more complete results." : {
+
+    },
     "MacSweep can inspect protected folders for complete results." : {
       "localizations" : {
         "bg" : {
@@ -55101,6 +55117,9 @@
           }
         }
       }
+    },
+    "MacSweep works with limited access. Full Disk Access improves coverage, but macOS only allows you to grant it in System Settings." : {
+
     },
     "Maintenance schedule" : {
 
@@ -65343,6 +65362,7 @@
       }
     },
     "Optimize system performance, clean junk files, analyze disk usage, and manage developer caches." : {
+      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
@@ -95151,6 +95171,7 @@
       }
     },
     "To clean system caches, user logs, and developer artifacts, MacSweep needs Full Disk Access permission." : {
+      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
@@ -100661,6 +100682,7 @@
       }
     },
     "Welcome to MacSweep" : {
+      "extractionState" : "stale",
       "localizations" : {
         "bg" : {
           "stringUnit" : {
@@ -102231,6 +102253,9 @@
           }
         }
       }
+    },
+    "Your Privacy Comes First" : {
+
     }
   },
   "version" : "1.0"

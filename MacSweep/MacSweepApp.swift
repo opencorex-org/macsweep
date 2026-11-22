@@ -11,6 +11,10 @@ struct MacSweepApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .frame(
+                    minWidth: AppConstants.Window.minWidth,
+                    minHeight: AppConstants.Window.minHeight
+                )
                 .environmentObject(environment)
                 .environmentObject(localizationStore)
                 .environment(\.locale, localizationStore.locale)
@@ -25,6 +29,7 @@ struct MacSweepApp: App {
         }
         .windowStyle(.titleBar)
         .windowToolbarStyle(.unified)
+        .windowResizability(.contentMinSize)
         .commands {
             CommandGroup(after: .appInfo) {
                 Button("Check for Updates…") {
