@@ -77,6 +77,8 @@ jobs:
         run: |
           set -euo pipefail
           git fetch --force --tags origin
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           if git show-ref --verify --quiet "refs/tags/$RELEASE_TAG"; then
             if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
@@ -85,13 +87,19 @@ jobs:
               exit 0
             fi
 
+            verified_sha="$(git rev-parse HEAD)"
+            tagged_sha="$(git rev-list -n 1 "$RELEASE_TAG")"
+            if [[ "$tagged_sha" != "$verified_sha" ]]; then
+              echo "$RELEASE_TAG is unpublished; moving it to the newly verified commit."
+              git tag -fa "$RELEASE_TAG" -m "Release $RELEASE_TAG"
+              git push --force origin "refs/tags/$RELEASE_TAG"
+            fi
+
             echo "$RELEASE_TAG exists without a GitHub Release; publication will be retried."
             echo "should_release=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git tag -a "$RELEASE_TAG" -m "Release $RELEASE_TAG"
           git push origin "$RELEASE_TAG"
           echo "should_release=true" >> "$GITHUB_OUTPUT"
