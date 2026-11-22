@@ -44,8 +44,24 @@ func drawText(
     )
 }
 
-let image = NSImage(size: canvasSize)
-image.lockFocus()
+guard let bitmap = NSBitmapImageRep(
+    bitmapDataPlanes: nil,
+    pixelsWide: Int(canvasSize.width),
+    pixelsHigh: Int(canvasSize.height),
+    bitsPerSample: 8,
+    samplesPerPixel: 4,
+    hasAlpha: true,
+    isPlanar: false,
+    colorSpaceName: .deviceRGB,
+    bytesPerRow: 0,
+    bitsPerPixel: 0
+), let context = NSGraphicsContext(bitmapImageRep: bitmap) else {
+    fputs("Failed to create DMG background canvas\n", stderr)
+    exit(1)
+}
+bitmap.size = canvasSize
+NSGraphicsContext.saveGraphicsState()
+NSGraphicsContext.current = context
 
 let fullRect = NSRect(origin: .zero, size: canvasSize)
 let gradient = NSGradient(colors: [color(0xF9FAFD), color(0xEEF3FF)])!
@@ -125,11 +141,9 @@ drawText(
     lineSpacing: 3
 )
 
-image.unlockFocus()
+NSGraphicsContext.restoreGraphicsState()
 
-guard let tiff = image.tiffRepresentation,
-      let bitmap = NSBitmapImageRep(data: tiff),
-      let png = bitmap.representation(using: .png, properties: [:]) else {
+guard let png = bitmap.representation(using: .png, properties: [:]) else {
     fputs("Failed to render DMG background\n", stderr)
     exit(1)
 }

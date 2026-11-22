@@ -5,13 +5,12 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APP_PATH="${APP_PATH:-$ROOT_DIR/build/Export/MacSweep.app}"
 DMG_PATH="${DMG_PATH:-$ROOT_DIR/build/Release/MacSweep.dmg}"
 BACKGROUND_PATH="$ROOT_DIR/Distribution/DMG/background.png"
-VOLUME_NAME="MacSweep"
+VOLUME_NAME="MacSweep Installer"
 
 test -d "$APP_PATH"
 mkdir -p "$(dirname "$DMG_PATH")"
 
 STAGING_DIR="$(mktemp -d)"
-MOUNT_DIR="$(mktemp -d)"
 TEMP_DIR="$(mktemp -d)"
 READ_WRITE_DMG="$TEMP_DIR/MacSweep-read-write.dmg"
 DEVICE=""
@@ -20,7 +19,7 @@ cleanup() {
   if [[ -n "$DEVICE" ]]; then
     hdiutil detach "$DEVICE" -quiet 2>/dev/null || true
   fi
-  rm -rf "$STAGING_DIR" "$MOUNT_DIR" "$TEMP_DIR" 2>/dev/null || true
+  rm -rf "$STAGING_DIR" "$TEMP_DIR" 2>/dev/null || true
 }
 trap cleanup EXIT
 
@@ -39,14 +38,16 @@ hdiutil create \
   -format UDRW \
   "$READ_WRITE_DMG"
 
-hdiutil attach "$READ_WRITE_DMG" -readwrite -noverify -noautoopen -mountpoint "$MOUNT_DIR"
-DEVICE="$(df "$MOUNT_DIR" | awk 'NR == 2 { print $1 }')"
+ATTACH_OUTPUT="$(hdiutil attach "$READ_WRITE_DMG" -readwrite -noverify -noautoopen)"
+printf '%s\n' "$ATTACH_OUTPUT"
+DEVICE="$(printf '%s\n' "$ATTACH_OUTPUT" | awk '$2 == "Apple_HFS" { print $1; exit }')"
 test -n "$DEVICE"
 
 osascript <<APPLESCRIPT
 tell application "Finder"
   tell disk "$VOLUME_NAME"
     open
+    delay 1
     set current view of container window to icon view
     set toolbar visible of container window to false
     set statusbar visible of container window to false
