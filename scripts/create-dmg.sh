@@ -20,7 +20,7 @@ cleanup() {
   if [[ -n "$DEVICE" ]]; then
     hdiutil detach "$DEVICE" -quiet 2>/dev/null || true
   fi
-  rm -rf "$STAGING_DIR" "$MOUNT_DIR" "$TEMP_DIR"
+  rm -rf "$STAGING_DIR" "$MOUNT_DIR" "$TEMP_DIR" 2>/dev/null || true
 }
 trap cleanup EXIT
 
@@ -39,7 +39,8 @@ hdiutil create \
   -format UDRW \
   "$READ_WRITE_DMG"
 
-DEVICE="$(hdiutil attach "$READ_WRITE_DMG" -readwrite -noverify -noautoopen -mountpoint "$MOUNT_DIR" | awk -v mount="$MOUNT_DIR" '$NF == mount { print $1; exit }')"
+hdiutil attach "$READ_WRITE_DMG" -readwrite -noverify -noautoopen -mountpoint "$MOUNT_DIR"
+DEVICE="$(df "$MOUNT_DIR" | awk 'NR == 2 { print $1 }')"
 test -n "$DEVICE"
 
 osascript <<APPLESCRIPT
