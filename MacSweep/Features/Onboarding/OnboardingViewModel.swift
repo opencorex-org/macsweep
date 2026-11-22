@@ -15,9 +15,7 @@ public final class OnboardingViewModel: ObservableObject {
     public init() {}
 
     public func checkPermissions() {
-        // Simple FDA check by attempting to access a restricted directory
-        let fdaPath = "/Library/Preferences/com.apple.TimeMachine.plist"
-        self.hasFullDiskAccess = FileManager.default.isReadableFile(atPath: fdaPath)
+        hasFullDiskAccess = FullDiskAccessManager.shared.hasFullDiskAccess
     }
 
     public func nextStep() {

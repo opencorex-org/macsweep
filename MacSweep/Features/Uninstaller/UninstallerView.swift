@@ -108,11 +108,7 @@ public struct UninstallerView: View {
                     // Right Detail
                     if let selectedApp = viewModel.selectedApp {
                         ApplicationDetailView(app: selectedApp) {
-                            if permissionManager.hasFullDiskAccess {
-                                showConfirmDialog = true
-                            } else {
-                                showPermissionDialog = true
-                            }
+                            beginUninstall()
                         }
                     } else {
                         EmptyStateView(
@@ -125,6 +121,7 @@ public struct UninstallerView: View {
             }
         }
         .onAppear {
+            permissionManager.refreshPermissions()
             if viewModel.applications.isEmpty {
                 Task { await viewModel.loadApplications() }
             }
@@ -184,10 +181,25 @@ public struct UninstallerView: View {
             }
             .buttonStyle(.bordered)
             .controlSize(.small)
+
+            Button("Check Again") {
+                permissionManager.refreshPermissions()
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.small)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
         .background(Color.orange.opacity(0.08))
+    }
+
+    private func beginUninstall() {
+        permissionManager.refreshPermissions()
+        if permissionManager.hasFullDiskAccess {
+            showConfirmDialog = true
+        } else {
+            showPermissionDialog = true
+        }
     }
 
     private func chooseApplication() {
