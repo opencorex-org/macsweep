@@ -114,7 +114,7 @@ public struct DashboardView: View {
                         Spacer()
                     }
 
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 14) {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 240), spacing: 14)], spacing: 14) {
                         QuickActionCard(
                             title: "Smart Scan",
                             subtitle: "Scan system cache, logs, and temp files",

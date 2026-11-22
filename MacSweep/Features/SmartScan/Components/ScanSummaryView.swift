@@ -147,7 +147,25 @@ public struct ScanSummaryView: View {
             .buttonStyle(.plain)
         }
         .padding(40)
+        .msCenteredScrollable()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+struct CenteredScrollableModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        GeometryReader { geometry in
+            ScrollView {
+                content
+                    .frame(maxWidth: .infinity, minHeight: geometry.size.height)
+            }
+        }
+    }
+}
+
+extension View {
+    func msCenteredScrollable() -> some View {
+        modifier(CenteredScrollableModifier())
     }
 }
 

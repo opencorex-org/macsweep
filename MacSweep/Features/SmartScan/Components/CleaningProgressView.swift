@@ -201,6 +201,7 @@ public struct CleaningProgressView: View {
             .padding(.bottom, 24)
         }
         .padding(.horizontal, 40)
+        .msCenteredScrollable()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .task {
             pulseGlow = true
